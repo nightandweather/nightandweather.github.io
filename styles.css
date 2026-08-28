@@ -269,6 +269,40 @@ body {
 .footer a:hover {
   text-decoration: underline;
 }
+.where-next {
+  padding: 42px 0;
+  color: #f4f1e8;
+  background: #213f3a;
+  border-block: 1px solid var(--ink);
+}
+.where-next-grid {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) auto;
+  gap: 34px;
+  align-items: center;
+}
+.where-next h2 {
+  margin: 5px 0 10px;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1;
+}
+.where-next p {
+  margin-block: 0;
+}
+.where-next .section-label,
+.where-next .eyebrow,
+.where-next a {
+  color: inherit;
+}
+.where-next-links {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+.where-next-links .button {
+  border-color: currentColor;
+}
 .article-hero {
   padding: 100px 0 64px;
   border-bottom: 1px solid var(--line);
@@ -404,6 +438,10 @@ body {
   }
   .event-gallery__wide {
     grid-column: auto;
+  }
+  .where-next-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
   .nav {
     height: 68px;
