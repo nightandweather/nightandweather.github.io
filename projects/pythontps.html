@@ -37,7 +37,15 @@
         <figure class="article-shot">
           <img src="../assets/pythontps-delivery.png" alt="Virtual C-arm linac delivering a beam around a three-dimensional anatomy model">
           <figcaption>Virtual C-arm delivery view: anatomy, beam geometry, structures, and machine motion are rendered together.</figcaption>
-        </figure>
+          </figure>
+          <h2>How a researcher uses it</h2>
+          <ol class="usage-flow">
+            <li><b>Load a case.</b><span>Import CT and RTSTRUCT data, or start with a committed open phantom such as TG-119.</span></li>
+            <li><b>Define the planning problem.</b><span>Select targets, organs, prescription, beam geometry, and measurable dose objectives.</span></li>
+            <li><b>Optimize and inspect.</b><span>Run fluence optimization, compare DVHs, and navigate trade-offs rather than accepting a single opaque answer.</span></li>
+            <li><b>Make it deliverable.</b><span>Sequence fluence into MLC apertures and check leaf, gantry, MU, and timing rules on the virtual machine.</span></li>
+            <li><b>Challenge the result.</b><span>Recalculate with an independent Monte Carlo experiment and export research DICOM objects for inspection.</span></li>
+          </ol>
           <h2>The question</h2>
           <p>
             Can the important pieces of a radiotherapy treatment-planning system

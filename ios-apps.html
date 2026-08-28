@@ -1,1 +1,107 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="iPhone applications built by Kanghoun Lee: ReturnProof and the ResaleDock Controller."><title>iPhone Apps — Kanghoun Lee</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="ios.css"><link rel="stylesheet" href="topics.css"></head><body><header class="nav wrap"><a class="wordmark" href="./">KANGHOUN LEE</a><nav><a href="./#topics">Topics</a><a href="opportunities.html">Calendar</a><a href="./#work">Work</a></nav></header><main><section class="topic-hero wrap"><p class="kicker">SwiftUI · Camera · BLE · QR</p><h1>iPhone<br>Apps</h1><p class="lead">Applications designed where the phone meets physical work: equipment moving through a room, a camera waiting for a motor, and records that should stay on the device.</p></section><section class="topic-index wrap" id="returnproof"><aside class="topic-intro">ReturnProof<br>Working private prototype<br>SwiftUI · iOS 17+</aside><div class="entry-list"><div class="entry"><small>Local-first rental operations</small><h2>Know what left. Record what came back.</h2><p>ReturnProof registers assets and expected kit components, prints QR labels, records checkout, and guides a return inspection with component counts, notes, and up to eight local photos. Required missing components block checkout instead of merely creating a warning.</p><p>The core includes atomic JSON persistence, export, QR deep links, AirPrint, direct ZPL network printing, Google Mobile Ads test integration, consent handling, and a one-time App Store purchase path for removing ads.</p><p><b>Honest boundary:</b> it is a working single-device prototype, not a multi-tenant rental SaaS. There is no cloud synchronization, customer signature, or independent proof of liability.</p></div></div></section><section class="topic-index wrap" id="resaledock"><aside class="topic-intro">ResaleDock Controller<br>Public controller prototype<br>Swift · BLE</aside><div class="entry-list"><div class="entry"><small>Phone-to-hardware workflow</small><h2>Coordinate the camera with a machine that moves.</h2><p>The controller speaks a documented BLE protocol to an ESP32, sends turntable and lighting commands, reads homing and weight state, and coordinates an eight-view capture sequence. Camera handling, device state, and transport logic are separated so the Swift core can be compiled and tested without the complete UI.</p><p><b>Honest boundary:</b> the Swift communication layer builds, but the complete turntable has not yet completed physical assembly and load testing.</p><p><a href="https://github.com/nightandweather/resale-dock">Open the public repository ↗</a></p></div></div></section></main><footer class="footer"><div class="wrap"><span>Prototypes are labeled as prototypes.</span><span>© 2026 Kanghoun Lee</span></div></footer></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="iPhone applications built by Kanghoun Lee: ReturnProof and the ResaleDock Controller."
+    />
+    <title>iPhone Apps — Kanghoun Lee</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="ios.css" />
+    <link rel="stylesheet" href="topics.css" />
+  </head>
+  <body>
+    <header class="nav wrap">
+      <a class="wordmark" href="./">KANGHOUN LEE</a>
+      <nav>
+        <a href="./#topics">Topics</a><a href="opportunities.html">Calendar</a
+        ><a href="./#work">Work</a>
+      </nav>
+    </header>
+    <main>
+      <section class="topic-hero wrap">
+        <p class="kicker">SwiftUI · Camera · BLE · QR</p>
+        <h1>iPhone<br />Apps</h1>
+        <p class="lead">
+          Applications designed where the phone meets physical work: equipment
+          moving through a room, a camera waiting for a motor, and records that
+          should stay on the device.
+        </p>
+      </section>
+      <section class="topic-index wrap" id="returnproof">
+        <aside class="topic-intro">
+          ReturnProof<br />Working private prototype<br />SwiftUI · iOS 17+
+        </aside>
+        <div class="entry-list">
+          <div class="entry">
+            <small>Local-first rental operations</small>
+            <h2>Know what left. Record what came back.</h2>
+            <p>
+              ReturnProof registers assets and expected kit components, prints
+              QR labels, records checkout, and guides a return inspection with
+              component counts, notes, and up to eight local photos. Required
+              missing components block checkout instead of merely creating a
+              warning.
+            </p>
+            <p>
+              The core includes atomic JSON persistence, export, QR deep links,
+              AirPrint, direct ZPL network printing, Google Mobile Ads test
+              integration, consent handling, and a one-time App Store purchase
+              path for removing ads.
+            </p>
+            <p>
+              <b>Honest boundary:</b> it is a working single-device prototype,
+              not a multi-tenant rental SaaS. There is no cloud synchronization,
+              customer signature, or independent proof of liability.
+            </p>
+            <h2>What using it looks like</h2>
+            <ol class="usage-flow">
+              <li><b>Register the equipment.</b><span>Add an asset, its expected components, and condition photos on the iPhone.</span></li>
+              <li><b>Print and attach a QR label.</b><span>Use AirPrint or a networked ZPL label printer directly from the app.</span></li>
+              <li><b>Scan at checkout.</b><span>Confirm the kit is complete; required missing components block the handoff.</span></li>
+              <li><b>Scan again on return.</b><span>Count components, add notes, and capture up to eight local inspection photos.</span></li>
+              <li><b>Keep or export the record.</b><span>The history remains on that device as JSON-backed local data unless the user exports it.</span></li>
+            </ol>
+          </div>
+        </div>
+      </section>
+      <section class="topic-index wrap" id="resaledock">
+        <aside class="topic-intro">
+          ResaleDock Controller<br />Public controller prototype<br />Swift ·
+          BLE
+        </aside>
+        <div class="entry-list">
+          <div class="entry">
+            <small>Phone-to-hardware workflow</small>
+            <h2>Coordinate the camera with a machine that moves.</h2>
+            <p>
+              The controller speaks a documented BLE protocol to an ESP32, sends
+              turntable and lighting commands, reads homing and weight state,
+              and coordinates an eight-view capture sequence. Camera handling,
+              device state, and transport logic are separated so the Swift core
+              can be compiled and tested without the complete UI.
+            </p>
+            <p>
+              <b>Honest boundary:</b> the Swift communication layer builds, but
+              the complete turntable has not yet completed physical assembly and
+              load testing.
+            </p>
+            <p>
+              <a href="https://github.com/nightandweather/resale-dock"
+                >Open the public repository ↗</a
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <span>Prototypes are labeled as prototypes.</span
+        ><span>© 2026 Kanghoun Lee</span>
+      </div>
+    </footer>
+  </body>
+</html>

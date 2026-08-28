@@ -39,7 +39,15 @@
         <figure class="article-shot">
           <img src="../assets/rt-claude-ui.png" alt="RT Claude interface showing a DVH, before-and-after metrics, and approve reject modify controls">
           <figcaption>A demo case with dose metrics, DVH comparison, an agent proposal, and explicit clinician decisions in one workspace.</figcaption>
-        </figure>
+          </figure>
+          <h2>How the workspace is used</h2>
+          <ol class="usage-flow">
+            <li><b>Choose a research case.</b><span>The clinician sees anatomy, structures, prescription, and starting constraints before the agent acts.</span></li>
+            <li><b>Review the proposal.</b><span>The agent states its intended technique and objectives; the human confirms or modifies them.</span></li>
+            <li><b>Run a real optimization.</b><span>RT Claude calls the pythontps engine and returns computed dose—not invented dashboard values.</span></li>
+            <li><b>Compare what changed.</b><span>Before-and-after dose, DVHs, and structure metrics appear together in the review workspace.</span></li>
+            <li><b>Approve, reject, or modify.</b><span>Every consequential transition stops at an explicit human decision and records that decision.</span></li>
+          </ol>
           <h2>The interaction problem</h2>
           <p>
             Automating an optimizer is not enough. A useful planning agent must
