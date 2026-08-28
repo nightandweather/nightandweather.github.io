@@ -4,10 +4,10 @@
 }
 
 .award {
-  min-height: 112px;
+  min-height: 286px;
   display: grid;
-  grid-template-columns: 80px 340px 1fr auto;
-  gap: 26px;
+  grid-template-columns: 70px 480px minmax(230px, 1fr) auto;
+  gap: 30px;
   align-items: center;
   color: inherit;
   text-decoration: none;
@@ -23,10 +23,10 @@
 .award b { font-size: 1.08rem; }
 .award small { color: #4e531d; margin-top: 3px; }
 .award-arrow { font-weight: 800; font-size: .82rem; }
-.award-photo { width: 340px; height: 186px; object-fit: cover; border: 1px solid rgba(0,0,0,.35); }
+.award-photo { width: 480px; height: 263px; object-fit: cover; border: 1px solid rgba(0,0,0,.35); }
 
 @media (max-width: 760px) {
   .award { grid-template-columns: 60px 1fr; padding: 20px 0; }
-  .award-photo { grid-column: 2; width: 100%; height: 120px; }
+  .award-photo { grid-column: 1 / -1; grid-row: 2; width: 100%; height: auto; }
   .award-arrow { grid-column: 2; }
 }
