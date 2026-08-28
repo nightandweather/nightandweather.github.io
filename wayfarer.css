@@ -1,0 +1,52 @@
+.wayfarer-showcase {
+  display: grid;
+  grid-template-columns: minmax(280px, .72fr) 1.28fr;
+  gap: 76px;
+  align-items: center;
+  padding: 90px 0;
+  border-bottom: 1px solid var(--line);
+}
+.wayfarer-phone {
+  height: 640px;
+  justify-content: flex-end;
+}
+.wayfarer-phone img {
+  border-color: #171816;
+  box-shadow: 0 24px 55px rgba(5, 8, 13, .22);
+}
+.wayfarer-copy h2 {
+  margin: .16em 0 .24em;
+  font-family: var(--serif);
+  font-size: clamp(3.8rem, 7vw, 6.8rem);
+  line-height: .9;
+}
+.wayfarer-copy p,
+.wayfarer-copy li {
+  max-width: 670px;
+  color: var(--muted);
+  font-size: 1.02rem;
+}
+.wayfarer-copy ul {
+  margin: 24px 0;
+  padding-left: 20px;
+}
+.wayfarer-lead {
+  color: var(--ink) !important;
+  font-family: var(--serif);
+  font-size: 1.65rem !important;
+  line-height: 1.15;
+}
+@media (max-width: 760px) {
+  .wayfarer-showcase {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 68px 0;
+  }
+  .wayfarer-phone {
+    height: 520px;
+    justify-content: center;
+  }
+  .wayfarer-copy h2 {
+    font-size: 4rem;
+  }
+}

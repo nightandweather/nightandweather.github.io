@@ -7,11 +7,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="iPhone applications built by Kanghoun Lee: ReturnProof and the ResaleDock Controller."
+      content="iPhone applications built by Kanghoun Lee: Wayfarer, ReturnProof, and the ResaleDock Controller."
     />
     <title>iPhone Apps — Kanghoun Lee</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="ios.css" />
+    <link rel="stylesheet" href="wayfarer.css" />
     <link rel="stylesheet" href="topics.css" />
   </head>
   <body>
@@ -24,13 +25,39 @@
     </header>
     <main>
       <section class="topic-hero wrap">
-        <p class="kicker">SwiftUI · Camera · BLE · QR</p>
+        <p class="kicker">SwiftUI · MapKit · Camera · BLE · QR</p>
         <h1>iPhone<br />Apps</h1>
         <p class="lead">
           Applications designed where the phone meets physical work: equipment
           moving through a room, a camera waiting for a motor, and records that
           should stay on the device.
         </p>
+      </section>
+      <section class="wrap wayfarer-showcase" id="wayfarer">
+        <div class="phone-frame wayfarer-phone">
+          <img src="assets/wayfarer-home.png" alt="Wayfarer iPhone prototype showing a photo letter traveling from Lisbon to Seoul" loading="lazy">
+        </div>
+        <div class="wayfarer-copy">
+          <p class="eyebrow">SwiftUI · MapKit · Local UX prototype</p>
+          <h2>Wayfarer</h2>
+          <p class="wayfarer-lead">A photo letter has to travel before you can open it.</p>
+          <p>
+            Wayfarer explores a slower kind of photo sharing. A postcard leaves
+            one city, crosses a MapKit route, and stays sealed until it reaches
+            another. The recipient can keep it or send it onward, extending its
+            distance and handoff history.
+          </p>
+          <ul>
+            <li>Animated city-to-city journey with distance and arrival time</li>
+            <li>Compose, seal, open, keep, and forward interactions</li>
+            <li>Journey, sending, and exhibition views in a native tab layout</li>
+          </ul>
+          <p>
+            <b>Honest boundary:</b> this is a local SwiftUI interaction demo.
+            The eight-second trip is accelerated, and the real server and photo
+            upload pipeline are not connected yet.
+          </p>
+        </div>
       </section>
       <section class="topic-index wrap" id="returnproof">
         <aside class="topic-intro">
