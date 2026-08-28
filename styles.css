@@ -375,6 +375,29 @@ body {
   color: var(--muted);
   font-size: 0.78rem;
 }
+.platform-shot {
+  padding: 13px 13px 0;
+  border-radius: 9px;
+  background: #272622;
+  box-shadow: 0 20px 48px rgba(29, 25, 17, 0.16);
+}
+.platform-shot::before {
+  content: "●  ●  ●     accuraylab.com";
+  display: block;
+  padding: 0 2px 11px;
+  color: #aaa79f;
+  font: 0.68rem/1 var(--sans);
+  letter-spacing: 0.05em;
+}
+.platform-shot img {
+  border: 0;
+  border-radius: 3px 3px 0 0;
+}
+.platform-shot figcaption {
+  margin: 0 -13px;
+  padding: 11px 13px 13px;
+  color: #cac7bf;
+}
 .event-gallery {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
