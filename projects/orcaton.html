@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="google-adsense-account" content="ca-pub-4242632384470714">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Orcaton is Kanghoun Lee's managed medical AI challenge platform for reproducible imaging, pathology, and radiotherapy competitions.">
+    <title>Orcaton — Kanghoun Lee</title>
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <header class="nav wrap"><a class="wordmark" href="../">KANGHOUN LEE</a><nav><a href="../#work">Work</a><a href="../topics/medical-physics.html">Medical Physics</a></nav></header>
+    <main>
+      <section class="article-hero wrap">
+        <p class="kicker">Medical AI · Hidden-label evaluation · Operations</p>
+        <h1>Orcaton</h1>
+        <p class="lead">A working control plane for turning a clinical research question into a reproducible challenge—and preserving the evidence after the leaderboard closes.</p>
+      </section>
+      <div class="article-layout wrap">
+        <aside class="article-meta">2026<br>Next.js · PostgreSQL<br>MinIO · Python workers<br>Caddy · AWS<br><br><a href="https://orcadose.com/orcaton">Live platform ↗</a><br>Private source: orcaimage<br><strong>Research and education only</strong></aside>
+        <article class="article-body">
+          <figure class="article-shot platform-shot orcaton-shot"><img src="../assets/orcaton.jpg" alt="Orcaton medical AI challenge platform graphic"><figcaption>One competition operating model across medical imaging, pathology, and radiotherapy.</figcaption></figure>
+          <h2>The problem is not just compute</h2>
+          <p>A credible medical AI challenge needs more than GPUs and a public leaderboard. Someone must define the clinical question, establish data rights and evaluation rules, approve participants, keep the hidden labels hidden, version the scorer, handle failures, and leave a record that another team can audit.</p>
+          <h2>One control plane, three verticals</h2>
+          <p>Orcaton shares identity, competition rules, submissions, evaluation versions, leaderboards, cost records, and incident logs. Domain-specific formats and evaluators stay separated inside OrcaImage, OrcaPath, and OrcaDose.</p>
+          <div class="facts"><div><strong>3</strong>medical AI verticals</div><div><strong>9</strong>implemented evaluation types</div><div><strong>1</strong>shared operating workflow</div></div>
+          <h2>What is working now</h2>
+          <ol class="usage-flow">
+            <li><b>Publish a synthetic challenge.</b><span>Organizers define the task, tracks, dates, submission rules, and evaluation version.</span></li>
+            <li><b>Register and submit.</b><span>Participants join a competition and upload through expiring object-storage URLs rather than routing large files through the web server.</span></li>
+            <li><b>Score out of band.</b><span>A worker claims a database-backed job, runs the domain evaluator, and writes a versioned scorecard.</span></li>
+            <li><b>Compare results.</b><span>The platform publishes a leaderboard while preserving submissions, scorer versions, and run status.</span></li>
+            <li><b>Operate the event.</b><span>Organizer views cover approvals, costs, incidents, and the evidence needed for a closeout report.</span></li>
+          </ol>
+          <h2>Operational architecture</h2>
+          <p>The live deployment uses Caddy for TLS, a Next.js application, PostgreSQL, MinIO object storage, and polling Python workers. Large uploads go directly from the browser to object storage with presigned URLs. The viewer remains loopback-only, and workers listen on no public port.</p>
+          <h2>What still requires a real partner</h2>
+          <p>The current public competitions use synthetic data. A real challenge still needs an institution with lawful, de-identified data; a society or clinical principal investigator to own the evaluation criteria; an approved compute environment; and human review of consent, DUA, privacy, and governance language. The platform does not manufacture those authorities.</p>
+          <a class="back" href="../#work">← All projects</a>
+        </article>
+      </div>
+    </main>
+    <footer class="footer"><div class="wrap"><span>Working synthetic demos—not clinical validation.</span><span><a href="https://orcadose.com/orcaton">Open Orcaton ↗</a></span></div></footer>
+  </body>
+</html>

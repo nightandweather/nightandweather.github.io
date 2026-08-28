@@ -389,6 +389,9 @@ body {
   font: 0.68rem/1 var(--sans);
   letter-spacing: 0.05em;
 }
+.orcaton-shot::before {
+  content: "●  ●  ●     orcadose.com/orcaton";
+}
 .platform-shot img {
   border: 0;
   border-radius: 3px 3px 0 0;

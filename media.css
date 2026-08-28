@@ -1,5 +1,15 @@
 .project-image{width:100%;height:170px;object-fit:cover;border:1px solid rgba(0,0,0,.2);mix-blend-mode:multiply}.project-hero .project-image{width:44%;height:230px;align-self:flex-end}.project-image.image-dose{object-position:center 46%;filter:grayscale(.1) contrast(1.06)}.project-hero .image-accuraylab{width:62%;height:300px;object-position:center top;mix-blend-mode:normal;background:#fff;border:8px solid #272622;border-radius:8px;box-shadow:0 16px 36px rgba(40,27,8,.22)}@media(max-width:760px){.project-hero .project-image{width:100%;height:190px}.project-image{height:160px}.project-hero .image-accuraylab{height:220px;border-width:6px}}
 
+.project-hero .image-orcaton {
+  width: 62%;
+  height: 300px;
+  object-position: center;
+  mix-blend-mode: normal;
+  border: 8px solid #081119;
+  border-radius: 8px;
+  box-shadow: 0 16px 36px rgba(3, 12, 18, .28);
+}
+
 /* Type scale and intentional headline rhythm. */
 .hero h1 {
   max-width: 980px;
