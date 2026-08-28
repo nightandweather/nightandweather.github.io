@@ -1,0 +1,30 @@
+.award-strip {
+  background: var(--lime);
+  border-block: 1px solid var(--ink);
+}
+
+.award {
+  min-height: 112px;
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 26px;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.award-year {
+  font-family: var(--serif);
+  font-size: 2rem;
+}
+
+.award b,
+.award small { display: block; }
+.award b { font-size: 1.08rem; }
+.award small { color: #4e531d; margin-top: 3px; }
+.award-arrow { font-weight: 800; font-size: .82rem; }
+
+@media (max-width: 760px) {
+  .award { grid-template-columns: 70px 1fr; padding: 20px 0; }
+  .award-arrow { grid-column: 2; }
+}
