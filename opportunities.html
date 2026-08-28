@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A curated calendar of medical AI challenges, healthcare hackathons, and conference deadlines.">
+  <meta name="google-adsense-account" content="ca-pub-4242632384470714">
+  <title>Opportunity Calendar — Kanghoun Lee</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="calendar.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header class="nav wrap"><a class="wordmark" href="./">KANGHOUN LEE</a><nav><a href="./#topics">Topics</a><a href="opportunities.html">Calendar</a><a href="./#work">Work</a></nav></header>
+  <main>
+    <section class="calendar-hero wrap"><p class="kicker">Medical AI · Imaging · Healthcare</p><h1>Opportunity<br>Calendar</h1><p class="lead">A small, source-checked list of competitions and events worth tracking. Dates marked TBA are never guessed.</p></section>
+    <section class="wrap calendar-shell">
+      <div class="calendar-toolbar"><button id="prev-month" aria-label="Previous month">←</button><h2 id="month-title"></h2><button id="next-month" aria-label="Next month">→</button></div>
+      <div class="filters" aria-label="Event filters"><button class="active" data-filter="all">All</button><button data-filter="challenge">Challenges</button><button data-filter="conference">Conferences</button><button data-filter="hackathon">Hackathons</button></div>
+      <div class="weekday-row"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+    </section>
+    <section class="wrap upcoming"><div class="section-head"><div><p class="section-label">Verified opportunities</p><h2>Deadlines & events</h2></div><p>Every entry links to its organizer or official challenge page. Last checked 28 Aug 2026.</p></div><div id="event-list" class="event-list"></div></section>
+    <section class="wrap submit-note"><h2>Know a good event?</h2><p>Open an issue with the official URL and exact date. I would rather list ten verified opportunities than one hundred stale ones.</p><a class="button primary" href="https://github.com/nightandweather/nightandweather.github.io/issues/new">Suggest an event ↗</a></section>
+  </main>
+  <footer class="footer"><div class="wrap"><span>Dates can change. Always verify with the organizer before travel or submission.</span><span>© 2026 Kanghoun Lee</span></div></footer>
+  <script src="events.js"></script>
+  <script src="calendar.js"></script>
+</body>
+</html>
