@@ -4,15 +4,33 @@
   <meta name="google-adsense-account" content="ca-pub-4242632384470714">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="A daily critical review of trending Hugging Face models, based on official model cards and reproducible evidence.">
+  <meta name="description" content="Occasional critical reviews of notable Hugging Face models, based on official model cards and reproducible evidence.">
   <title>Hugging Face Radar — Kanghoun Lee</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/hf-radar.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hugging Face Radar — Kanghoun Lee">
+  <meta property="og:description" content="Occasional critical reviews of notable Hugging Face models, based on official model cards and reproducible evidence.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
+  <meta property="og:url" content="https://nightandweather.github.io/hf-radar.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hugging Face Radar — Kanghoun Lee">
+  <meta name="twitter:description" content="Occasional critical reviews of notable Hugging Face models, based on official model cards and reproducible evidence.">
+  <meta name="twitter:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="hf-radar.css">
 </head>
 <body>
-  <header class="nav wrap"><a class="wordmark" href="./">KANGHOUN LEE</a><nav><a href="./#work">Work</a><a href="opportunities.html">Calendar</a><a href="rejections.html">Rejections</a></nav></header>
-  <main class="wrap radar-page">
-    <section class="radar-hero"><p class="kicker">Open models · Evidence before hype</p><h1>Hugging Face<br>Radar</h1><p class="lead">What is moving today, what the model card actually establishes, and whether it deserves your GPU time.</p><div class="radar-meta"><span>28 August 2026 · KST</span><span>Models only · no downloads executed</span><span>Official Hugging Face sources</span></div></section>
-    <section class="radar-lead"><p class="section-label">Today’s signal</p><blockquote>Qwen owns the attention.<br>DeepSeek owns the rack.<br>Neither owns the truth.</blockquote></section>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="nav wrap">
+    <a class="wordmark" href="./" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a>
+    <nav aria-label="Primary navigation"><a href="./#work">Work</a><a href="./#topics">Topics</a><a href="opportunities.html">Calendar</a><a href="hf-radar.html">HF Radar</a><a href="rejections.html">Rejections</a></nav>
+  </header>
+  <main id="main-content" class="wrap radar-page">
+    <section class="radar-hero"><p class="kicker">Open models · Evidence before hype</p><h1>Hugging Face<br>Radar</h1><p class="lead">What was moving when I checked, what the model card actually establishes, and whether it deserves your GPU time.</p><div class="radar-meta"><span>Last reviewed 28 August 2026 · KST</span><span>Models only · no downloads executed</span><span>Official Hugging Face sources</span></div></section>
+    <section class="radar-lead"><p class="section-label">Latest signal</p><blockquote>Qwen owns the attention.<br>DeepSeek owns the rack.<br>Neither owns the truth.</blockquote></section>
 
     <article class="radar-card"><div class="radar-rank">01</div><div><p class="eyebrow">Test this first</p><h2><a href="https://huggingface.co/Qwen/Qwen3.8-27B">Qwen3.8-27B ↗</a></h2><div class="radar-facts"><span>27B dense</span><span>Apache-2.0</span><span>Vision + text</span><span>262K native context</span><span>13K+ likes</span></div><p><strong>Fact.</strong> The official card describes a 27B native vision-language model with adjustable reasoning, image and video input, and compatibility with Transformers, vLLM, and SGLang. Qwen reports large gains on coding and computer-use benchmarks.</p><p><strong>Inference.</strong> This is the most interesting general-purpose model in today’s trending list because 27B is still within serious workstation or quantized local-server territory. But nearly every headline score comes from the maker’s evaluation setup, including some in-house benchmarks. Popularity and vendor tables justify testing—not trust.</p></div><aside class="radar-verdict"><b>Verdict</b><p>Worth a controlled local evaluation against your own coding, Korean, document, and image tasks. Do not adopt from the benchmark table alone.</p></aside></article>
 
@@ -20,7 +38,9 @@
 
     <article class="radar-card"><div class="radar-rank">03</div><div><p class="eyebrow">Watch the workflow</p><h2><a href="https://huggingface.co/Lightricks/LTX-2.5">LTX-2.5 ↗</a></h2><div class="radar-facts"><span>Image-to-video</span><span>Top trending cohort</span><span>800K+ downloads</span></div><p><strong>Fact.</strong> LTX-2.5 appears near the top of the current Hugging Face trending list as an image-to-video model with substantial recent downloads and community attention.</p><p><strong>Inference.</strong> The important question is not whether another video model can make an attractive clip. It is whether the release produces repeatable shots, supports controllable edits, and fits a creator’s memory and latency budget. Until those are tested on a fixed prompt suite, this is a workflow candidate rather than a recommendation.</p></div><aside class="radar-verdict"><b>Verdict</b><p>Keep on the test queue. A visual model needs side-by-side outputs, timing, and VRAM measurements before a real review.</p></aside></article>
 
-    <section class="radar-method"><h2>How this page is updated</h2><p>The daily loop reads Hugging Face’s official trending page and the linked model cards. It records the observation date, separates repository facts from my interpretation, and avoids executing untrusted model code or downloading weights. Trending rank is volatile and is never treated as a quality score.</p><p><a href="https://huggingface.co/models?sort=trending">Current Hugging Face trending models ↗</a></p></section>
+    <section class="radar-method"><h2>How this page is updated</h2><p>Each review reads Hugging Face’s official trending page and the linked model cards. It records the observation date, separates repository facts from my interpretation, and avoids executing untrusted model code or downloading weights. Trending rank is volatile and is never treated as a quality score.</p><p><a href="https://huggingface.co/models?sort=trending">Current Hugging Face trending models ↗</a></p></section>
   </main>
-  <footer class="footer"><div class="wrap"><span>Daily critical notes, not endorsements.</span><span>Sources checked 28 August 2026</span></div></footer>
+  <footer class="footer">
+    <div class="wrap"><span>© 2026 Kanghoun Lee · Seoul</span><nav aria-label="Footer navigation"><a href="./#about">About</a><a href="https://github.com/nightandweather">GitHub ↗</a><a href="https://www.linkedin.com/in/%EA%B0%95%ED%9B%88-%EC%9D%B4-aa7ba618a/" rel="me noopener">LinkedIn ↗</a></nav></div>
+  </footer>
 </body></html>

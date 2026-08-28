@@ -6,6 +6,20 @@
   <meta name="description" content="Kanghoun Lee reviews anything: radiotherapy software, open models, apps, hardware, business ideas, experiments, and failures.">
   <meta name="google-adsense-account" content="ca-pub-4242632384470714">
   <title>Kanghoun Lee — Reviewing anything</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Kanghoun Lee — Reviewing anything">
+  <meta property="og:description" content="Kanghoun Lee reviews anything: radiotherapy software, open models, apps, hardware, business ideas, experiments, and failures.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/lunit-hackathon-annotated.webp">
+  <meta property="og:url" content="https://nightandweather.github.io/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kanghoun Lee — Reviewing anything">
+  <meta name="twitter:description" content="Kanghoun Lee reviews anything: radiotherapy software, open models, apps, hardware, business ideas, experiments, and failures.">
+  <meta name="twitter:image" content="https://nightandweather.github.io/assets/lunit-hackathon-annotated.webp">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="awards.css">
   <link rel="stylesheet" href="topics.css">
@@ -16,12 +30,13 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="nav wrap">
-    <a class="wordmark" href="./">KANGHOUN LEE</a>
-    <nav><a href="#topics">Topics</a><a href="opportunities.html">Calendar</a><a href="hf-radar.html">HF Radar</a><a href="#work">Work</a><a href="rejections.html">Rejections</a><a href="https://www.linkedin.com/in/%EA%B0%95%ED%9B%88-%EC%9D%B4-aa7ba618a/" target="_blank" rel="me noopener">LinkedIn ↗</a></nav>
+    <a class="wordmark" href="./" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a>
+    <nav aria-label="Primary navigation"><a href="./#work">Work</a><a href="./#topics">Topics</a><a href="opportunities.html">Calendar</a><a href="hf-radar.html">HF Radar</a><a href="rejections.html">Rejections</a></nav>
   </header>
 
-  <main>
+  <main id="main-content">
     <section class="hero wrap">
       <p class="kicker">PROJECTS · REVIEWS · NOTES · OCCASIONAL BAD IDEAS</p>
       <h1>Reviewing<br>anything.</h1>
@@ -48,7 +63,7 @@
     <section class="award-strip">
       <a class="wrap award" href="https://www.lunit.io/ko/media-hub/%EB%A3%A8%EB%8B%9B-%EA%B5%AD%EA%B0%80%EA%B3%BC%EC%A0%9C-ai-%EB%AA%A8%EB%8D%B8-%ED%99%9C%EC%9A%A9-%EC%B2%AB-%ED%95%B4%EC%BB%A4%ED%86%A4-%EC%84%B1%EB%A3%8C-%EA%B0%9C%EB%B0%9C%EC%9E%90/">
         <span class="award-year">2026</span>
-        <img class="award-photo" src="assets/lunit-hackathon-annotated.png" alt="Participants at the 2026 Lunit Medical Foundation Model Hackathon, with Kanghoun Lee identified" loading="lazy">
+        <img class="award-photo" src="assets/lunit-hackathon-annotated.webp" alt="Participants at the 2026 Lunit Medical Foundation Model Hackathon, with Kanghoun Lee identified" loading="lazy" width="1697" height="927">
         <span><b>Lunit Medical Foundation Model Hackathon</b><small>Benchmark Award · Team AIM · 1st place</small></span>
         <span class="award-arrow">Official announcement ↗</span>
       </a>
@@ -63,7 +78,7 @@
     </section>
 
     <section class="hf-callout">
-      <div class="wrap hf-callout-grid"><p class="section-label">Daily field note</p><div><p class="eyebrow">Hugging Face Radar · 28 Aug 2026</p><h2>Trending is a clue,<br>not a verdict.</h2><p>Qwen3.8-27B is the model worth testing today. DeepSeek-V4-Flash is impressive infrastructure, not a casual local download. A short review based on official model cards, with vendor claims kept separate from judgment.</p><a class="button" href="hf-radar.html">Read today’s radar →</a></div></div>
+      <div class="wrap hf-callout-grid"><p class="section-label">Model field note</p><div><p class="eyebrow">Hugging Face Radar · Last reviewed 28 Aug 2026</p><h2>Trending is a clue,<br>not a verdict.</h2><p>Qwen3.8-27B was the model worth testing when reviewed. DeepSeek-V4-Flash was impressive infrastructure, not a casual local download. A short review based on official model cards, with vendor claims kept separate from judgment.</p><a class="button" href="hf-radar.html">Read the latest radar →</a></div></div>
     </section>
 
     <section class="wrap section" id="topics">
@@ -80,7 +95,7 @@
       <div class="featured-grid">
         <article class="project project-hero tone-blue">
           <div class="project-top"><span class="num">01</span><span class="status live">LIVE</span></div>
-          <img class="project-image image-dose" src="assets/myrtdose-dose.png" alt="An anonymized CT slice with radiotherapy dose overlay" loading="lazy">
+          <img class="project-image image-dose" src="assets/myrtdose-dose.png" alt="An anonymized CT slice with radiotherapy dose overlay" loading="lazy" width="1024" height="1024">
           <div><p class="eyebrow">Radiotherapy · Patient tools</p><h3>myRTdose</h3><p>A stateless web service that turns a patient's DICOM-RT records into CT dose overlays, structures, DVHs, treatment summaries, and plain-language explanations.</p></div>
           <div class="project-links"><a href="https://myrtdose.com">Open service ↗</a><a href="projects/myrtdose.html">How it was built</a><a href="https://github.com/nightandweather/myrtdose">Code</a></div>
         </article>
@@ -91,37 +106,37 @@
         </article>
         <article class="project tone-orange">
           <div class="project-top"><span class="num">03</span><span class="status">BUILD FILES</span></div>
-          <img class="project-image" src="assets/resaledock.png" alt="Rendered assembly of the ResaleDock photography turntable" loading="lazy">
+          <img class="project-image" src="assets/resaledock.png" alt="Rendered assembly of the ResaleDock photography turntable" loading="lazy" width="1600" height="1200">
           <div><p class="eyebrow">Hardware · Resale</p><h3>ResaleDock</h3><p>A repeatable eight-angle photography turntable for secondhand products, including CAD, STL files, ESP32 firmware, iPhone control, and a complete BOM.</p></div>
           <div class="project-links"><a href="projects/resaledock.html">Build scope</a><a href="https://github.com/nightandweather/resale-dock">Files ↗</a></div>
         </article>
         <article class="project tone-violet">
           <div class="project-top"><span class="num">04</span><span class="status">DESIGN STUDY</span></div>
-          <img class="project-image" src="assets/sproutcam.png" alt="Concept render comparing SproutCam HOME 12 and PRO 48" loading="lazy">
+          <img class="project-image" src="assets/sproutcam.webp" alt="Concept render comparing SproutCam HOME 12 and PRO 48" loading="lazy" width="1200" height="800">
           <div><p class="eyebrow">Plant tech · Fabrication</p><h3>SproutCam</h3><p>A propagation cabinet that records rooting and acclimation. The HOME 12 and PRO 48 studies include build guides, costing, CAD, and explicit safety boundaries.</p></div>
           <div class="project-links"><a href="projects/sproutcam.html">Product study</a><a href="https://github.com/nightandweather/sproutcam-kit">Files ↗</a></div>
         </article>
         <article class="project tone-blue">
           <div class="project-top"><span class="num">05</span><span class="status">RESEARCH SOFTWARE</span></div>
-          <img class="project-image" src="assets/pythontps-delivery.png" alt="pythontps virtual C-arm delivery visualization" loading="lazy">
+          <img class="project-image" src="assets/pythontps-delivery.png" alt="pythontps virtual C-arm delivery visualization" loading="lazy" width="1784" height="1324">
           <div><p class="eyebrow">Treatment planning · Monte Carlo</p><h3>pythontps</h3><p>An open, reproducible radiotherapy planning stack spanning DICOM import, fluence optimization, MCO, MLC sequencing, virtual delivery, and independent photon, proton, and carbon Monte Carlo experiments.</p></div>
           <div class="project-links"><a href="projects/pythontps.html">Architecture & validation</a></div>
         </article>
         <article class="project tone-lime">
           <div class="project-top"><span class="num">06</span><span class="status">HACKATHON PROTOTYPE</span></div>
-          <img class="project-image" src="assets/rt-claude-ui.png" alt="RT Claude planning review interface with DVH comparison and clinician approval controls" loading="lazy">
+          <img class="project-image" src="assets/rt-claude-ui.png" alt="RT Claude planning review interface with DVH comparison and clinician approval controls" loading="lazy" width="1784" height="1324">
           <div><p class="eyebrow">Claude · Clinician-in-the-loop</p><h3>RT Claude</h3><p>A clinician-supervised planning workspace where an agent proposes, optimizes, compares, and revises research plans while every consequential step remains subject to human approval.</p></div>
           <div class="project-links"><a href="projects/rt-claude.html">See the workflow</a></div>
         </article>
         <article class="project project-hero tone-orange">
           <div class="project-top"><span class="num">07</span><span class="status live">LIVE PLATFORM</span></div>
-          <img class="project-image image-accuraylab" src="assets/accuraylab-home.png" alt="AccurayLab treatment planning challenge platform landing page" loading="lazy">
+          <img class="project-image image-accuraylab" src="assets/accuraylab-home.png" alt="AccurayLab treatment planning challenge platform landing page" loading="lazy" width="1774" height="1317">
           <div><p class="eyebrow">Radiotherapy · Benchmarking platform</p><h3>AccurayLab</h3><p>A vendor-neutral treatment-planning challenge platform: physicists download a case, plan it in any TPS, upload RT Dose, and receive automated DVH scoring, browser-based review, and a live ranking.</p></div>
           <div class="project-links"><a href="https://accuraylab.com">Open live platform ↗</a><a href="projects/accuraylab.html">How it works</a></div>
         </article>
         <article class="project project-hero tone-blue">
           <div class="project-top"><span class="num">08</span><span class="status live">LIVE SYNTHETIC DEMOS</span></div>
-          <img class="project-image image-orcaton" src="assets/orcaton.jpg" alt="Orcaton medical AI challenge platform connecting imaging, pathology, and radiotherapy" loading="lazy">
+          <img class="project-image image-orcaton" src="assets/orcaton.jpg" alt="Orcaton medical AI challenge platform connecting imaging, pathology, and radiotherapy" loading="lazy" width="1600" height="840">
           <div><p class="eyebrow">Medical AI · Reproducible challenges</p><h3>Orcaton</h3><p>A managed challenge platform that brings societies, hospitals, researchers, and companies into one auditable workflow—from problem definition and participant approval to hidden-label scoring, leaderboards, and closeout evidence.</p></div>
           <div class="project-links"><a href="https://orcadose.com/orcaton">Open live platform ↗</a><a href="projects/orcaton.html">What is actually built</a></div>
         </article>
@@ -133,11 +148,11 @@
         <div class="section-head"><div><p class="section-label">iPhone apps</p><h2>Small tools for physical work</h2></div><p>SwiftUI applications built around cameras, QR codes, Bluetooth devices, labels, and local records.</p></div>
         <div class="ios-grid">
           <article class="ios-card">
-            <div class="phone-frame"><img src="assets/returnproof-overview.png" alt="ReturnProof iPhone inventory and inspection screens" loading="lazy"></div>
+            <div class="phone-frame"><img src="assets/returnproof-overview.png" alt="ReturnProof iPhone inventory and inspection screens" loading="lazy" width="1206" height="2622"></div>
             <div class="ios-copy"><span class="status live">WORKING PROTOTYPE</span><p class="eyebrow">SwiftUI · Local-first operations</p><h3>ReturnProof</h3><p>An iPhone inventory, QR checkout, and return-inspection app for small rental operations. It records kit components and condition photos, prints AirPrint or ZPL labels, and stores data locally.</p><ul><li>QR deep links and five explicit asset states</li><li>Checkout and return condition records</li><li>Ad-supported mode and one-time remove-ads purchase</li></ul><a href="ios-apps.html#returnproof">Read the build note →</a></div>
           </article>
           <article class="ios-card reverse">
-            <div class="ios-visual"><img src="assets/resaledock.png" alt="ResaleDock turntable controlled by an iPhone app" loading="lazy"></div>
+            <div class="ios-visual"><img src="assets/resaledock.png" alt="ResaleDock turntable controlled by an iPhone app" loading="lazy" width="1600" height="1200"></div>
             <div class="ios-copy"><span class="status">CONTROLLER PROTOTYPE</span><p class="eyebrow">Swift · BLE · Camera</p><h3>ResaleDock Controller</h3><p>An iPhone controller that coordinates an ESP32 turntable, lighting, homing, weight readout, and an eight-angle product photography sequence.</p><ul><li>Bluetooth Low Energy command protocol</li><li>Camera capture coordination</li><li>Separately testable pure Swift core</li></ul><a href="ios-apps.html#resaledock">Read the build note →</a></div>
           </article>
         </div>
@@ -168,6 +183,8 @@
       <div><h2>I follow the work<br>all the way to reality.</h2><p>My background is in medical physics and medical AI. I now explore local AI and buildable product systems alongside clinical software. For research collaboration, technical consulting, or prototype review, reach me through GitHub or LinkedIn.</p><div class="actions"><a class="button primary" href="https://github.com/nightandweather">GitHub profile</a><a class="button" href="https://www.linkedin.com/in/%EA%B0%95%ED%9B%88-%EC%9D%B4-aa7ba618a/">LinkedIn</a></div></div>
     </section>
   </main>
-  <footer class="footer"><div class="wrap"><span>© 2026 Kanghoun Lee</span><span><a href="https://github.com/nightandweather">GitHub</a> · <a href="https://www.linkedin.com/in/%EA%B0%95%ED%9B%88-%EC%9D%B4-aa7ba618a/" target="_blank" rel="me noopener">LinkedIn</a></span></div></footer>
+  <footer class="footer">
+    <div class="wrap"><span>© 2026 Kanghoun Lee · Seoul</span><nav aria-label="Footer navigation"><a href="./#about">About</a><a href="https://github.com/nightandweather">GitHub ↗</a><a href="https://www.linkedin.com/in/%EA%B0%95%ED%9B%88-%EC%9D%B4-aa7ba618a/" rel="me noopener">LinkedIn ↗</a></nav></div>
+  </footer>
 </body>
 </html>
