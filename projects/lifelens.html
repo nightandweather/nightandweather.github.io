@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="LifeLens is a privacy-first wearable agent prototype built with AWS Strands and Bedrock for health, work, relationships, and context-aware activity guidance.">
+  <title>LifeLens — Kanghoun Lee</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/projects/lifelens.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&amp;display=swap" rel="stylesheet">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="LifeLens — A context-aware wearable agent">
+  <meta property="og:description" content="A buildable smart-glasses agent that sees, hears, reasons, and asks before acting.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/lifelens-scenes.png">
+  <meta property="og:url" content="https://nightandweather.github.io/projects/lifelens.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="nav wrap"><a class="wordmark" href="../" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a><nav aria-label="Primary navigation"><a href="../#work">Work</a><a href="../#topics">Topics</a><a href="../opportunities.html">Calendar</a><a href="../hf-radar.html">HF Radar</a><a href="../rejections.html">Rejections</a></nav></header>
+  <main id="main-content">
+    <section class="article-hero wrap"><p class="kicker">Wearable AI · Agents for Humans Hackathon · 2026</p><h1>LifeLens</h1><p class="lead">I tried building the agent I would want in a pair of smart glasses: aware of the current moment, useful before I ask, and unable to act behind my back.</p></section>
+    <div class="article-layout wrap">
+      <aside class="article-meta">2026<br>React · TypeScript<br>Python · FastAPI<br>AWS Strands · Bedrock<br>MIT License<br><br><a href="https://github.com/nightandweather/lifelens-agent">GitHub repository ↗</a><br><strong>Hackathon prototype</strong></aside>
+      <article class="article-body">
+        <figure class="article-shot"><img src="../assets/lifelens-glasses-run.gif" alt="Animated first-person running view with a LifeLens rain warning and safer route suggestion" width="900" height="600"><figcaption>The display prototype moves from live pace to a weather warning and a user-confirmed route change.</figcaption></figure>
+        <h2>The idea moved beyond a camera log</h2>
+        <p>The first version recognized a meal, remembered an explicit promise from a conversation, and suggested an evening walk. I then extended it into a context orchestrator. During a user-approved session, LifeLens can combine vision, voice, maps, movement, weather, calendar, and a previously authorized health profile to decide what might be useful now.</p>
+        <p>A meal can become a calorie range and an optional running-time comparison based on a saved pace and prior InBody record. A run can become a rain warning and a well-lit route home. A conversation can become a commitment the user may add to a calendar. Each result is a proposal; it is not an automatic command.</p>
+        <div class="facts"><div><strong>4</strong>interactive moments</div><div><strong>0</strong>raw media retained</div><div><strong>1</strong>confirmation per action</div></div>
+        <h2>What I actually developed</h2>
+        <p>The public prototype includes a React interface, photorealistic first-person demo scenes, an animated glasses HUD, a FastAPI service, a Strands agent backed by Amazon Bedrock, typed Pydantic contracts, deterministic fixtures, and safety tests. The backend rejects retained raw media and refuses actions that do not carry explicit confirmation.</p>
+        <p>The hardware boundary is deliberately replaceable. Vuzix M400/M4000 provides a practical Android path for Camera2, microphones, sensors, speech, and display. Meta's Wearables Device Access Toolkit provides the Ray-Ban camera and audio bridge, while display notifications target display-capable Meta glasses or Vuzix devices. Samsung and other Android XR glasses can connect through the same normalized event contract when their production APIs are available.</p>
+        <h2>Permission is not one big switch</h2>
+        <p>Camera access does not imply microphone access. Location access does not imply location sharing. A health record does not become permanent agent memory. LifeLens scopes each signal independently for the active session, transforms raw input into a minimal structured observation, and discards the media. Messages, reminders, route changes, logs, and stored memories remain separate confirmation steps.</p>
+        <p>Conversation analysis is restricted to observable behavior and explicit statements. The agent may remember “I will send the slides Friday,” but it may not decide that the other person dislikes the user, infer personality, or suggest manipulation. Food and exercise numbers stay estimates and are framed as planning comparisons, never punishment or medical advice.</p>
+        <h2>What remains to become a real device</h2>
+        <p>The hosted experience uses simulated wearable events; the agent and consent boundary are real, but there is no claim that continuous everyday capture has been solved. A hardware pilot still needs battery and thermal testing, background-audio restrictions, bystander notice, regional recording-law review, safe fallback behavior, and evaluation of whether interventions are actually helpful instead of merely frequent.</p>
+        <div class="actions"><a class="button primary" href="https://github.com/nightandweather/lifelens-agent">View the code ↗</a><a class="button" href="../#work">All projects</a></div>
+      </article>
+    </div>
+  </main>
+  <footer class="footer"><div class="wrap"><span>© 2026 Kanghoun Lee · Seoul</span><nav aria-label="Footer navigation"><a href="../#about">About</a><a href="https://github.com/nightandweather">GitHub ↗</a><a href="https://www.linkedin.com/in/%EA%B0%95%ED%9B%88-%EC%9D%B4-aa7ba618a/" rel="me noopener">LinkedIn ↗</a></nav></div></footer>
+</body>
+</html>
