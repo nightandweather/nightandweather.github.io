@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="MoveProof is a local-first iPhone app for repeatable move-in and move-out evidence, matched photo comparison, signatures, and PDF reporting.">
+  <meta name="google-adsense-account" content="ca-pub-4242632384470714">
+  <title>MoveProof — Kanghoun Lee</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/projects/moveproof.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="MoveProof — Kanghoun Lee">
+  <meta property="og:description" content="A local-first iPhone workflow for recording the same rental home at move-in and move-out.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/moveproof-compare.webp">
+  <meta property="og:url" content="https://nightandweather.github.io/projects/moveproof.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MoveProof — Kanghoun Lee">
+  <meta name="twitter:description" content="A local-first iPhone workflow for repeatable rental-property evidence.">
+  <meta name="twitter:image" content="https://nightandweather.github.io/assets/moveproof-compare.webp">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../ios.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="nav wrap">
+    <a class="wordmark" href="../" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a>
+    <nav aria-label="Primary navigation"><a href="../#work">Work</a><a href="../#topics">Topics</a><a href="../opportunities.html">Calendar</a><a href="../hf-radar.html">HF Radar</a><a href="../rejections.html">Rejections</a></nav>
+  </header>
+  <main id="main-content">
+    <section class="article-hero wrap">
+      <p class="kicker">SwiftUI · Vision OCR · Camera · Local-first evidence</p>
+      <h1>MoveProof</h1>
+      <p class="lead">A guided move-in and move-out record that asks both parties to photograph the same rooms, from the same directions, before comparing and signing.</p>
+    </section>
+    <div class="article-layout wrap">
+      <aside class="article-meta">2026<br>SwiftUI · iOS 17+<br>App Store build uploaded<br><br><a href="../ios-apps.html#moveproof">iPhone apps ↗</a><br><a href="https://nightandweather.github.io/moveproof-support/">Support ↗</a></aside>
+      <article class="article-body">
+        <figure class="article-shot app-screen-shot"><img src="../assets/moveproof-compare.webp" alt="MoveProof comparison screen with landlord and tenant records side by side" width="642" height="1389"><figcaption>Matched landlord and tenant records can be reviewed side by side rather than searched for in two camera rolls.</figcaption></figure>
+
+        <h2>The problem is not taking more photos</h2>
+        <p>People already photograph a rental home. The evidence still becomes hard to use because one person photographs a wall, the other photographs a window, filenames lose their meaning, and the move-out record is captured months after everyone has forgotten the original angle.</p>
+        <p>MoveProof treats the inspection as a repeatable route instead of a loose album. A floor-plan image or PDF is read with Apple Vision OCR, room names become an editable sequence, and each room receives one sweep video plus nine required views covering walls, floor, ceiling, windows, doors, and fixed equipment.</p>
+
+        <div class="facts"><div><strong>9</strong>required views per room</div><div><strong>2</strong>separate party records</div><div><strong>0</strong>property files sent to my server</div></div>
+
+        <h2>One inspection, then the same inspection again</h2>
+        <ol class="usage-flow">
+          <li><b>Import the plan.</b><span>Select an image or PDF. OCR proposes Korean or English room labels, which remain editable.</span></li>
+          <li><b>Build the route.</b><span>Put the entrance, living room, bedrooms, kitchen, and bathroom in the order someone will actually walk them.</span></li>
+          <li><b>Capture the baseline.</b><span>Record the landlord and tenant sides separately while following the same room-and-view checklist.</span></li>
+          <li><b>Repeat at move-out.</b><span>Use the earlier image as a translucent camera guide and compare matching views side by side.</span></li>
+          <li><b>Review and sign.</b><span>Both parties can sign a shared confirmation and export a PDF containing images, timestamps, and the evidence index.</span></li>
+        </ol>
+
+        <div class="phone-trio">
+          <figure><img src="../assets/moveproof-dashboard.webp" alt="MoveProof dashboard" loading="lazy" width="642" height="1389"><figcaption>A property record exposes progress and missing work.</figcaption></figure>
+          <figure><img src="../assets/moveproof-compare.webp" alt="MoveProof comparison view" loading="lazy" width="642" height="1389"><figcaption>Matching captures are paired by room, phase, party, and view.</figcaption></figure>
+          <figure><img src="../assets/moveproof-agreement.webp" alt="MoveProof shared confirmation form" loading="lazy" width="642" height="1389"><figcaption>Names, signatures, time, and SHA-256 hashes are stored locally.</figcaption></figure>
+        </div>
+
+        <h2>Private by default, not private by slogan</h2>
+        <p>The floor plan, address, notes, photos, video, and signatures remain in the app's local storage. MoveProof has no account system and no property backend. A PDF leaves the device only when the user explicitly opens the iOS share sheet.</p>
+        <p>The free build includes a consent-aware Google Mobile Ads banner. Property evidence is never provided to the advertising SDK. A non-consumable ₩5,500 purchase removes the banner permanently and supports purchase restoration.</p>
+
+        <h2>What the hashes and signatures do not prove</h2>
+        <p>A timestamp and SHA-256 value make a local evidence index easier to audit, but they are not a trusted external timestamp. The visual similarity score points a reviewer toward a change; it does not identify damage. The shared confirmation records that two people reviewed what was displayed; it does not automatically decide liability, repair cost, or legal effect.</p>
+        <p>A later production service could add encrypted backup, trusted server timestamps, controlled sharing, and jurisdiction-specific legal review. The current app keeps the first release deliberately smaller: make the physical inspection repeatable, make comparison immediate, and keep the original material under the user's control.</p>
+
+        <a class="back" href="../">← All projects</a>
+      </article>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="wrap"><span>© 2026 Kanghoun Lee · Seoul</span><nav aria-label="Footer navigation"><a href="../#about">About</a><a href="https://github.com/nightandweather">GitHub ↗</a><a href="https://www.linkedin.com/in/%EA%B0%95%ED%9B%88-%EC%9D%B4-aa7ba618a/" rel="me noopener">LinkedIn ↗</a></nav></div>
+  </footer>
+</body>
+</html>
