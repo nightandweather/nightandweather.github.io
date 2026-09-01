@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Inspect DICOM and DICOM-RT files locally in your browser. Check object types, identifiers, references, and common privacy risks without uploading files.">
+  <title>Free DICOM-RT Inspector — Kanghoun Lee</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/dicom-inspector.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Free DICOM-RT Inspector">
+  <meta property="og:description" content="Local-only structural and privacy checks for DICOM radiotherapy files.">
+  <meta property="og:url" content="https://nightandweather.github.io/dicom-inspector.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dicom-inspector.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="nav wrap"><a class="wordmark" href="./">KANGHOUN LEE</a><nav aria-label="Primary navigation"><a href="./#work">Work</a><a href="./#topics">Topics</a><a href="opportunities.html">Calendar</a><a href="hf-radar.html">HF Radar</a><a href="rejections.html">Rejections</a></nav></header>
+  <main id="main-content">
+    <section class="inspector-hero wrap">
+      <p class="kicker">FREE TOOL · LOCAL-ONLY · NO UPLOAD</p>
+      <h1>DICOM-RT<br>Inspector.</h1>
+      <p class="lead">Drop a DICOM folder to inventory RT objects, inspect identifiers, and flag obvious privacy or reference problems. Files stay in this browser tab.</p>
+      <div class="privacy-note"><b>Privacy boundary</b><span>No network request is made by this tool. Analysis happens in browser memory and disappears when the tab closes.</span></div>
+    </section>
+
+    <section class="wrap inspector-workspace" aria-labelledby="drop-title">
+      <div id="drop-zone" class="drop-zone">
+        <div><p class="section-label">Step 1</p><h2 id="drop-title">Choose DICOM files or a folder</h2><p>CT, MR, RTSTRUCT, RTPLAN, RTDOSE and RTIMAGE are recognized. Other DICOM objects are inventoried.</p></div>
+        <div class="picker-actions">
+          <label class="button primary">Choose files<input id="file-input" type="file" multiple hidden></label>
+          <label class="button">Choose folder<input id="folder-input" type="file" webkitdirectory multiple hidden></label>
+        </div>
+        <p class="drop-hint">or drag and drop files here</p>
+      </div>
+
+      <section id="results" class="results" hidden aria-live="polite">
+        <div class="result-head"><div><p class="section-label">Inspection result</p><h2 id="result-title">0 files inspected</h2></div><button class="button" id="clear-button" type="button">Clear files</button></div>
+        <div class="metric-grid" id="metrics"></div>
+        <div class="finding-panel"><h3>Findings</h3><div id="findings"></div></div>
+        <div class="table-wrap"><table><thead><tr><th>File</th><th>Object</th><th>Patient fields</th><th>Study / Series</th><th>Status</th></tr></thead><tbody id="file-rows"></tbody></table></div>
+        <p class="limitation"><b>Research-use limitation:</b> this lightweight parser is not a diagnostic device, anonymizer, conformance validator, or substitute for clinical DICOM QA. It intentionally does not interpret pixel data or calculate dose.</p>
+      </section>
+    </section>
+
+    <section class="wrap inspector-explainer">
+      <div><p class="section-label">What it checks</p><h2>A quick first pass,<br>not a clinical verdict.</h2></div>
+      <div class="check-grid"><article><b>Object inventory</b><p>Counts CT, MR and radiotherapy SOP classes before you open a dataset elsewhere.</p></article><article><b>Privacy signals</b><p>Flags populated patient name, ID, birth date and institution fields. It does not certify anonymization.</p></article><article><b>Reference consistency</b><p>Compares Study, Series and Frame of Reference identifiers exposed in the parsed headers.</p></article><article><b>Readable structure</b><p>Reports malformed or unsupported files without attempting to execute embedded content.</p></article></div>
+    </section>
+  </main>
+  <footer class="footer"><div class="wrap"><span>© 2026 Kanghoun Lee · Seoul</span><nav><a href="./#about">About</a><a href="https://github.com/nightandweather">GitHub ↗</a></nav></div></footer>
+  <script src="dicom-inspector.js"></script>
+</body>
+</html>

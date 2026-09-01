@@ -151,6 +151,28 @@ button:focus-visible,
 .manifesto-grid > p:last-child {
   color: #b9bab3;
 }
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.entry-card {
+  min-height: 330px;
+  padding: 30px;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.entry-card:hover { transform: translateY(-4px); box-shadow: 7px 7px 0 var(--ink); }
+.entry-card span { font-size: .68rem; font-weight: 800; letter-spacing: .09em; }
+.entry-card h3 { font: 500 2.4rem/.98 var(--serif); letter-spacing: -.03em; margin: 44px 0 14px; }
+.entry-card p { color: var(--muted); }
+.entry-card b { margin-top: auto; }
+.entry-tool { background: #dff4ff; }
+.entry-challenge { background: #e8f5cf; }
 .section {
   padding: 110px 0;
 }
@@ -526,6 +548,8 @@ button:focus-visible,
   .manifesto-grid {
     gap: 22px;
   }
+  .entry-grid { grid-template-columns: 1fr; }
+  .entry-card { min-height: 270px; }
   .section {
     padding: 76px 0;
   }
