@@ -5,7 +5,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="description" content="Orcaton is Kanghoun Lee's managed medical AI challenge platform for reproducible imaging, pathology, and radiotherapy competitions.">
+    <meta name="description" content="Why should medical societies need an equipment vendor or a custom software team to run a challenge? Orcaton is Kanghoun Lee's working experiment in another model.">
     <title>Orcaton — Kanghoun Lee</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://nightandweather.github.io/projects/orcaton.html">
@@ -14,12 +14,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Orcaton — Kanghoun Lee">
-  <meta property="og:description" content="Orcaton is Kanghoun Lee's managed medical AI challenge platform for reproducible imaging, pathology, and radiotherapy competitions.">
+  <meta property="og:description" content="Why should medical societies need an equipment vendor or a custom software team to run a challenge? Orcaton tests another model.">
   <meta property="og:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
   <meta property="og:url" content="https://nightandweather.github.io/projects/orcaton.html">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Orcaton — Kanghoun Lee">
-  <meta name="twitter:description" content="Orcaton is Kanghoun Lee's managed medical AI challenge platform for reproducible imaging, pathology, and radiotherapy competitions.">
+  <meta name="twitter:description" content="Why should medical societies need an equipment vendor or a custom software team to run a challenge? Orcaton tests another model.">
   <meta name="twitter:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
     <link rel="stylesheet" href="../styles.css">
   </head>
@@ -33,14 +33,18 @@
       <section class="article-hero wrap">
         <p class="kicker">Medical AI · Hidden-label evaluation · Operations</p>
         <h1>Orcaton</h1>
-        <p class="lead">A working control plane for turning a clinical research question into a reproducible challenge—and preserving the evidence after the leaderboard closes.</p>
+        <p class="lead">Why should a medical society need an equipment vendor—or become a software company itself—just to run a credible challenge?</p>
       </section>
       <div class="article-layout wrap">
         <aside class="article-meta">2026<br>Next.js · PostgreSQL<br>MinIO · Python workers<br>Caddy · AWS<br><br><a href="https://orcadose.com/orcaton">Live platform ↗</a><br>Private source: orcaimage<br><strong>Research and education only</strong></aside>
         <article class="article-body">
           <figure class="article-shot platform-shot orcaton-shot"><img src="../assets/orcaton.jpg" alt="Orcaton medical AI challenge platform graphic" width="1600" height="840"><figcaption>One competition operating model across medical imaging, pathology, and radiotherapy.</figcaption></figure>
-          <h2>The problem is not just compute</h2>
-          <p>A credible medical AI challenge needs more than GPUs and a public leaderboard. Someone must define the clinical question, establish data rights and evaluation rules, approve participants, keep the hidden labels hidden, version the scorer, handle failures, and leave a record that another team can audit.</p>
+          <h2>The question that started it</h2>
+          <p>I kept wondering why radiotherapy planning challenges so often depend on an equipment company or a one-off development effort. The people with the most useful clinical questions may be a medical society, a hospital, or a small research group. They may already have the expertise, a dataset, and participants—but not the software and operating team needed to run a challenge safely.</p>
+          <p>Orcaton is my attempt to test a different model: could those groups operate their own reproducible competition without first waiting for a vendor to organize it or building an entire platform from scratch?</p>
+          <h2>What the first real event taught me</h2>
+          <p>This was not a question I invented in isolation. I first built and operated AccurayLab for an actual treatment-planning competition. Seven final plans passed through a shared evaluation workflow, with 36 structures processed per plan and an anonymized 150-point leaderboard. That experience showed that the difficult part was not merely calculating a score. It was coordinating rules, files, identities, failures, versions, and evidence from beginning to end.</p>
+          <p>Orcaton generalizes that operating model beyond one vendor-associated event. A credible medical challenge still needs someone to define the clinical question, establish data rights and evaluation rules, approve participants, keep hidden labels hidden, version the scorer, handle failures, and leave a record another team can audit.</p>
           <h2>One control plane, three verticals</h2>
           <p>Orcaton shares identity, competition rules, submissions, evaluation versions, leaderboards, cost records, and incident logs. Domain-specific formats and evaluators stay separated inside OrcaImage, OrcaPath, and OrcaDose.</p>
           <div class="facts"><div><strong>3</strong>medical AI verticals</div><div><strong>9</strong>implemented evaluation types</div><div><strong>1</strong>shared operating workflow</div></div>
@@ -56,6 +60,8 @@
           <p>The live deployment uses Caddy for TLS, a Next.js application, PostgreSQL, MinIO object storage, and polling Python workers. Large uploads go directly from the browser to object storage with presigned URLs. The viewer remains loopback-only, and workers listen on no public port.</p>
           <h2>What still requires a real partner</h2>
           <p>The current public competitions use synthetic data. A real challenge still needs an institution with lawful, de-identified data; a society or clinical principal investigator to own the evaluation criteria; an approved compute environment; and human review of consent, DUA, privacy, and governance language. The platform does not manufacture those authorities.</p>
+          <h2>The product hypothesis</h2>
+          <p>The claim is not that vendors should disappear, or that software can replace governance. The hypothesis is narrower: challenge infrastructure can become reusable enough that a society or research group controls the scientific question, while the platform handles repeatable operations. Whether that becomes a sustainable service depends on finding partners who value independence, auditability, and continuity more than another custom event website.</p>
           <a class="back" href="../#work">← All projects</a>
         </article>
       </div>
