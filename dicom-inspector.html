@@ -35,6 +35,7 @@
         <div class="picker-actions">
           <label class="button primary">Choose files<input id="file-input" type="file" multiple hidden></label>
           <label class="button">Choose folder<input id="folder-input" type="file" webkitdirectory multiple hidden></label>
+          <button class="button" id="demo-button" type="button">Load synthetic demo</button>
         </div>
         <p class="drop-hint">or drag and drop files here</p>
       </div>
@@ -43,6 +44,7 @@
         <div class="result-head"><div><p class="section-label">Inspection result</p><h2 id="result-title">0 files inspected</h2></div><button class="button" id="clear-button" type="button">Clear files</button></div>
         <div class="metric-grid" id="metrics"></div>
         <div class="finding-panel"><h3>Findings</h3><div id="findings"></div></div>
+        <div class="graph-panel"><div><p class="section-label">Reference map</p><h3>RT object relationships</h3></div><div id="reference-graph"></div></div>
         <div class="table-wrap"><table><thead><tr><th>File</th><th>Object</th><th>Patient fields</th><th>Study / Series</th><th>Status</th></tr></thead><tbody id="file-rows"></tbody></table></div>
         <p class="limitation"><b>Research-use limitation:</b> this lightweight parser is not a diagnostic device, anonymizer, conformance validator, or substitute for clinical DICOM QA. It intentionally does not interpret pixel data or calculate dose.</p>
       </section>

@@ -1,78 +1,16 @@
 (() => {
-  const drop = document.querySelector('#drop-zone');
-  const results = document.querySelector('#results');
-  const rows = document.querySelector('#file-rows');
-  const findings = document.querySelector('#findings');
-  const metrics = document.querySelector('#metrics');
-  const decoder = new TextDecoder('latin1');
-  const objectNames = {
-    '1.2.840.10008.5.1.4.1.1.2':'CT','1.2.840.10008.5.1.4.1.1.4':'MR',
-    '1.2.840.10008.5.1.4.1.1.481.1':'RTIMAGE','1.2.840.10008.5.1.4.1.1.481.2':'RTDOSE',
-    '1.2.840.10008.5.1.4.1.1.481.3':'RTSTRUCT','1.2.840.10008.5.1.4.1.1.481.5':'RTPLAN'
-  };
-  const tags = {
-    '0008,0016':'sop','0008,0060':'modality','0008,0080':'institution','0010,0010':'patientName',
-    '0010,0020':'patientId','0010,0030':'birthDate','0020,000d':'study','0020,000e':'series','0020,0052':'frame'
-  };
-  const longVR = new Set(['OB','OD','OF','OL','OV','OW','SQ','UC','UR','UT','UN']);
-  const clean = value => value.replace(/\0/g,'').trim();
-
-  function parse(buffer) {
-    const view = new DataView(buffer); let p = 0; const out = {};
-    if (buffer.byteLength >= 132 && decoder.decode(new Uint8Array(buffer,128,4)) === 'DICM') p = 132;
-    let explicit = true, little = true, steps = 0;
-    while (p + 8 <= buffer.byteLength && steps++ < 20000) {
-      const group = view.getUint16(p,little), element = view.getUint16(p+2,little);
-      const key = group.toString(16).padStart(4,'0') + ',' + element.toString(16).padStart(4,'0');
-      let len, valueStart;
-      const vr = decoder.decode(new Uint8Array(buffer,p+4,2));
-      if (explicit && /^[A-Z]{2}$/.test(vr)) {
-        if (longVR.has(vr)) { if (p+12>buffer.byteLength) break; len=view.getUint32(p+8,little); valueStart=p+12; }
-        else { len=view.getUint16(p+6,little); valueStart=p+8; }
-      } else { explicit=false; len=view.getUint32(p+4,little); valueStart=p+8; }
-      if (len === 0xffffffff || valueStart + len > buffer.byteLength) { p = valueStart; continue; }
-      if (tags[key] && len < 4096) out[tags[key]] = clean(decoder.decode(new Uint8Array(buffer,valueStart,len)));
-      if (key === '0002,0010') {
-        const ts = clean(decoder.decode(new Uint8Array(buffer,valueStart,len)));
-        if (ts === '1.2.840.10008.1.2') explicit=false;
-        if (ts === '1.2.840.10008.1.2.2') little=false;
-      }
-      if (group > 0x0020 && Object.keys(out).length >= 6) break;
-      p = valueStart + len;
-    }
-    if (!out.sop && !out.modality) throw new Error('No readable DICOM header');
-    out.object = objectNames[out.sop] || out.modality || 'DICOM';
-    return out;
-  }
-
-  async function inspect(fileList) {
-    const files = [...fileList].filter(f => f.size > 0); if (!files.length) return;
-    const parsed = await Promise.all(files.map(async file => { try { return {file, data:parse(await file.arrayBuffer())}; } catch(error) { return {file,error}; } }));
-    render(parsed); results.hidden=false; results.scrollIntoView({behavior:'smooth',block:'start'});
-  }
-
-  function render(items) {
-    const valid=items.filter(x=>x.data), failed=items.length-valid.length;
-    const rt=valid.filter(x=>x.data.object.startsWith('RT')).length;
-    const phi=valid.filter(x=>['patientName','patientId','birthDate','institution'].some(k=>x.data[k])).length;
-    const frames=new Set(valid.map(x=>x.data.frame).filter(Boolean));
-    document.querySelector('#result-title').textContent=`${items.length} file${items.length===1?'':'s'} inspected`;
-    metrics.innerHTML=[['Readable',valid.length],['RT objects',rt],['Privacy flags',phi],['Frame UIDs',frames.size]].map(([l,n])=>`<div class="metric"><strong>${n}</strong><span>${l}</span></div>`).join('');
-    const notes=[];
-    notes.push(phi?['warn',`${phi} readable file(s) contain at least one direct patient or institution field. Do not treat this dataset as anonymized.`]:['ok','No populated patient name, ID, birth date, or institution field was found in the readable headers. This is not proof of anonymization.']);
-    if(failed) notes.push(['warn',`${failed} file(s) could not be parsed as basic DICOM. They may be unsupported transfer syntaxes, malformed, or non-DICOM files.`]);
-    if(rt && !valid.some(x=>x.data.object==='RTSTRUCT')) notes.push(['warn','RT objects were found, but no RTSTRUCT was detected in this selection.']);
-    if(rt && frames.size>1) notes.push(['warn',`${frames.size} Frame of Reference UIDs were found. Confirm that cross-frame registrations or intended reference relationships exist.`]);
-    if(!failed) notes.push(['ok','All selected files exposed a readable basic DICOM header.']);
-    findings.innerHTML=notes.map(([c,t])=>`<p class="finding ${c}">${t}</p>`).join('');
-    rows.innerHTML=items.map(({file,data,error})=>{if(error)return `<tr><td>${escapeHtml(file.name)}</td><td>—</td><td>—</td><td>—</td><td>Unreadable</td></tr>`;const fields=['patientName','patientId','birthDate','institution'].filter(k=>data[k]).length;return `<tr><td>${escapeHtml(file.webkitRelativePath||file.name)}</td><td>${escapeHtml(data.object)}</td><td>${fields?fields+' present':'none found'}</td><td>${short(data.study)} / ${short(data.series)}</td><td>Readable</td></tr>`}).join('');
-  }
-  const short=v=>v?escapeHtml(v.length>18?'…'+v.slice(-16):v):'—';
-  const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  ['dragenter','dragover'].forEach(e=>drop.addEventListener(e,x=>{x.preventDefault();drop.classList.add('dragging')}));
-  ['dragleave','drop'].forEach(e=>drop.addEventListener(e,x=>{x.preventDefault();drop.classList.remove('dragging')}));
-  drop.addEventListener('drop',e=>inspect(e.dataTransfer.files));
-  document.querySelector('#file-input').addEventListener('change',e=>inspect(e.target.files));
-  document.querySelector('#folder-input').addEventListener('change',e=>inspect(e.target.files));
-  document.querySelector('#clear-button').addEventListener('click',()=>{results.hidden=true;rows.innerHTML='';document.querySelectorAll('input[type=file]').forEach(i=>i.value='');drop.scrollIntoView({behavior:'smooth'})});
+  const $=s=>document.querySelector(s),drop=$('#drop-zone'),results=$('#results'),rows=$('#file-rows'),findings=$('#findings'),metrics=$('#metrics'),graph=$('#reference-graph');
+  const decoder=new TextDecoder('latin1'),longVR=new Set(['OB','OD','OF','OL','OV','OW','SQ','UC','UR','UT','UN']);
+  const objectNames={'1.2.840.10008.5.1.4.1.1.2':'CT','1.2.840.10008.5.1.4.1.1.4':'MR','1.2.840.10008.5.1.4.1.1.481.1':'RTIMAGE','1.2.840.10008.5.1.4.1.1.481.2':'RTDOSE','1.2.840.10008.5.1.4.1.1.481.3':'RTSTRUCT','1.2.840.10008.5.1.4.1.1.481.5':'RTPLAN'};
+  const tags={'0008,0016':'sop','0008,0018':'instance','0008,0060':'modality','0008,0080':'institution','0008,1155':'refs','0010,0010':'patientName','0010,0020':'patientId','0010,0030':'birthDate','0020,000d':'study','0020,000e':'series','0020,0052':'frame','3006,0024':'referencedFrame'};
+  const clean=v=>v.replace(/\0/g,'').trim(),esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),short=v=>v?esc(v.length>20?`…${v.slice(-18)}`:v):'—';
+  function parse(buffer){const view=new DataView(buffer);let p=0,steps=0,explicit=true,little=true;const out={refs:[],warnings:[]};if(buffer.byteLength>=132&&decoder.decode(new Uint8Array(buffer,128,4))==='DICM')p=132;else out.warnings.push('Missing DICM preamble; parsed as a raw data set.');while(p+8<=buffer.byteLength&&steps++<50000){const group=view.getUint16(p,little),element=view.getUint16(p+2,little),key=`${group.toString(16).padStart(4,'0')},${element.toString(16).padStart(4,'0')}`;if(key==='7fe0,0010')break;let len,valueStart;const vr=decoder.decode(new Uint8Array(buffer,p+4,2));if(explicit&&/^[A-Z]{2}$/.test(vr)){if(longVR.has(vr)){if(p+12>buffer.byteLength)break;len=view.getUint32(p+8,little);valueStart=p+12;}else{len=view.getUint16(p+6,little);valueStart=p+8;}}else{explicit=false;len=view.getUint32(p+4,little);valueStart=p+8;}if(len===0xffffffff){p=valueStart;continue;}if(valueStart+len>buffer.byteLength){out.warnings.push(`Truncated value at ${key}.`);break;}if(tags[key]&&len<4096){const value=clean(decoder.decode(new Uint8Array(buffer,valueStart,len)));if(tags[key]==='refs'){if(value&&!out.refs.includes(value))out.refs.push(value);}else if(!out[tags[key]])out[tags[key]]=value;}if(key==='0002,0010'){const ts=clean(decoder.decode(new Uint8Array(buffer,valueStart,len)));out.transferSyntax=ts;if(ts==='1.2.840.10008.1.2')explicit=false;else if(ts==='1.2.840.10008.1.2.2'){little=false;out.warnings.push('Big-endian transfer syntax has limited support.');}else if(ts&&ts!=='1.2.840.10008.1.2.1')out.warnings.push('Compressed or uncommon transfer syntax; metadata only.');}p=valueStart+len;}if(steps>=50000)out.warnings.push('Header scan stopped at the safety limit.');if(!out.sop&&!out.modality)throw new Error('No readable DICOM SOP class or modality');out.object=objectNames[out.sop]||out.modality||'DICOM';return out;}
+  function analyze(items){const valid=items.filter(x=>x.data),failed=items.filter(x=>x.error),byUid=new Map();valid.forEach(x=>{if(x.data.instance){const list=byUid.get(x.data.instance)||[];list.push(x);byUid.set(x.data.instance,list);}});const duplicates=[...byUid].filter(([,list])=>list.length>1),edges=[],missing=[];valid.forEach(source=>source.data.refs.forEach(uid=>{const targets=byUid.get(uid);if(targets)edges.push({source,target:targets[0]});else missing.push({source,uid});}));return{valid,failed,duplicates,edges,missing,phi:valid.filter(x=>['patientName','patientId','birthDate','institution'].some(k=>x.data[k])),frames:new Set(valid.map(x=>x.data.frame).filter(Boolean))};}
+  async function inspect(fileList){const files=[...fileList].filter(f=>f.size>0);if(!files.length)return;const parsed=await Promise.all(files.map(async file=>{try{return{file,data:parse(await file.arrayBuffer())};}catch(error){return{file,error};}}));render(parsed);results.hidden=false;results.scrollIntoView({behavior:'smooth',block:'start'});}
+  function render(items){const a=analyze(items),rt=a.valid.filter(x=>x.data.object.startsWith('RT')).length;$('#result-title').textContent=`${items.length} file${items.length===1?'':'s'} inspected`;metrics.innerHTML=[['Readable',a.valid.length],['RT objects',rt],['Missing refs',a.missing.length],['Privacy flags',a.phi.length]].map(([l,n])=>`<div class="metric"><strong>${n}</strong><span>${l}</span></div>`).join('');const notes=[];notes.push(a.phi.length?['warn',`${a.phi.length} file(s) contain direct patient or institution fields. This selection is not safe to treat as anonymized.`]:['ok','No populated patient name, ID, birth date, or institution field was found. This is not proof of anonymization.']);if(a.failed.length)notes.push(['warn',`${a.failed.length} unreadable file(s): ${a.failed.slice(0,3).map(x=>x.file.name).join(', ')}.`]);if(a.duplicates.length)notes.push(['warn',`${a.duplicates.length} duplicate SOP Instance UID(s) were found.`]);if(a.missing.length)notes.push(['warn',`${a.missing.length} referenced SOP Instance UID(s) are absent from this selection.`]);if(rt&&!a.valid.some(x=>x.data.object==='RTSTRUCT'))notes.push(['warn','RT objects were found, but no RTSTRUCT was detected.']);if(rt&&a.frames.size>1)notes.push(['warn',`${a.frames.size} Frame of Reference UIDs were found. Confirm registrations or intended cross-frame relationships.`]);if(!a.failed.length&&!a.missing.length&&!a.duplicates.length)notes.push(['ok','No basic structural blocker was detected in the readable selection.']);findings.innerHTML=notes.map(([c,t])=>`<p class="finding ${c}">${t}</p>`).join('');rows.innerHTML=items.map(item=>{const{file,data,error}=item;if(error)return`<tr><td>${esc(file.name)}</td><td>—</td><td>—</td><td>—</td><td class="bad">${esc(error.message)}</td></tr>`;const fields=['patientName','patientId','birthDate','institution'].filter(k=>data[k]).length,problems=[fields&&`${fields} privacy field(s)`,data.warnings.length&&data.warnings.join(' '),a.missing.some(x=>x.source===item)&&'missing reference'].filter(Boolean);return`<tr><td>${esc(file.webkitRelativePath||file.name)}</td><td><b>${esc(data.object)}</b><br><small>${short(data.instance)}</small></td><td>${fields?`${fields} present`:'none found'}</td><td>${short(data.study)} / ${short(data.series)}</td><td class="${problems.length?'bad':'good'}">${problems.length?esc(problems.join(' · ')):'No basic issue'}</td></tr>`;}).join('');renderGraph(a);}
+  function renderGraph(a){const rt=a.valid.filter(x=>x.data.object.startsWith('RT'));if(!rt.length){graph.innerHTML='<p class="empty-graph">No radiotherapy objects with graphable references were found.</p>';return;}const inbound=new Map();a.edges.forEach(e=>inbound.set(e.target,(inbound.get(e.target)||0)+1));graph.innerHTML=`<div class="graph-nodes">${rt.map(item=>{const resolved=a.edges.filter(e=>e.source===item).length,absent=a.missing.filter(e=>e.source===item).length;return`<article class="graph-node"><span>${esc(item.data.object)}</span><b>${esc(item.file.name)}</b><small>${short(item.data.instance)}</small><p>${resolved} resolved · ${absent} missing · ${inbound.get(item)||0} inbound</p></article>`;}).join('')}</div><div class="graph-edges">${a.edges.map(e=>`<p><b>${esc(e.source.data.object)}</b> ${esc(e.source.file.name)} <span>→</span> <b>${esc(e.target.data.object)}</b> ${esc(e.target.file.name)}</p>`).join('')||'<p>No resolvable SOP Instance references were exposed.</p>'}${a.missing.map(e=>`<p class="missing"><b>${esc(e.source.data.object)}</b> ${esc(e.source.file.name)} <span>→</span> missing ${short(e.uid)}</p>`).join('')}</div>`;}
+  function element(group,number,vr,value){let bytes=new TextEncoder().encode(value);if(bytes.length%2)bytes=new Uint8Array([...bytes,vr==='UI'?0:32]);const isLong=longVR.has(vr),head=new Uint8Array(isLong?12:8),v=new DataView(head.buffer);v.setUint16(0,group,true);v.setUint16(2,number,true);head[4]=vr.charCodeAt(0);head[5]=vr.charCodeAt(1);if(isLong)v.setUint32(8,bytes.length,true);else v.setUint16(6,bytes.length,true);return new Uint8Array([...head,...bytes]);}
+  function synthetic(name,object,instance,refs=[]){const sop=Object.entries(objectNames).find(([,v])=>v===object)?.[0]||'1.2.840.10008.5.1.4.1.1.2',parts=[element(0x0002,0x0010,'UI','1.2.840.10008.1.2.1'),element(0x0008,0x0016,'UI',sop),element(0x0008,0x0018,'UI',instance),element(0x0008,0x0060,'CS',object),element(0x0020,0x000d,'UI','1.2.826.0.1.3680043.10.99.1'),element(0x0020,0x000e,'UI',`${instance}.1`),element(0x0020,0x0052,'UI','1.2.826.0.1.3680043.10.99.2'),...refs.map(uid=>element(0x0008,0x1155,'UI',uid))],pre=new Uint8Array(132);pre.set([68,73,67,77],128);return new File([new Blob([pre,...parts])],name);}
+  function loadDemo(){const s='1.2.826.0.1.3680043.10.99.10',p='1.2.826.0.1.3680043.10.99.20',d='1.2.826.0.1.3680043.10.99.30';inspect([synthetic('RS.synthetic.dcm','RTSTRUCT',s),synthetic('RP.synthetic.dcm','RTPLAN',p,[s]),synthetic('RD.synthetic.dcm','RTDOSE',d,[p]),synthetic('RI.missing-reference.dcm','RTIMAGE','1.2.826.0.1.3680043.10.99.40',['1.2.826.0.1.3680043.10.99.404'])]);}
+  ['dragenter','dragover'].forEach(e=>drop.addEventListener(e,x=>{x.preventDefault();drop.classList.add('dragging');}));['dragleave','drop'].forEach(e=>drop.addEventListener(e,x=>{x.preventDefault();drop.classList.remove('dragging');}));drop.addEventListener('drop',e=>inspect(e.dataTransfer.files));$('#file-input').addEventListener('change',e=>inspect(e.target.files));$('#folder-input').addEventListener('change',e=>inspect(e.target.files));$('#demo-button').addEventListener('click',loadDemo);$('#clear-button').addEventListener('click',()=>{results.hidden=true;rows.innerHTML='';document.querySelectorAll('input[type=file]').forEach(i=>i.value='');drop.scrollIntoView({behavior:'smooth'});});window.DicomInspectorTest={parse,analyze,synthetic};
 })();
