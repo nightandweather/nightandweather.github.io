@@ -234,8 +234,13 @@ button:focus-visible,
   color: #b8cfcb;
 }
 .project-ruin .eyebrow,
-.project-ruin .num {
+.project-ruin .project-category {
   color: #72ddce;
+}
+.project-category {
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
 }
 .project-ruin .status.live::before {
   background: #72ddce;
