@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="What Apple asked for after rejecting two first App Store submissions under Guideline 2.1, and what I learned from it."><title>Apple rejected both of my first submissions — Kanghoun Lee</title><link rel="icon" href="../favicon.svg"><link rel="canonical" href="https://nightandweather.github.io/notes/app-store-first-rejections.html"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&amp;display=swap" rel="stylesheet"><meta property="og:type" content="article"><meta property="og:title" content="Apple rejected both of my first submissions"><meta property="og:description" content="The builds were not rejected for a confirmed bug. Apple wanted more evidence from a new developer account."><meta property="og:image" content="https://nightandweather.github.io/assets/returnproof-overview.png"><meta property="og:url" content="https://nightandweather.github.io/notes/app-store-first-rejections.html"><meta name="twitter:card" content="summary_large_image"><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../field-notes.css"></head>
+<body><a class="skip-link" href="#main-content">Skip to content</a><header class="nav wrap"><a class="wordmark" href="../">KANGHOUN LEE</a><nav><a href="../field-notes.html">Field Notes</a><a href="../ios-apps.html">iPhone Apps</a><a href="../#work">Work</a></nav></header>
+<main id="main-content" class="note-page"><section class="article-hero wrap"><p class="kicker">2 September 2026 · App Store review</p><h1>Apple rejected both of my first submissions.</h1><p class="lead">The red status looked like a product verdict. The actual message was a request for evidence from a developer account with limited review history.</p></section><article class="note-body"><p class="note-status">This note paraphrases the App Review messages. Submission identifiers, reviewer correspondence, and account details are intentionally omitted.</p>
+<p>I submitted two different iPhone apps on the same day. <strong>ReturnProof Inventory</strong> records QR-based equipment checkout and return inspections. <strong>Wayfarer</strong> is an anonymous photo-letter experience in which a story travels from city to city. The next morning, both app versions were marked Rejected under <strong>Guideline 2.1 — App Completeness</strong>.</p>
+<p>The wording that mattered was “Information Needed — New App Submission.” Apple said the developer account had limited App Review history and asked for more information before it could complete the reviews. It did not identify a reproducible crash or a specific broken feature.</p>
+<h2>What Apple asked me to provide</h2>
+<ol>
+  <li>A screen recording from a physical device on the latest operating system, beginning at launch and showing the normal end-to-end flow.</li>
+  <li>The app’s purpose, target audience, problem, and user value.</li>
+  <li>Setup and access instructions, including demo credentials or sample files when needed.</li>
+  <li>A list of external services, tools, and platforms used by the core experience.</li>
+  <li>An explanation of regional differences, or confirmation that the same features work in every region.</li>
+  <li>Authorization material if the product belongs to a regulated industry or uses protected third-party content.</li>
+  <li>An overview of the in-app purchase and exact directions to reach the purchase flow.</li>
+</ol>
+<p>The recording also needs to demonstrate account creation and deletion, user-content reporting and blocking, and paid features whenever those flows exist. Apple asked for the same information in both the reply and the persistent App Review Notes field.</p>
+<h2>What was actually rejected</h2>
+<table><thead><tr><th>Submission</th><th>Review result</th><th>What was not decided</th></tr></thead><tbody><tr><td>ReturnProof Inventory 1.0</td><td>Guideline 2.1: more information required</td><td>The “Remove Ads Forever” purchase remained Ready for Review.</td></tr><tr><td>Wayfarer 1.0</td><td>Guideline 2.1: more information required</td><td>The “Remove Ads Forever” purchase remained Ready for Review.</td></tr><tr><td>MoveProof 1.0</td><td>Not submitted yet</td><td>It has not been rejected.</td></tr></tbody></table>
+<div class="note-callout"><strong>The useful distinction:</strong> “Rejected” is the App Store Connect workflow state. In these two cases, the reviewer paused the submission for missing review evidence; Apple did not yet issue a final judgement on the product idea.</div>
+<h2>What I got wrong</h2>
+<p>I treated a successful archive, upload, metadata pass, and simulator QA as if they added up to a review-ready submission. They did not. For a new developer account, the reviewer also needs a compact evidence package that makes the product understandable without reverse-engineering it.</p>
+<p>The simultaneous submissions made this obvious. Two unrelated apps received nearly identical requests one minute apart. That strongly suggests an account-history verification gate rather than two independently discovered defects.</p>
+<h2>The resubmission checklist</h2>
+<ul>
+  <li>Run the exact submitted build on a supported physical iPhone.</li>
+  <li>Record launch, the primary workflow, privacy and safety controls, ad display, purchase, and purchase restoration.</li>
+  <li>State clearly which data stays on-device and which third-party services receive data.</li>
+  <li>Explain who the app is for and why public App Store distribution is appropriate.</li>
+  <li>Put stable test instructions in App Review Notes, not only in a one-time message.</li>
+  <li>Verify that the first in-app purchase is included with the app version.</li>
+</ul>
+<p>Getting a build into App Store Connect was an engineering milestone. Getting a stranger at Apple to understand and verify it is a separate product task. The rejection made that boundary visible.</p>
+<a class="back" href="../field-notes.html">← All field notes</a></article></main><footer class="footer"><div class="wrap"><span>© 2026 Kanghoun Lee</span><nav><a href="../ios-apps.html">iPhone Apps</a><a href="../field-notes.html">Field Notes</a></nav></div></footer></body></html>

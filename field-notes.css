@@ -5,6 +5,7 @@
 .note-card:nth-child(1) { background: #dff4ff; }
 .note-card:nth-child(2) { background: #e8f5cf; }
 .note-card:nth-child(3) { background: #fff0dc; }
+.note-card:nth-child(4) { background: #f0e8ff; }
 .note-card h2 { font: 500 2.5rem/1 var(--serif); letter-spacing: -.035em; margin: 42px 0 18px; }
 .note-card p { color: var(--muted); }
 .note-card b { margin-top: auto; }
