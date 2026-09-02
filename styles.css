@@ -223,6 +223,24 @@ button:focus-visible,
 .tone-violet {
   background: var(--violet);
 }
+.project-ruin {
+  color: #e8f7f4;
+  background:
+    radial-gradient(circle at 78% 22%, rgba(45, 209, 191, 0.17), transparent 28%),
+    linear-gradient(135deg, #091719 0%, #061013 58%, #111820 100%);
+  border-color: rgba(126, 234, 219, 0.28);
+}
+.project-ruin p:not(.eyebrow) {
+  color: #b8cfcb;
+}
+.project-ruin .eyebrow,
+.project-ruin .num {
+  color: #72ddce;
+}
+.project-ruin .status.live::before {
+  background: #72ddce;
+  box-shadow: 0 0 12px rgba(114, 221, 206, 0.75);
+}
 .project-top {
   display: flex;
   justify-content: space-between;
@@ -417,6 +435,20 @@ button:focus-visible,
   background: #090d13;
 }
 .article-shot figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.article-video {
+  margin: 46px 0;
+}
+.article-video video {
+  display: block;
+  width: 100%;
+  border: 1px solid #24413f;
+  background: #061013;
+}
+.article-video figcaption {
   margin-top: 10px;
   color: var(--muted);
   font-size: 0.78rem;
