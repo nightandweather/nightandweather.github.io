@@ -21,6 +21,10 @@
 <h2>What I got wrong</h2>
 <p>I treated a successful archive, upload, metadata pass, and simulator QA as if they added up to a review-ready submission. They did not. For a new developer account, the reviewer also needs a compact evidence package that makes the product understandable without reverse-engineering it.</p>
 <p>The simultaneous submissions made this obvious. Two unrelated apps received nearly identical requests one minute apart. That strongly suggests an account-history verification gate rather than two independently discovered defects.</p>
+<h2>Update: the physical-device workflow works</h2>
+<p>I connected the submitted Wayfarer build to an iPhone 16 Pro running iOS 26.6.1, then added a deliberately paced, test-only App Review walkthrough. It demonstrates the primary send-and-receive experience, content reporting, author blocking, the one-time ad-removal purchase location, and the account-deletion confirmation. The complete 86-second walkthrough passed on the physical phone with no test failures.</p>
+<p>One practical failure was useful too: QuickTime initially selected the iPhone as a Continuity Camera while iPhone Mirroring was also trying to connect, which produced a camera-in-use conflict. Those are camera and mirroring sessions, not the same thing as an on-device screen recording. I closed both sessions and kept the verified UI automation as the repeatable script for a native iPhone screen recording.</p>
+<div class="note-callout"><strong>Current status:</strong> the device-side demonstration has been verified. The App Store rejection itself remains open until the recording, written answers, and review notes are sent back to Apple and the reviewer completes a new review.</div>
 <h2>The resubmission checklist</h2>
 <ul>
   <li>Run the exact submitted build on a supported physical iPhone.</li>
