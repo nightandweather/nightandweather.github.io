@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en"><head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HGZPVGV9N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-3HGZPVGV9N");
+  </script>
+  <meta name="google-adsense-account" content="ca-pub-4242632384470714">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Supervised learning from least squares to SVMs, learning theory, EM, PCA, and MDPs, with the equations that tie them together.">
+  <title>CS229 Machine Learning &mdash; Kanghoun Lee</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/study/cs229.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CS229 Machine Learning">
+  <meta property="og:description" content="Supervised learning from least squares to SVMs, learning theory, EM, PCA, and MDPs, with the equations that tie them together.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
+  <meta property="og:url" content="https://nightandweather.github.io/study/cs229.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../study.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+</head>
+<body><a class="skip-link" href="#main-content">Skip to content</a>
+<header class="nav wrap"><a class="wordmark" href="../" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a><nav aria-label="Primary navigation"><a href="../work.html">Work</a><a href="../experiments.html">Experiments</a><a href="../field-notes.html">Field Notes</a><a href="../study.html" aria-current="page">Study</a><a href="../opportunities.html">Calendar</a><a href="../rejections.html">Rejections</a></nav></header>
+<main id="main-content" class="study-page">
+  <section class="study-hero study-hero-tinted" style="--tone:#dff4ff"><div class="wrap"><p class="kicker">Stanford CS229 &middot; Foundations</p><h1>Machine Learning</h1><p class="lead">Supervised learning from least squares to SVMs, learning theory, EM, PCA, and MDPs, with the equations that tie them together.</p></div></section>
+  <div class="study-layout wrap">
+    <aside class="study-side">
+      <dl class="study-facts"><dt>Taught by</dt><dd>Andrew Ng (original lectures); rotating faculty in recent offerings</dd><dt>Notes based on</dt><dd>Public lecture sequence and course notes</dd><dt>Lectures covered</dt><dd>17</dd><dt>Official page</dt><dd><a href="https://cs229.stanford.edu/" rel="noopener">CS229 &#8599;</a></dd></dl>
+      <nav class="study-jump" aria-label="Lectures"><p class="eyebrow">Lectures</p><ol><li><a href="#01-linear-regression-lms-and-the-normal-equations">01 · Linear regression, LMS, and the normal equations</a></li><li><a href="#02-locally-weighted-regression-and-the-probabilistic-interpretation">02 · Locally weighted regression and the probabilistic interpretation</a></li><li><a href="#03-logistic-regression-and-newtons-method">03 · Logistic regression and Newton’s method</a></li><li><a href="#04-perceptron-the-exponential-family-and-glms">04 · Perceptron, the exponential family, and GLMs</a></li><li><a href="#05-generative-learning-gda-and-naive-bayes">05 · Generative learning: GDA and naive Bayes</a></li><li><a href="#06-laplace-smoothing-and-event-models">06 · Laplace smoothing and event models</a></li><li><a href="#07-svms-and-the-optimal-margin-classifier">07 · SVMs and the optimal margin classifier</a></li><li><a href="#08-kernels-and-smo">08 · Kernels and SMO</a></li><li><a href="#09-bias-variance-and-regularization">09 · Bias, variance, and regularization</a></li><li><a href="#10-cross-validation-and-feature-selection">10 · Cross-validation and feature selection</a></li><li><a href="#11-learning-theory-empirical-risk-uniform-convergence-vc-dimension">11 · Learning theory: empirical risk, uniform convergence, VC dimension</a></li><li><a href="#12-decision-trees-and-ensembles">12 · Decision trees and ensembles</a></li><li><a href="#13-neural-networks-and-backpropagation">13 · Neural networks and backpropagation</a></li><li><a href="#14-k-means-mixtures-of-gaussians-and-em">14 · k-means, mixtures of Gaussians, and EM</a></li><li><a href="#15-pca-and-ica">15 · PCA and ICA</a></li><li><a href="#16-reinforcement-learning-mdps-value-iteration-policy-iteration">16 · Reinforcement learning: MDPs, value iteration, policy iteration</a></li><li><a href="#17-evaluating-and-debugging-learning-algorithms">17 · Evaluating and debugging learning algorithms</a></li></ol></nav>
+    </aside>
+    <article class="study-body note-body">
+      <p class="study-disclaimer">Personal study notes written in my own words from publicly available lectures and course pages. Not affiliated with or endorsed by Stanford University. No assignment solutions are published here.</p>
+<h2 id="what-the-course-is-about">What the course is about</h2>
+<p>CS229 turns &ldquo;machine learning&rdquo; into a small number of repeatable moves: write down a model with parameters, write down a loss or a likelihood, and optimize it. Linear regression, logistic regression, GLMs, support vector machines, and neural networks are all that story with a different hypothesis class and objective. The second half asks the harder questions: why should a model fit on one sample work on the next one (learning theory), how to learn when there are no labels (clustering, EM, PCA, ICA), and how to learn when feedback arrives as delayed rewards (reinforcement learning).</p>
+<p>You should be comfortable with multivariable calculus (gradients, Hessians), linear algebra (inverses, eigenvectors, positive semidefinite matrices), and basic probability (conditional probability, expectations, the Gaussian). Python and NumPy help for the snippets but are not needed to follow the ideas.</p>
+<p>The lectures build in order. Regression introduces gradient descent and the maximum-likelihood view. Classification introduces logistic regression, generalizes it to GLMs, and contrasts it with generative models. SVMs introduce margins and kernels. A block on bias, variance, validation, and learning theory explains why models overfit. Trees, ensembles, and neural networks round out supervised learning; k-means, EM, PCA, ICA, and MDPs close the arc, followed by advice on debugging learning systems.</p>
+<h2 id="lecture-notes">Lecture notes</h2>
+<h3 id="01-linear-regression-lms-and-the-normal-equations">01 · Linear regression, LMS, and the normal equations</h3>
+<p>A linear model predicts $h_\theta(x) = \theta^T x$ with a constant feature $x_0 = 1$ folded in. The training objective is the sum of squared errors over $n$ examples:</p>
+<div class="math-display">$$J(\theta) = \frac{1}{2} \sum_{i=1}^{n} \big(h_\theta(x^{(i)}) - y^{(i)}\big)^2$$</div>
+<p>Differentiating one term gives $(h_\theta(x^{(i)}) - y^{(i)})\, x^{(i)}$, so gradient descent on one example is the LMS (Widrow-Hoff) rule $\theta := \theta + \alpha\,(y^{(i)} - h_\theta(x^{(i)}))\,x^{(i)}$. Batch gradient descent sums that over all examples per step; stochastic gradient descent applies it one example at a time and is what you use when $n$ is large.</p>
+<p>Because $J$ is a convex quadratic, you can also set the gradient to zero in matrix form. With the design matrix $X$ (one row per example) and target vector $y$, $\nabla_\theta J = X^T X \theta - X^T y$, so</p>
+<div class="math-display">$$\theta = (X^T X)^{-1} X^T y$$</div>
+<p>These are the normal equations. They are exact, but the inverse costs roughly cubic time in the number of features, and $X^T X$ is singular when features are linearly dependent; then use the pseudoinverse or add regularization.</p>
+<p>What goes wrong in practice: forgetting to scale features, which makes gradient descent zigzag and forces a tiny learning rate; and reading a good training fit as a good model. The next lecture asks what a &ldquo;good fit&rdquo; even means and shows that the squared loss is not arbitrary.</p>
+<h3 id="02-locally-weighted-regression-and-the-probabilistic-interpretation">02 · Locally weighted regression and the probabilistic interpretation</h3>
+<p>Locally weighted linear regression (LWR) keeps the linear model but refits it for every query point $x$, weighting nearby training points more heavily:</p>
+<div class="math-display">$$w^{(i)} = \exp\Big(-\frac{(x^{(i)} - x)^2}{2\tau^2}\Big), \qquad \theta_x = \arg\min_\theta \sum_i w^{(i)} \big(y^{(i)} - \theta^T x^{(i)}\big)^2$$</div>
+<p>The bandwidth $\tau$ controls how local the fit is. LWR is non-parametric: there is no fixed parameter vector to store, and prediction requires the whole training set, so it is a poor choice when you need cheap inference or have millions of points. The weighted problem has its own normal equations, $\theta = (X^T W X)^{-1} X^T W y$ with $W$ diagonal.</p>
+<p>The second theme answers why squared error is the right loss. Assume $y^{(i)} = \theta^T x^{(i)} + \epsilon^{(i)}$ with $\epsilon^{(i)} \sim \mathcal{N}(0, \sigma^2)$ independently. Then $p(y^{(i)} \mid x^{(i)}; \theta)$ is Gaussian with mean $\theta^T x^{(i)}$, and the log-likelihood of the whole training set is</p>
+<div class="math-display">$$\ell(\theta) = n \log \frac{1}{\sqrt{2\pi}\sigma} - \frac{1}{2\sigma^2} \sum_i \big(y^{(i)} - \theta^T x^{(i)}\big)^2$$</div>
+<p>Maximizing $\ell$ is the same as minimizing $J$. Least squares is maximum likelihood under Gaussian noise, and $\sigma$ does not affect the answer. This is the pattern you reuse constantly: choose a distribution for $y \mid x$, and the loss falls out. Choosing a Bernoulli instead of a Gaussian is the next lecture.</p>
+<h3 id="03-logistic-regression-and-newtons-method">03 · Logistic regression and Newton&rsquo;s method</h3>
+<p>For binary labels $y \in \lbrace 0, 1 \rbrace$, force the output into $(0, 1)$ with the sigmoid $g(z) = 1 / (1 + e^{-z})$ and set $h_\theta(x) = g(\theta^T x)$, interpreted as $p(y = 1 \mid x; \theta)$. The likelihood of one example is $h^{y}(1-h)^{1-y}$, so the log-likelihood is</p>
+<div class="math-display">$$\ell(\theta) = \sum_i \Big[ y^{(i)} \log h_\theta(x^{(i)}) + (1 - y^{(i)}) \log\big(1 - h_\theta(x^{(i)})\big) \Big]$$</div>
+<p>Using $g'(z) = g(z)(1 - g(z))$, the gradient of one term is $(y^{(i)} - h_\theta(x^{(i)}))\, x^{(i)}$, exactly the LMS form again. Gradient ascent on $\ell$ looks identical to linear regression; only the hypothesis changed. Negating $\ell$ gives the logistic (cross-entropy) loss that most libraries minimize.</p>
+<p>Newton&rsquo;s method converges much faster when the number of features is moderate. It replaces the gradient step with</p>
+<div class="math-display">$$\theta := \theta - H^{-1} \nabla_\theta \ell(\theta), \qquad H = -\sum_i h_\theta(x^{(i)})\big(1 - h_\theta(x^{(i)})\big)\, x^{(i)} x^{(i)T}$$</div>
+<p>Each step solves a weighted least-squares problem, which is why this is also called iteratively reweighted least squares. Newton converges quadratically near the optimum but each iteration costs a $d \times d$ solve, so it loses to gradient methods when $d$ is in the tens of thousands.</p>
+<p>Typical failures: perfectly separable data makes $\ell$ unbounded and the weights diverge (regularization fixes this); and reading $h_\theta$ as a calibrated probability when the model is badly misspecified. The next lecture shows that the sigmoid was not a guess.</p>
+<h3 id="04-perceptron-the-exponential-family-and-glms">04 · Perceptron, the exponential family, and GLMs</h3>
+<p>The perceptron replaces the sigmoid with a hard threshold, $g(z) = \mathbf{1}[z \geq 0]$, and uses the same update rule. It has no probabilistic interpretation and only converges on linearly separable data.</p>
+<p>The exponential family is a class of distributions of the form</p>
+<div class="math-display">$$p(y; \eta) = b(y) \exp\big(\eta^T T(y) - a(\eta)\big)$$</div>
+<p>with natural parameter $\eta$, sufficient statistic $T(y)$ (usually $y$), and log-partition function $a(\eta)$ for normalization. The Bernoulli, Gaussian (known variance), Poisson, and multinomial are all members. For the Bernoulli, $\eta = \log(\phi / (1 - \phi))$, which inverts to $\phi = 1 / (1 + e^{-\eta})$: the sigmoid is the Bernoulli&rsquo;s canonical response function.</p>
+<p>A generalized linear model makes three assumptions: $y \mid x; \theta$ is exponential-family with natural parameter $\eta$; the prediction is $\mathbb{E}[T(y) \mid x]$; and $\eta = \theta^T x$ (the linear part). These give you a family of models by picking a distribution:</p>
+<table>
+<thead>
+<tr>
+<th>Distribution for $y \mid x$</th>
+<th>Canonical response</th>
+<th>Resulting model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gaussian</td>
+<td>$\mu = \eta$</td>
+<td>Linear regression</td>
+</tr>
+<tr>
+<td>Bernoulli</td>
+<td>$\phi = 1/(1+e^{-\eta})$</td>
+<td>Logistic regression</td>
+</tr>
+<tr>
+<td>Multinomial</td>
+<td>softmax of $\eta$</td>
+<td>Softmax regression</td>
+</tr>
+<tr>
+<td>Poisson</td>
+<td>$\lambda = e^{\eta}$</td>
+<td>Poisson regression for counts</td>
+</tr>
+</tbody>
+</table>
+<p>For any GLM with canonical link, the log-likelihood gradient has the familiar form $(y - h_\theta(x))\,x$, which is why the same update kept appearing. The common mistake is fitting linear regression to counts or bounded outputs when a Poisson or Bernoulli GLM matches the data&rsquo;s support. Next, a different approach: model $x$ given $y$ instead of $y$ given $x$.</p>
+<h3 id="05-generative-learning-gda-and-naive-bayes">05 · Generative learning: GDA and naive Bayes</h3>
+<p>Discriminative models learn $p(y \mid x)$ directly. Generative models learn $p(x \mid y)$ and the prior $p(y)$, then classify with Bayes&rsquo; rule, $\arg\max_y p(x \mid y)\,p(y)$.</p>
+<p>Gaussian discriminant analysis (GDA) assumes $y \sim \text{Bernoulli}(\phi)$ and $x \mid y = k \sim \mathcal{N}(\mu_k, \Sigma)$ with one covariance shared across classes. The maximum-likelihood estimates are what you would guess: $\phi$ is the fraction of positives, $\mu_k$ is the mean of the examples in class $k$, and $\Sigma$ is the pooled covariance of the residuals $x^{(i)} - \mu_{y^{(i)}}$. Because the two Gaussians share $\Sigma$, the quadratic terms cancel in the log-odds and the posterior has the form</p>
+<div class="math-display">$$p(y = 1 \mid x) = \frac{1}{1 + \exp(-\theta^T x)}$$</div>
+<p>for some $\theta$ that is a function of $\phi, \mu_0, \mu_1, \Sigma$. GDA therefore implies logistic regression, but not the converse: many other class-conditional choices (Poisson, for example) also give a logistic posterior. GDA needs less data when its assumptions hold and does worse when they do not; logistic regression is the more robust default.</p>
+<p>Naive Bayes handles discrete, high-dimensional $x$ such as a bag-of-words vector by assuming the features are conditionally independent given the class:</p>
+<div class="math-display">$$p(x \mid y) = \prod_{j=1}^{d} p(x_j \mid y)$$</div>
+<p>The MLE for each $\phi_{j \mid y=1} = p(x_j = 1 \mid y = 1)$ is a simple count ratio. The assumption is false for language, yet the classifier is a strong baseline because only the argmax needs to be right. Its most visible failure, a zero probability for an unseen word, is next.</p>
+<h3 id="06-laplace-smoothing-and-event-models">06 · Laplace smoothing and event models</h3>
+<p>If a word never appears in the spam training set, naive Bayes estimates $p(\text{word} \mid \text{spam}) = 0$, and one occurrence at test time drives the posterior to zero regardless of other evidence. Laplace smoothing pretends you saw every outcome once more than you did. For a variable with $k$ values,</p>
+<div class="math-display">$$\phi_j = \frac{\sum_i \mathbf{1}[z^{(i)} = j] + 1}{n + k}$$</div>
+<p>The estimates still sum to one, and the adjustment vanishes as $n$ grows.</p>
+<p>There are two ways to turn text into features. The multivariate Bernoulli event model has one binary feature per vocabulary word. The multinomial event model treats a document as a sequence of word draws, so a document of length $m$ contributes $m$ observations and every position shares the same $p(\text{word} \mid y)$ table.</p>
+<table>
+<thead>
+<tr>
+<th>Event model</th>
+<th>Feature per document</th>
+<th>What is counted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multivariate Bernoulli</td>
+<td>binary vector over vocabulary</td>
+<td>documents containing each word</td>
+</tr>
+<tr>
+<td>Multinomial</td>
+<td>sequence of word indices</td>
+<td>total occurrences of each word</td>
+</tr>
+</tbody>
+</table>
+<p>The multinomial version usually classifies text better because repeated words carry evidence. Both are trained by counting, both should be smoothed, and both should multiply probabilities in log space to avoid underflow. The independence assumption also makes the posterior overconfident, so do not read it as a calibrated probability. Next, a classifier that sidesteps probability entirely and reasons about margins.</p>
+<h3 id="07-svms-and-the-optimal-margin-classifier">07 · SVMs and the optimal margin classifier</h3>
+<p>Write the linear classifier as $h(x) = \text{sign}(w^T x + b)$ with labels $y \in \lbrace -1, +1 \rbrace$. The functional margin of an example is $y^{(i)}(w^T x^{(i)} + b)$; it is positive when the example is classified correctly, but it can be inflated by scaling $w$ and $b$. The geometric margin divides by $\lVert w \rVert$ and is the actual signed distance from the point to the hyperplane. The margin of the whole training set is the minimum over examples.</p>
+<p>The optimal margin classifier chooses the hyperplane with the largest geometric margin. Fixing the functional margin of the closest points to 1 turns this into a convex quadratic program:</p>
+<div class="math-display">$$\min_{w, b} \; \frac{1}{2} \lVert w \rVert^2 \quad \text{subject to} \quad y^{(i)}(w^T x^{(i)} + b) \geq 1 \;\; \forall i$$</div>
+<p>Lagrangian duality converts this into a problem over multipliers $\alpha_i \geq 0$:</p>
+<div class="math-display">$$\max_\alpha \; \sum_i \alpha_i - \frac{1}{2} \sum_{i, j} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \quad \text{subject to} \quad \alpha_i \geq 0, \;\; \sum_i \alpha_i y^{(i)} = 0$$</div>
+<p>with $w = \sum_i \alpha_i y^{(i)} x^{(i)}$. The KKT conditions force $\alpha_i = 0$ for every example strictly outside the margin, so only the support vectors carry weight. Two consequences matter. First, the prediction $w^T x + b = \sum_i \alpha_i y^{(i)} \langle x^{(i)}, x \rangle + b$ depends on the data only through inner products. Second, when the data is not separable, adding slack variables with a penalty $C \sum_i \xi_i$ produces the soft-margin SVM, whose dual is identical except for the box constraint $0 \leq \alpha_i \leq C$. The primal loss is the hinge loss, $\max(0, 1 - y(w^T x + b))$, plus an $L_2$ penalty.</p>
+<p>Typical mistakes are leaving $C$ at a default without validation and skipping feature scaling, which distorts the geometry the margin is measuring. The inner-product observation is the door to the next lecture.</p>
+<h3 id="08-kernels-and-smo">08 · Kernels and SMO</h3>
+<p>Since the SVM dual and its prediction rule only touch the data through $\langle x^{(i)}, x^{(j)} \rangle$, you can replace that inner product with $K(x, z) = \langle \phi(x), \phi(z) \rangle$ for some feature map $\phi$, and train a linear classifier in the feature space without ever computing $\phi$. Two workhorse kernels:</p>
+<div class="math-display">$$K(x, z) = (x^T z + c)^d, \qquad K(x, z) = \exp\Big(-\frac{\lVert x - z \rVert^2}{2\sigma^2}\Big)$$</div>
+<p>The polynomial kernel corresponds to all monomials up to degree $d$; the Gaussian (RBF) kernel corresponds to an infinite-dimensional $\phi$, and its width $\sigma$ becomes a second hyperparameter alongside $C$. Mercer&rsquo;s theorem says a symmetric $K$ is a valid kernel exactly when the kernel matrix $K_{ij} = K(x^{(i)}, x^{(j)})$ is positive semidefinite for every finite set of points. Sums, positive scalings, and products of valid kernels are valid, and the trick applies to any algorithm written in terms of inner products.</p>
+<p>Sequential minimal optimization (SMO) solves the dual. Plain coordinate ascent fails because the constraint $\sum_i \alpha_i y^{(i)} = 0$ pins any single $\alpha_i$ once the others are fixed. SMO therefore updates a pair $(\alpha_i, \alpha_j)$ at a time: with everything else held, $\alpha_i$ is a linear function of $\alpha_j$, the objective becomes a one-dimensional quadratic, and the maximizer is found in closed form and clipped to the box $[0, C]$.</p>
+<p>Common problems: a very small $\sigma$ in the RBF kernel memorizes the training set, and kernel matrices are $n \times n$, so kernel SVMs stop being practical at hundreds of thousands of examples. Both point at the next topic, overfitting.</p>
+<h3 id="09-bias-variance-and-regularization">09 · Bias, variance, and regularization</h3>
+<p>Fit a straight line to curved data and it underfits: error is high on training and test sets alike because the hypothesis class cannot represent the truth. That is bias. Fit a degree-ten polynomial to twelve points and it overfits: training error is near zero but test error is large because the fit tracks noise. That is variance. Expected test squared error decomposes as noise plus squared bias plus variance, and model choice trades one against the other.</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Training error</th>
+<th>Test error</th>
+<th>Diagnosis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Underfitting</td>
+<td>high</td>
+<td>high, close to training</td>
+<td>high bias</td>
+</tr>
+<tr>
+<td>Overfitting</td>
+<td>low</td>
+<td>much higher than training</td>
+<td>high variance</td>
+</tr>
+</tbody>
+</table>
+<p>Regularization is the main lever for variance. For linear regression, a weight penalty gives</p>
+<div class="math-display">$$J(\theta) = \frac{1}{2} \sum_i \big(y^{(i)} - \theta^T x^{(i)}\big)^2 + \frac{\lambda}{2} \lVert \theta \rVert^2, \qquad \theta = (X^T X + \lambda I)^{-1} X^T y$$</div>
+<p>A side benefit: $X^T X + \lambda I$ is always invertible. The Bayesian reading is that $L_2$ regularization is maximum a posteriori estimation under a Gaussian prior on $\theta$ with variance inversely proportional to $\lambda$; an $L_1$ penalty (lasso) corresponds to a Laplace prior and drives many weights to exactly zero. The same penalties work in logistic regression, where they also cure the divergence on separable data.</p>
+<p>The usual mistake is tuning $\lambda$ on the training set, which always picks $\lambda = 0$. Picking it honestly is the next lecture.</p>
+<h3 id="10-cross-validation-and-feature-selection">10 · Cross-validation and feature selection</h3>
+<p>Model selection means choosing among hypothesis classes or hyperparameters, and training error is useless for it because a more flexible model always fits training data better. Hold-out validation splits the data into a training set and a validation (dev) set, fits each candidate on the first, scores it on the second, and retrains the winner on everything; 70/30 splits are common when data is plentiful. When it is scarce, $k$-fold cross-validation trains $k$ times, each time leaving out one fold for validation, and averages the scores; $k = 10$ is standard, and leave-one-out sets $k = n$. The test set is touched once, at the end; if you use it for decisions it is no longer a test set.</p>
+<p>Feature selection is model selection over subsets of features. Forward search starts with no features, adds the one that most improves validation error, and repeats; it is accurate but costs many training runs. Filter methods score each feature independently, for example by mutual information with the label, $\text{MI}(x_j, y) = \sum_{x_j, y} p(x_j, y) \log \frac{p(x_j, y)}{p(x_j)\,p(y)}$, and keep the top scorers; they are cheap and a good first pass on text.</p>
+<pre><code class="language-python">from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import Ridge
+for lam in [0.01, 0.1, 1, 10, 100]:
+    scores = cross_val_score(Ridge(alpha=lam), X, y, cv=10,
+                             scoring=&quot;neg_mean_squared_error&quot;)
+    print(lam, -scores.mean())
+</code></pre>
+<p>The classic error is leakage: computing feature statistics, scaling, or a feature selection step on the full data before splitting. Everything learned from data must be learned inside the training fold. The next lecture asks why any of this should generalize at all.</p>
+<h3 id="11-learning-theory-empirical-risk-uniform-convergence-vc-dimension">11 · Learning theory: empirical risk, uniform convergence, VC dimension</h3>
+<p>Define the training (empirical) error of a classifier as the fraction of mistakes on the sample, $\hat\varepsilon(h) = \frac{1}{n} \sum_i \mathbf{1}[h(x^{(i)}) \neq y^{(i)}]$, and the generalization error $\varepsilon(h)$ as the probability of a mistake on a fresh draw. Empirical risk minimization picks $\hat h = \arg\min_{h \in \mathcal{H}} \hat\varepsilon(h)$; the question is how far $\varepsilon(\hat h)$ can be from the best achievable $\varepsilon(h^{\star})$.</p>
+<p>For a single fixed $h$, Hoeffding&rsquo;s inequality bounds the gap between a mean of $n$ Bernoulli draws and its expectation. For a finite class of size $k$, the union bound extends this to every hypothesis at once: with probability at least $1 - \delta$,</p>
+<div class="math-display">$$|\varepsilon(h) - \hat\varepsilon(h)| \leq \sqrt{\frac{1}{2n} \log \frac{2k}{\delta}} \quad \text{for all } h \in \mathcal{H}$$</div>
+<p>This is uniform convergence, and it gives $\varepsilon(\hat h) \leq \varepsilon(h^{\star}) + 2\sqrt{\frac{1}{2n}\log\frac{2k}{\delta}}$. The first term falls as the class grows (bias); the second rises with $\log k$ (variance): the trade-off as a theorem. Rearranging gives sample complexity: the number of examples needed to be within $\gamma$ of optimal scales like $\frac{1}{\gamma^2} \log \frac{k}{\delta}$.</p>
+<p>Infinite classes need a different size measure. A class shatters a set of points if it can realize every labeling of them, and the VC dimension is the size of the largest shatterable set. Linear classifiers in $\mathbb{R}^d$ have VC dimension $d + 1$. The bound becomes $\varepsilon(\hat h) \leq \varepsilon(h^{\star}) + O\big(\sqrt{\tfrac{\text{VC}}{n} \log \tfrac{n}{\text{VC}} + \tfrac{1}{n} \log \tfrac{1}{\delta}}\big)$, so the number of examples you need grows roughly linearly with the number of parameters. The bounds are loose; their value is in the shape of the dependence. Next, nonlinear hypothesis classes.</p>
+<h3 id="12-decision-trees-and-ensembles">12 · Decision trees and ensembles</h3>
+<p>A decision tree partitions the input space with axis-aligned splits, one threshold on one feature per node, and predicts a constant in each leaf. Trees are grown greedily, picking at each node the split that most reduces a loss. Misclassification rate is a poor criterion because many useful splits leave it unchanged; entropy and the Gini index are strictly concave and reward purity gains,</p>
+<div class="math-display">$$H(p) = -\sum_c p_c \log p_c, \qquad G(p) = \sum_c p_c (1 - p_c)$$</div>
+<p>A fully grown tree has near-zero training error and high variance; limit depth, require a minimum leaf size, or prune.</p>
+<p>Ensembles average that variance away. Bagging fits $B$ trees on bootstrap resamples and averages them. If each tree has variance $\sigma^2$ and pairwise correlation $\rho$, the average has variance $\rho \sigma^2 + \frac{1 - \rho}{B}\sigma^2$: more trees kill the second term, but the first remains unless the trees are decorrelated, which random forests do by considering only a random subset of features at each split. Boosting fits a sequence of shallow, high-bias learners, each concentrating on what the previous ones got wrong: AdaBoost reweights examples, and gradient boosting fits each new tree to the negative gradient of the loss.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Reduces</th>
+<th>Base learner</th>
+<th>Trained</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bagging / random forest</td>
+<td>variance</td>
+<td>deep trees</td>
+<td>in parallel</td>
+</tr>
+<tr>
+<td>Boosting</td>
+<td>bias</td>
+<td>shallow trees</td>
+<td>sequentially</td>
+</tr>
+</tbody>
+</table>
+<p>Boosting overfits when run for too many rounds on noisy labels; forests cannot extrapolate outside the training range. Neural networks, next, learn features instead of splitting on them.</p>
+<h3 id="13-neural-networks-and-backpropagation">13 · Neural networks and backpropagation</h3>
+<p>A neural network composes affine maps with elementwise nonlinearities. For a network with layers $l = 1, \dots, L$,</p>
+<div class="math-display">$$z^{[l]} = W^{[l]} a^{[l-1]} + b^{[l]}, \qquad a^{[l]} = g(z^{[l]}), \qquad a^{[0]} = x$$</div>
+<p>With $g$ the identity everywhere the whole thing collapses to a single linear map, so the nonlinearity is what buys capacity. ReLU, $g(z) = \max(0, z)$, is the default hidden activation; the output layer uses a sigmoid or softmax for classification with the same cross-entropy loss as logistic regression, or no activation with squared error for regression. Logistic regression is the special case $L = 1$.</p>
+<p>Backpropagation is the chain rule organized to reuse work. Define $\delta^{[l]} = \partial J / \partial z^{[l]}$. For softmax with cross-entropy, the output layer gives $\delta^{[L]} = a^{[L]} - y$, the same &ldquo;prediction minus target&rdquo; that every GLM produced. Then going backward,</p>
+<div class="math-display">$$\delta^{[l]} = \big(W^{[l+1]T} \delta^{[l+1]}\big) \odot g'(z^{[l]}), \qquad \frac{\partial J}{\partial W^{[l]}} = \delta^{[l]} a^{[l-1]T}$$</div>
+<p>A forward pass caches every $z^{[l]}$ and $a^{[l]}$; a backward pass produces all gradients at roughly the cost of the forward pass. Mini-batch gradient descent with a tuned learning rate does the optimization; the loss is non-convex, so different initializations reach different local optima, though in practice good ones.</p>
+<pre><code class="language-python">def relu(z): return np.maximum(0, z)
+a1 = relu(W1 @ x + b1)                  # forward
+p = softmax(W2 @ a1 + b2)
+d2 = p - y                              # backward
+dW2 = np.outer(d2, a1)
+d1 = (W2.T @ d2) * (a1 &gt; 0)
+dW1 = np.outer(d1, x)
+</code></pre>
+<p>What goes wrong: initializing all weights to zero, so every hidden unit stays identical; sigmoid activations in deep stacks, whose derivatives shrink gradients toward zero; and skipping a gradient check against finite differences. The next lectures drop the labels.</p>
+<h3 id="14-k-means-mixtures-of-gaussians-and-em">14 · k-means, mixtures of Gaussians, and EM</h3>
+<p>Clustering asks for structure in unlabeled points. k-means alternates two steps until nothing changes: assign each point to the nearest centroid, $c^{(i)} = \arg\min_j \lVert x^{(i)} - \mu_j \rVert^2$, then move each centroid to the mean of its points. Each step lowers the distortion $J = \sum_i \lVert x^{(i)} - \mu_{c^{(i)}} \rVert^2$, so the algorithm converges, but only to a local minimum; run it from several random starts and keep the lowest $J$.</p>
+<p>A mixture of Gaussians is the probabilistic version. A latent $z^{(i)} \sim \text{Multinomial}(\phi)$ picks a component, then $x^{(i)} \mid z^{(i)} = j \sim \mathcal{N}(\mu_j, \Sigma_j)$. If the $z$&rsquo;s were observed this would be GDA with $k$ classes. They are not, so the expectation-maximization algorithm alternates guessing them and refitting:</p>
+<div class="math-display">$$\text{E-step:}\quad w_j^{(i)} = p(z^{(i)} = j \mid x^{(i)}; \phi, \mu, \Sigma)$$</div>
+<div class="math-display">$$\text{M-step:}\quad \phi_j = \frac{1}{n}\sum_i w_j^{(i)}, \quad \mu_j = \frac{\sum_i w_j^{(i)} x^{(i)}}{\sum_i w_j^{(i)}}, \quad \Sigma_j = \frac{\sum_i w_j^{(i)} (x^{(i)} - \mu_j)(x^{(i)} - \mu_j)^T}{\sum_i w_j^{(i)}}$$</div>
+<p>Soft responsibilities $w_j^{(i)}$ replace k-means&rsquo; hard assignments, and per-cluster covariances replace spherical distance. In general, EM maximizes a lower bound on the log-likelihood obtained from Jensen&rsquo;s inequality,</p>
+<div class="math-display">$$\ell(\theta) \geq \sum_i \sum_{z} Q_i(z) \log \frac{p(x^{(i)}, z; \theta)}{Q_i(z)}$$</div>
+<p>The E-step makes the bound tight by setting $Q_i(z) = p(z \mid x^{(i)}; \theta)$; the M-step maximizes it over $\theta$. Because the bound touches $\ell$ at the current parameters, $\ell$ never decreases. The same recipe covers factor analysis and hidden Markov models. Common failures are a component collapsing onto a single point with vanishing covariance (add a small ridge to $\Sigma_j$) and choosing $k$ by likelihood alone, which always favors more clusters. Next, reducing dimension rather than grouping points.</p>
+<h3 id="15-pca-and-ica">15 · PCA and ICA</h3>
+<p>Principal component analysis finds the directions of largest variance. After centering and scaling each feature, the direction $u$ that maximizes the variance of the projections is</p>
+<div class="math-display">$$\max_{u : \lVert u \rVert = 1} \; u^T \Sigma u, \qquad \Sigma = \frac{1}{n} \sum_i x^{(i)} x^{(i)T}$$</div>
+<p>The maximizer is the top eigenvector of $\Sigma$; the first $k$ principal components are the top $k$ eigenvectors, and the reduced representation is $y^{(i)} = (u_1^T x^{(i)}, \dots, u_k^T x^{(i)})$. Equivalently, PCA minimizes the squared reconstruction error of projecting onto a $k$-dimensional subspace. The eigenvalues say how much variance each component keeps, which is how you choose $k$; in practice the SVD of the centered design matrix gives the same components.</p>
+<pre><code class="language-python">Xc = (X - X.mean(0)) / X.std(0)
+U, S, Vt = np.linalg.svd(Xc, full_matrices=False)
+Z = Xc @ Vt[:k].T          # k principal component scores
+explained = S[:k]**2 / (S**2).sum()
+</code></pre>
+<p>Independent component analysis solves a different problem: $n$ microphones record mixtures $x = As$ of $n$ independent sources, and you want the unmixing matrix $W = A^{-1}$. The order and scale of the recovered sources are unavoidably ambiguous, and the sources must be non-Gaussian: a rotation of independent Gaussians is still independent Gaussians, so $W$ could not be identified. Choosing a heavy-tailed prior with the sigmoid as its CDF and maximizing the likelihood gives a stochastic gradient update on $W$ of the form $W := W + \alpha\big((1 - 2g(Wx))x^T + (W^T)^{-1}\big)$, where $g$ is the sigmoid applied elementwise.</p>
+<p>PCA is a variance criterion with orthogonal directions; ICA is an independence criterion and its directions need not be orthogonal. The frequent mistake is running PCA without scaling, so one feature with large units dominates every component. The final block turns to sequential decisions with delayed reward.</p>
+<h3 id="16-reinforcement-learning-mdps-value-iteration-policy-iteration">16 · Reinforcement learning: MDPs, value iteration, policy iteration</h3>
+<p>A Markov decision process has states $S$, actions $A$, transition probabilities $P_{sa}(s')$, a discount $\gamma \in [0, 1)$, and a reward $R(s)$. A policy $\pi$ maps states to actions, and its value is the expected discounted return</p>
+<div class="math-display">$$V^\pi(s) = \mathbb{E}\big[R(s_0) + \gamma R(s_1) + \gamma^2 R(s_2) + \cdots \mid s_0 = s, \pi\big]$$</div>
+<p>The Markov property lets you write this recursively as the Bellman equation,</p>
+<div class="math-display">$$V^\pi(s) = R(s) + \gamma \sum_{s'} P_{s\pi(s)}(s')\, V^\pi(s')$$</div>
+<p>a linear system in the unknowns $V^\pi(s)$ for a finite state space. The optimal value function maximizes over actions, $V^{\star}(s) = R(s) + \gamma \max_a \sum_{s'} P_{sa}(s') V^{\star}(s')$, and the optimal policy is greedy with respect to it, $\pi^{\star}(s) = \arg\max_a \sum_{s'} P_{sa}(s') V^{\star}(s')$.</p>
+<p>Value iteration starts from $V = 0$ and repeatedly applies the Bellman optimality update as an assignment; it converges because the update is a contraction with factor $\gamma$. Policy iteration alternates solving the linear system for $V^\pi$ and making $\pi$ greedy with respect to it.</p>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>Per-iteration cost</th>
+<th>Iterations</th>
+<th>Best when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Value iteration</td>
+<td>one sweep over states and actions</td>
+<td>many, geometric convergence</td>
+<td>large $S$</td>
+</tr>
+<tr>
+<td>Policy iteration</td>
+<td>solve a linear system in $S$ unknowns</td>
+<td>few</td>
+<td>small $S$</td>
+</tr>
+</tbody>
+</table>
+<p>When $P_{sa}$ is unknown, estimate it by counting observed transitions, plan in the estimated model, act, and repeat. Continuous states need discretization or a function approximator for $V$. The usual mistake is a $\gamma$ so small, or a reward so sparse, that the agent never values the goal. The last section returns to practice.</p>
+<h3 id="17-evaluating-and-debugging-learning-algorithms">17 · Evaluating and debugging learning algorithms</h3>
+<p>When a model underperforms, the tempting fixes (more data, more features, a bigger or smaller model, more regularization) pull in opposite directions, so diagnose first. Learning curves plot training and validation error against the number of training examples. If both curves converge to a high plateau, the model has high bias: more data will not help, but more features or less regularization will. If a wide gap persists between low training error and high validation error, the model has high variance: more data, fewer features, or stronger regularization will help.</p>
+<p>A second diagnostic separates the optimizer from the objective. If a reference solution $\theta_{\text{ref}}$ does better on the metric you care about, compare the training objective at both: when $J(\theta_{\text{ref}})$ is lower, the optimizer has not converged; when $J(\theta_{\text{learned}})$ is lower yet the metric is worse, you are minimizing the wrong objective.</p>
+<p>For multi-stage pipelines, error analysis replaces each component in turn with ground truth and measures how much final accuracy rises; work on the stage with the largest jump. Ablative analysis runs the other way, removing one addition at a time from the full system to see which pieces earned their place. Report precision, recall, and $F_1$ rather than accuracy alone when classes are imbalanced. The general advice is to get a simple end-to-end system running first, then let diagnostics decide where the time goes.</p>
+<h2 id="key-equations-at-a-glance">Key equations at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Equation</th>
+<th>When it applies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LMS update</td>
+<td>$\theta := \theta + \alpha (y^{(i)} - h_\theta(x^{(i)}))\, x^{(i)}$</td>
+<td>Linear, logistic, and any canonical-link GLM</td>
+</tr>
+<tr>
+<td>Normal equations</td>
+<td>$\theta = (X^T X)^{-1} X^T y$</td>
+<td>Least squares when $X^T X$ is invertible</td>
+</tr>
+<tr>
+<td>Ridge solution</td>
+<td>$\theta = (X^T X + \lambda I)^{-1} X^T y$</td>
+<td>Least squares with $L_2$ penalty; always invertible</td>
+</tr>
+<tr>
+<td>Logistic log-likelihood</td>
+<td>$\ell(\theta) = \sum_i [y^{(i)} \log h + (1 - y^{(i)}) \log (1 - h)]$</td>
+<td>Binary classification with sigmoid output</td>
+</tr>
+<tr>
+<td>Newton step</td>
+<td>$\theta := \theta - H^{-1} \nabla_\theta \ell(\theta)$</td>
+<td>Few features, want fast convergence</td>
+</tr>
+<tr>
+<td>Exponential family</td>
+<td>$p(y; \eta) = b(y) \exp(\eta^T T(y) - a(\eta))$</td>
+<td>Deriving GLMs from a distribution choice</td>
+</tr>
+<tr>
+<td>GDA posterior</td>
+<td>$p(y = 1 \mid x) = 1/(1 + e^{-\theta^T x})$</td>
+<td>Shared-covariance Gaussians imply logistic form</td>
+</tr>
+<tr>
+<td>Naive Bayes</td>
+<td>$p(x \mid y) = \prod_j p(x_j \mid y)$</td>
+<td>Discrete high-dimensional features</td>
+</tr>
+<tr>
+<td>Laplace smoothing</td>
+<td>$\phi_j = (\text{count}_j + 1)/(n + k)$</td>
+<td>Avoiding zero-probability estimates</td>
+</tr>
+<tr>
+<td>SVM primal</td>
+<td>$\min \tfrac{1}{2}\lVert w \rVert^2$ s.t. $y^{(i)}(w^T x^{(i)} + b) \geq 1$</td>
+<td>Separable data; add slack with $C$ otherwise</td>
+</tr>
+<tr>
+<td>SVM dual</td>
+<td>$\max_\alpha \sum_i \alpha_i - \tfrac{1}{2}\sum_{i,j} y^{(i)}y^{(j)}\alpha_i\alpha_j \langle x^{(i)}, x^{(j)} \rangle$</td>
+<td>Enables kernels; $0 \leq \alpha_i \leq C$</td>
+</tr>
+<tr>
+<td>Gaussian kernel</td>
+<td>$K(x, z) = \exp(-\lVert x - z \rVert^2 / 2\sigma^2)$</td>
+<td>Nonlinear boundaries; tune $\sigma$ and $C$</td>
+</tr>
+<tr>
+<td>Uniform convergence</td>
+<td>$\lvert \varepsilon(h) - \hat\varepsilon(h) \rvert \leq \sqrt{\tfrac{1}{2n}\log\tfrac{2k}{\delta}}$</td>
+<td>Finite hypothesis class of size $k$</td>
+</tr>
+<tr>
+<td>Bagged variance</td>
+<td>$\rho\sigma^2 + \tfrac{1-\rho}{B}\sigma^2$</td>
+<td>Why random forests decorrelate trees</td>
+</tr>
+<tr>
+<td>Backprop recursion</td>
+<td>$\delta^{[l]} = (W^{[l+1]T}\delta^{[l+1]}) \odot g'(z^{[l]})$</td>
+<td>Gradients for any feedforward network</td>
+</tr>
+<tr>
+<td>EM lower bound</td>
+<td>$\ell(\theta) \geq \sum_i \sum_z Q_i(z) \log \frac{p(x^{(i)}, z; \theta)}{Q_i(z)}$</td>
+<td>Latent-variable models (GMM, factor analysis)</td>
+</tr>
+<tr>
+<td>PCA objective</td>
+<td>$\max_{\lVert u \rVert = 1} u^T \Sigma u$</td>
+<td>Dimensionality reduction after centering and scaling</td>
+</tr>
+<tr>
+<td>Bellman equation</td>
+<td>$V^\pi(s) = R(s) + \gamma \sum_{s'} P_{s\pi(s)}(s') V^\pi(s')$</td>
+<td>Policy evaluation in a finite MDP</td>
+</tr>
+<tr>
+<td>Bellman optimality</td>
+<td>$V^{\star}(s) = R(s) + \gamma \max_a \sum_{s'} P_{sa}(s') V^{\star}(s')$</td>
+<td>Value iteration target</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-mistakes">Common mistakes</h2>
+<ul>
+<li>Running gradient descent on unscaled features, then blaming the learning rate. Standardize features first; the same fix helps SVMs, k-means, and PCA.</li>
+<li>Treating training error as a quality measure. Hold out a validation set or use k-fold cross-validation, and reserve the test set for a single final number.</li>
+<li>Computing preprocessing statistics or selecting features on the full dataset before splitting. Fit every data-dependent step inside the training fold only.</li>
+<li>Fitting logistic regression to separable data and getting weights that grow without bound. Add an $L_2$ penalty, which also makes the Hessian better conditioned for Newton&rsquo;s method.</li>
+<li>Forgetting Laplace smoothing in naive Bayes, so one unseen word zeroes out the posterior. Add one to every count and the number of categories to the denominator, and work in log probabilities.</li>
+<li>Running k-means or EM from a single random initialization. Use several restarts, keep the best objective, and for EM add a small ridge to each covariance.</li>
+<li>Choosing GDA or naive Bayes for speed without checking their assumptions. When the class-conditional model is wrong, logistic regression usually generalizes better.</li>
+<li>Debugging a learning system by trying fixes at random. Plot learning curves first to decide between bias and variance, then spend effort where the diagnostic points.</li>
+</ul>
+<h2 id="related-courses">Related courses</h2>
+<ul>
+<li><a href="cs230.html">CS230</a> — expands the neural network and backpropagation lecture into a full course on deep learning practice.</li>
+<li><a href="cs231n.html">CS231n</a> — builds convolutional networks on top of the same loss functions, gradient descent, and regularization ideas.</li>
+<li><a href="cs224n.html">CS224n</a> — naive Bayes and softmax regression on text are the starting point; that course replaces bag-of-words with learned representations.</li>
+<li><a href="cs234.html">CS234</a> — the MDP, Bellman equation, and value/policy iteration lecture is the first week of that course, which then covers model-free and deep RL.</li>
+<li><a href="cs246.html">CS246</a> — k-means, PCA/SVD, and the scaling limits of kernel methods reappear there at data-mining scale.</li>
+<li><a href="cs224w.html">CS224w</a> — extends the feature-map and kernel view of this course to graph-structured data.</li>
+</ul>
+      <a class="back" href="../study.html">&larr; All courses</a>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="wrap"><span>&copy; 2026 Kanghoun Lee &middot; Seoul</span><nav aria-label="Footer navigation"><a href="../#about">About</a><a href="../study.html">Study</a><a href="https://github.com/nightandweather">GitHub &#8599;</a></nav></div></footer>
+</body></html>

@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en"><head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HGZPVGV9N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-3HGZPVGV9N");
+  </script>
+  <meta name="google-adsense-account" content="ca-pub-4242632384470714">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="From pixels to ResNets, ViTs, detectors and generative models: how modern vision systems are built, trained and understood.">
+  <title>CS231n Deep Learning for Computer Vision &mdash; Kanghoun Lee</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/study/cs231n.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CS231n Deep Learning for Computer Vision">
+  <meta property="og:description" content="From pixels to ResNets, ViTs, detectors and generative models: how modern vision systems are built, trained and understood.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
+  <meta property="og:url" content="https://nightandweather.github.io/study/cs231n.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../study.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+</head>
+<body><a class="skip-link" href="#main-content">Skip to content</a>
+<header class="nav wrap"><a class="wordmark" href="../" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a><nav aria-label="Primary navigation"><a href="../work.html">Work</a><a href="../experiments.html">Experiments</a><a href="../field-notes.html">Field Notes</a><a href="../study.html" aria-current="page">Study</a><a href="../opportunities.html">Calendar</a><a href="../rejections.html">Rejections</a></nav></header>
+<main id="main-content" class="study-page">
+  <section class="study-hero study-hero-tinted" style="--tone:#fff0dc"><div class="wrap"><p class="kicker">Stanford CS231n &middot; Computer vision</p><h1>Deep Learning for Computer Vision</h1><p class="lead">From pixels to ResNets, ViTs, detectors and generative models: how modern vision systems are built, trained and understood.</p></div></section>
+  <div class="study-layout wrap">
+    <aside class="study-side">
+      <dl class="study-facts"><dt>Taught by</dt><dd>Fei-Fei Li and rotating co-instructors (Justin Johnson, Serena Yeung in the widely watched 2017 lectures)</dd><dt>Notes based on</dt><dd>Public lecture sequence (2017 videos plus recent syllabus)</dd><dt>Lectures covered</dt><dd>17</dd><dt>Official page</dt><dd><a href="https://cs231n.stanford.edu/" rel="noopener">CS231n &#8599;</a></dd></dl>
+      <nav class="study-jump" aria-label="Lectures"><p class="eyebrow">Lectures</p><ol><li><a href="#01-image-classification-as-a-problem">01 · Image classification as a problem</a></li><li><a href="#02-nearest-neighbours-and-linear-classifiers">02 · Nearest neighbours and linear classifiers</a></li><li><a href="#03-optimization-and-sgd">03 · Optimization and SGD</a></li><li><a href="#04-backpropagation-and-computational-graphs">04 · Backpropagation and computational graphs</a></li><li><a href="#05-neural-networks-activations-initialization">05 · Neural networks, activations, initialization</a></li><li><a href="#06-training-tricks">06 · Training tricks</a></li><li><a href="#07-convolution-layers-receptive-fields-pooling">07 · Convolution layers, receptive fields, pooling</a></li><li><a href="#08-cnn-architectures">08 · CNN architectures</a></li><li><a href="#09-hardware-and-software">09 · Hardware and software</a></li><li><a href="#10-recurrent-networks-and-image-captioning">10 · Recurrent networks and image captioning</a></li><li><a href="#11-attention-and-transformers-for-vision">11 · Attention and Transformers for vision</a></li><li><a href="#12-object-detection-and-segmentation">12 · Object detection and segmentation</a></li><li><a href="#13-visualizing-and-understanding-cnns">13 · Visualizing and understanding CNNs</a></li><li><a href="#14-generative-models">14 · Generative models</a></li><li><a href="#15-self-supervised-and-contrastive-learning">15 · Self-supervised and contrastive learning</a></li><li><a href="#16-video-and-3d">16 · Video and 3D</a></li><li><a href="#17-fairness-ethics-and-dataset-bias">17 · Fairness, ethics and dataset bias</a></li></ol></nav>
+    </aside>
+    <article class="study-body note-body">
+      <p class="study-disclaimer">Personal study notes written in my own words from publicly available lectures and course pages. Not affiliated with or endorsed by Stanford University. No assignment solutions are published here.</p>
+<h2 id="what-the-course-is-about">What the course is about</h2>
+<p>CS231n asks one question and keeps widening it: how do you turn a grid of pixel intensities into a statement about what is in the picture? It starts with image classification because almost every other vision task — detection, segmentation, captioning, generation — is built from the same parts. The answer it develops is the convolutional network trained end to end with gradient descent, and later the vision Transformer, which swaps convolution for attention over image patches.</p>
+<p>You should be comfortable with Python and NumPy, with the chain rule applied to matrices, and with the vocabulary of supervised learning (train/validation/test splits, overfitting, regularization).</p>
+<p>The lectures fall into three blocks. The first builds the training machinery from scratch: linear classifiers, losses, stochastic gradient descent, backpropagation, and the tricks that make deep networks train at all. The second specializes to images: convolution, the canonical architectures, hardware, and the shift to attention. The third applies the machinery to harder tasks — sequences, detection, segmentation, interpretation, generation, self-supervised pretraining, video and 3D — and closes with the ethics of pointing a camera at real people.</p>
+<h2 id="lecture-notes">Lecture notes</h2>
+<h3 id="01-image-classification-as-a-problem">01 · Image classification as a problem</h3>
+<p>Before deep learning, vision pipelines were hand-designed: detect keypoints, describe them with local gradient histograms, pool the descriptors into a fixed-length vector, train a linear classifier on top. The turning point was a large labeled dataset (ImageNet, with on the order of a million training images across a thousand categories) meeting a deep convolutional network trained on GPUs, which cut the ImageNet challenge error rate dramatically in 2012.</p>
+<p>The lecture frames why the problem is hard. To the computer an image is an array of integers in $[0, 255]$, and the semantic gap between those numbers and the label &ldquo;cat&rdquo; is enormous. The same cat produces wildly different arrays under changes of viewpoint, illumination, scale, deformation, occlusion and clutter, and two cats can differ more in pixel space than a cat and a dog.</p>
+<p>The data-driven approach replaces rules with examples: collect a labeled dataset, fit a model, measure accuracy on images the model never saw.</p>
+<p>What goes wrong at this stage is evaluation discipline: tuning on the test set, or reporting accuracy on data that overlaps the training set. The next lecture starts with the simplest data-driven classifier there is.</p>
+<h3 id="02-nearest-neighbours-and-linear-classifiers">02 · Nearest neighbours and linear classifiers</h3>
+<p>A k-nearest-neighbour classifier memorizes the training set and labels a new image by majority vote among the $k$ closest training images under an $L_1$ or $L_2$ pixel distance. It also fails on images because pixel distance does not track meaning: shifting or darkening a picture moves it far in $L_2$ without changing the class. The lasting lesson is methodological: $k$ and the distance are hyperparameters, chosen on a validation split, never on the test set.</p>
+<p>A linear classifier computes one score per class with a single matrix multiply, $s = Wx + b$, where $x$ is the flattened image. Each row of $W$ is a template for one class; the decision boundaries are hyperplanes in pixel space. To learn $W$ you need a loss:</p>
+<table>
+<thead>
+<tr>
+<th>Loss</th>
+<th>Per-example form</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multiclass SVM (hinge)</td>
+<td>$L_i = \sum_{j \neq y_i} \max(0, s_j - s_{y_i} + 1)$</td>
+<td>Zero once every wrong class trails the right one by the margin</td>
+</tr>
+<tr>
+<td>Softmax (cross-entropy)</td>
+<td>$L_i = -\log \dfrac{e^{s_{y_i}}}{\sum_j e^{s_j}}$</td>
+<td>Scores as unnormalized log-probabilities; always pushes for more confidence</td>
+</tr>
+</tbody>
+</table>
+<p>The full objective adds a regularizer, usually $\lambda \sum_{k,l} W_{k,l}^2$, to prefer small, spread-out weights among the many that fit the data. A common bug is overflow in the exponentials — subtract the maximum score first. Both are differentiable almost everywhere, which is what the next lecture needs.</p>
+<h3 id="03-optimization-and-sgd">03 · Optimization and SGD</h3>
+<p>Training means finding the $W$ that minimizes average loss over the training set. Beyond a linear model the surface is non-convex, so the strategy is local: compute the gradient and step against it. Numerical gradients (finite differences) cost one forward pass per parameter; analytic gradients are exact and fast but easy to get wrong, so the practice is to derive the analytic gradient and check it numerically on a few coordinates.</p>
+<p>Computing the gradient over the full dataset per step is wasteful. Minibatch SGD samples a small batch, treats its gradient as a noisy estimate of the true one, and updates $w \leftarrow w - \alpha \nabla_w L$. Plain SGD zigzags in badly conditioned valleys, stalls at saddle points, and is thrown by noise. Momentum accumulates a velocity:</p>
+<div class="math-display">$$v \leftarrow \rho v + \nabla_w L, \qquad w \leftarrow w - \alpha v$$</div>
+<p>with $\rho$ typically around $0.9$. AdaGrad divides each coordinate&rsquo;s step by the root of its accumulated squared gradient; RMSProp uses a moving average so steps do not decay to zero; Adam combines a momentum-style first moment with an RMSProp-style second moment and corrects both for zero initialization.</p>
+<p>The learning rate is the most important hyperparameter: too high and the loss explodes or plateaus early, too low and training crawls. All of this assumes you can compute $\nabla_w L$ for an arbitrary model, which is backpropagation.</p>
+<h3 id="04-backpropagation-and-computational-graphs">04 · Backpropagation and computational graphs</h3>
+<p>Backpropagation is the chain rule applied to a computational graph. Each operation stores what it needs in the forward pass; in the backward pass it receives the gradient of the loss with respect to its output, multiplies by its local derivative, and passes the result to its inputs.</p>
+<p>A few gates are worth memorizing: addition copies the upstream gradient to both inputs; multiplication swaps them (the gradient for one factor is the upstream gradient times the other); max routes the whole gradient to the winning input. A variable feeding several nodes sums their contributions.</p>
+<p>The vectorized case is what you implement. For an affine layer $y = xW$ with $x$ of shape $(N, D)$, $W$ of shape $(D, M)$, and upstream gradient $\partial L / \partial y$ of shape $(N, M)$:</p>
+<div class="math-display">$$\frac{\partial L}{\partial W} = x^{\top} \frac{\partial L}{\partial y}, \qquad \frac{\partial L}{\partial x} = \frac{\partial L}{\partial y} W^{\top}$$</div>
+<p>You never form the full Jacobian — for elementwise operations it is a huge diagonal matrix — you write the product directly.</p>
+<pre><code class="language-python">def affine_forward(x, W, b):
+    return x @ W + b, (x, W)
+
+def affine_backward(dout, cache):
+    x, W = cache
+    return dout @ W.T, x.T @ dout, dout.sum(axis=0)
+</code></pre>
+<p>Frameworks automate this with autograd, but the mental model matters for debugging: a vanishing gradient is a long chain of local derivatives each below one. That is the story of the next lecture.</p>
+<h3 id="05-neural-networks-activations-initialization">05 · Neural networks, activations, initialization</h3>
+<p>Two stacked affine maps are still affine, so the nonlinearity between layers is what makes depth useful. A two-layer network is $s = W_2 \, \sigma(W_1 x)$: hidden units learn intermediate templates that the second layer combines.</p>
+<p>The choice of $\sigma$ shapes training. The sigmoid saturates at both ends, so gradients die passing through it, and its outputs are all positive, so weight gradients share a sign. Tanh is zero-centred but still saturates. ReLU, $\max(0, x)$, does not saturate for positive inputs, is cheap, and trains much faster; its cost is that a unit whose pre-activation is always negative gets no gradient and stays dead.</p>
+<p>Initialization decides whether signals survive the forward pass. All-zero weights make every hidden unit identical, and identical gradients keep them so. Weights too small shrink activations toward zero layer by layer; too large push tanh units into saturation. The fix is to scale the initial variance to the fan-in. Xavier initialization uses</p>
+<div class="math-display">$$\mathrm{Var}(W) = \frac{1}{n_{\mathrm{in}}}$$</div>
+<p>which keeps activation variance roughly constant for tanh-like units; Kaiming (He) initialization doubles it to $2 / n_{\mathrm{in}}$ because ReLU zeroes half its inputs. Xavier with ReLU in a deep network is a classic reason a model trains briefly and then stalls. A good initialization is not enough on its own, which motivates the next lecture.</p>
+<h3 id="06-training-tricks">06 · Training tricks</h3>
+<p>Preprocess the input: subtract the mean (per channel for images) and, for non-image data, divide by the standard deviation, so the first layer sees zero-centred inputs.</p>
+<p>Batch normalization normalizes inside the network. For each feature it standardizes across the minibatch, then lets the network undo it with two learned parameters:</p>
+<div class="math-display">$$\hat{x} = \frac{x - \mu_{\mathcal{B}}}{\sqrt{\sigma^2_{\mathcal{B}} + \epsilon}}, \qquad y = \gamma \hat{x} + \beta$$</div>
+<p>It allows larger learning rates, softens the dependence on initialization, and mildly regularizes. At test time it uses running averages of $\mu$ and $\sigma^2$ — forgetting to switch modes is a frequent bug.</p>
+<p>Beyond weight decay, dropout zeroes each activation with probability $p$ in training and, in the inverted form, scales the survivors by $1/(1-p)$ so inference needs no change. Data augmentation (random crops, flips, colour jitter, cutout, mixup) is the cheapest accuracy available.</p>
+<p>For hyperparameters, sample randomly on a log scale, run a coarse search for a few epochs, then narrow. Learning-rate schedules (step decay, cosine decay, a short warmup) buy a few more points; ensembles of independently trained models add a couple more, and averaging a model&rsquo;s own weights over training approximates that for free. The next lecture makes the model image-shaped.</p>
+<h3 id="07-convolution-layers-receptive-fields-pooling">07 · Convolution layers, receptive fields, pooling</h3>
+<p>A fully connected layer on a $224 \times 224 \times 3$ image needs over 150,000 weights per hidden unit and has no notion of locality. A convolution layer slides a small filter (say $3 \times 3 \times C_{\mathrm{in}}$) across the image, computing a dot product at each position. The same weights are reused everywhere and each output depends only on a small patch. A layer has $C_{\mathrm{out}}$ filters and produces an activation volume with that many channels.</p>
+<p>For input width $W$, filter size $K$, padding $P$ and stride $S$, the output width is</p>
+<div class="math-display">$$W_{\mathrm{out}} = \frac{W - K + 2P}{S} + 1$$</div>
+<p>The parameter count is $K \cdot K \cdot C_{\mathrm{in}} \cdot C_{\mathrm{out}}$ weights plus $C_{\mathrm{out}}$ biases, independent of image size — this is why CNNs scale to large inputs.</p>
+<pre><code class="language-python">def conv_params(K, c_in, c_out):
+    return K * K * c_in * c_out + c_out
+
+def conv_out_size(W, K, P, S):
+    return (W - K + 2 * P) // S + 1
+
+print(conv_params(3, 64, 128))      # 73856
+print(conv_out_size(32, 3, 1, 1))   # 32
+</code></pre>
+<p>The receptive field of a unit is the input region that can influence it. Each $3 \times 3$ layer adds 2, so $L$ such layers see $1 + 2L$ pixels; stride and pooling grow it faster. Max pooling (usually $2 \times 2$, stride 2) halves the spatial size with no parameters.</p>
+<p>Typical mistakes are off-by-one sizes and forgetting that memory, not parameter count, dominates in early layers with large spatial maps. How to assemble these layers well is next.</p>
+<h3 id="08-cnn-architectures">08 · CNN architectures</h3>
+<p>The ImageNet winners form a compact history of design ideas.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Key idea</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AlexNet</td>
+<td>Five conv layers plus three fully connected, ReLU, dropout, GPU training</td>
+<td>Most parameters in the FC layers</td>
+</tr>
+<tr>
+<td>VGG</td>
+<td>Only $3 \times 3$ convs and $2 \times 2$ pools, stacked 16 or 19 layers deep</td>
+<td>Heavy in memory and parameters</td>
+</tr>
+<tr>
+<td>GoogLeNet</td>
+<td>Inception modules, $1 \times 1$ bottlenecks, global average pooling instead of a big FC head</td>
+<td>Hard to design by hand</td>
+</tr>
+<tr>
+<td>ResNet</td>
+<td>Residual connections make 100-plus layers trainable</td>
+<td>Needs batch norm</td>
+</tr>
+</tbody>
+</table>
+<p>VGG&rsquo;s argument is that two stacked $3 \times 3$ layers match the receptive field of one $5 \times 5$ with fewer parameters and an extra nonlinearity.</p>
+<p>ResNet starts from a puzzle: a deeper plain network can have higher training error than a shallower one, which should not happen if the extra layers could learn the identity. The residual block makes the identity the default:</p>
+<div class="math-display">$$y = \mathcal{F}(x, \{W_i\}) + x$$</div>
+<p>The layers learn a correction rather than the whole map, and the skip gives gradients a direct path backwards. Deeper variants use a bottleneck block ($1 \times 1$ down, $3 \times 3$, $1 \times 1$ up).</p>
+<p>The efficient family optimizes accuracy per FLOP or parameter. MobileNet replaces a standard conv with a depthwise conv followed by a $1 \times 1$ pointwise conv; EfficientNet scales depth, width and resolution together. What training one costs in hardware is next.</p>
+<h3 id="09-hardware-and-software">09 · Hardware and software</h3>
+<p>Deep learning is matrix multiplication at scale, and a GPU is a chip with thousands of simple cores built for exactly that. A CPU has a few fast cores good at branching code; GPU throughput on dense linear algebra is one to two orders of magnitude higher for the money. TPUs and similar accelerators push the same idea further with dedicated matrix units.</p>
+<p>Frameworks do three jobs: build a computational graph, differentiate it automatically, and run it on accelerators. The early generation (Caffe, Theano, the first TensorFlow) used static graphs defined once then executed; PyTorch popularized dynamic graphs built as Python runs, which makes debugging and control flow natural, and TensorFlow later moved that way too.</p>
+<p>Mixed-precision training keeps activations and weights in 16-bit floats (fp16 or bfloat16) with an fp32 master copy of the weights, roughly halving memory and often doubling speed on hardware with tensor cores; fp16 needs loss scaling so small gradients do not underflow. Data loading is the hidden bottleneck — if the GPU sits idle waiting for JPEG decoding, no optimizer change will help. The next lecture leaves fixed-size inputs behind.</p>
+<h3 id="10-recurrent-networks-and-image-captioning">10 · Recurrent networks and image captioning</h3>
+<p>Images have a fixed size, but many vision outputs are sequences. A recurrent network carries a hidden state through time with the same weights at every step:</p>
+<div class="math-display">$$h_t = \tanh(W_{hh} h_{t-1} + W_{xh} x_t), \qquad y_t = W_{hy} h_t$$</div>
+<p>Training unrolls the recurrence into a deep graph and backpropagates through time; for long sequences you truncate to a window of steps to bound memory.</p>
+<p>Repeated multiplication by $W_{hh}$ makes gradients through many steps explode or vanish. Gradient clipping handles the explosion; vanishing needs a different cell. The LSTM keeps a separate cell state updated by additive, gated changes (forget, input, output gates), so gradients can pass through unchanged.</p>
+<p>Image captioning stitches the two halves of the course together: a CNN summarizes the image into a feature vector that initializes or conditions the RNN, which emits words one at a time until an end token. Soft attention lets the decoder, at each word, take a weighted average over spatial CNN features instead of one global vector, so the model looks at the relevant region as it writes. Failure modes are those of any language model: repetition, generic captions that ignore the image, and exposure bias from training only on ground-truth prefixes. The attention mechanism introduced here became the whole model in the next lecture.</p>
+<h3 id="11-attention-and-transformers-for-vision">11 · Attention and Transformers for vision</h3>
+<p>Attention is a differentiable lookup. Given queries $Q$, keys $K$ and values $V$, each query takes a weighted sum of values, weighted by its similarity to the keys:</p>
+<div class="math-display">$$\mathrm{Attention}(Q, K, V) = \mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right) V$$</div>
+<p>The $\sqrt{d_k}$ keeps the softmax from saturating. In self-attention all three come from the same inputs, so every element can gather information from every other in one step. A Transformer block is self-attention followed by a per-token MLP, each wrapped in a residual connection and layer normalization. Attention is permutation-invariant, so position must be injected through positional embeddings.</p>
+<p>The Vision Transformer applies this with a deliberately minimal recipe: cut the image into non-overlapping patches (commonly $16 \times 16$ pixels), flatten each, project it linearly to the model width, add a learned position embedding, prepend a learnable class token, and run a standard Transformer encoder.</p>
+<p>The catch is inductive bias. Convolution assumes locality and translation equivariance; ViT assumes almost nothing and must learn both from data. On ImageNet alone a ViT trails a comparable ResNet, but with much larger pretraining sets it overtakes it, and strong augmentation plus distillation (DeiT) narrow the gap. Swin restores locality by attending within shifted windows and building a hierarchy, which also makes it a usable backbone for the dense tasks of the next lecture.</p>
+<h3 id="12-object-detection-and-segmentation">12 · Object detection and segmentation</h3>
+<p>Classification says what; the harder tasks say where.</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Output</th>
+<th>Representative models</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Semantic segmentation</td>
+<td>A class per pixel, no instances</td>
+<td>FCN, U-Net</td>
+</tr>
+<tr>
+<td>Object detection</td>
+<td>A box and class per object, variable count</td>
+<td>R-CNN family, YOLO, SSD, RetinaNet</td>
+</tr>
+<tr>
+<td>Instance segmentation</td>
+<td>A mask per detected object</td>
+<td>Mask R-CNN</td>
+</tr>
+</tbody>
+</table>
+<p>Detection cannot be fixed-output regression because the number of objects varies. R-CNN runs a CNN on each of a couple of thousand class-agnostic region proposals — accurate but very slow. Fast R-CNN runs the CNN once and crops proposal features from the shared map (RoI pooling). Faster R-CNN removes that with a region proposal network: at each feature-map location, anchor boxes of preset scales and aspect ratios are scored for objectness and regressed to refined boxes, then a second stage classifies and refines again. Single-stage detectors (YOLO, SSD) predict class and box directly from anchors or grid cells; RetinaNet showed that the resulting foreground/background imbalance is what hurts them and fixed it with the focal loss.</p>
+<p>Two tools appear everywhere. Intersection over union scores a predicted box against a true one:</p>
+<div class="math-display">$$\mathrm{IoU}(A, B) = \frac{|A \cap B|}{|A \cup B|}$$</div>
+<p>Non-maximum suppression removes duplicates: sort by score, keep the best, drop remaining boxes that overlap it above a threshold, repeat.</p>
+<p>Segmentation replaces the classifier head with dense prediction. A fully convolutional network keeps the convolutional trunk, downsamples to a coarse map, upsamples (transposed convolution or interpolation) to per-pixel scores, and adds skips from earlier high-resolution layers to sharpen boundaries. U-Net makes the encoder–decoder symmetric with a skip at every resolution. Mask R-CNN adds a mask branch to Faster R-CNN and replaces RoI pooling with RoIAlign, which avoids quantizing coordinates so masks line up with pixels. What these networks actually respond to is next.</p>
+<h3 id="13-visualizing-and-understanding-cnns">13 · Visualizing and understanding CNNs</h3>
+<p>A trained network is a black box only if you do not look. First-layer filters of any image CNN are interpretable directly: oriented edges and colour blobs. Deeper layers are examined indirectly. Occluding patches of an image and watching the class score drop maps which regions matter.</p>
+<p>Gradient methods are sharper. A saliency map is the gradient of the class score with respect to the input pixels, highlighting the pixels the score is most sensitive to. Grad-CAM weights the last convolutional feature maps by their gradient to produce a coarse heatmap of evidence.</p>
+<p>Gradient ascent runs the process in reverse: start from noise and update the image to maximize a neuron or class score under a regularizer that keeps it natural. Feature inversion reconstructs an image from a layer&rsquo;s activations, showing that early layers keep nearly everything and late layers keep only layout and semantics.</p>
+<p>The same sensitivity has a dark side. An adversarial example adds a small chosen perturbation — one step of the fast gradient sign method is $x' = x + \epsilon \, \mathrm{sign}(\nabla_x L)$ — and flips the prediction while the image looks unchanged. Robustness remains open and is a warning against reading confidence as understanding. The next lecture optimizes images for a constructive purpose.</p>
+<h3 id="14-generative-models">14 · Generative models</h3>
+<p>Everything so far learned $p(y \mid x)$ from labels. Generative models learn $p(x)$ from unlabeled data. Explicit models such as autoregressive models and VAEs work with the density itself; implicit models such as GANs only learn to sample.</p>
+<p>A plain autoencoder compresses $x$ to a code $z$ and reconstructs it, but nothing makes the code space one you can sample from. The VAE makes $z$ a random variable with prior $p(z) = \mathcal{N}(0, I)$, an encoder $q_\phi(z \mid x)$ and a decoder $p_\theta(x \mid z)$, and maximizes the evidence lower bound:</p>
+<div class="math-display">$$\log p_\theta(x) \geq \mathbb{E}_{z \sim q_\phi(z \mid x)}\big[\log p_\theta(x \mid z)\big] - \mathrm{KL}\big(q_\phi(z \mid x) \,\|\, p(z)\big)$$</div>
+<p>The first term is reconstruction; the second keeps the encoder near the prior so decoding a prior sample gives something sensible. The reparameterization trick, $z = \mu + \sigma \odot \varepsilon$ with $\varepsilon \sim \mathcal{N}(0, I)$, moves the randomness out of the gradient&rsquo;s way. VAE samples are coherent but blurry.</p>
+<p>A GAN pits a generator $G$ mapping noise to images against a discriminator $D$ scoring real versus fake:</p>
+<div class="math-display">$$\min_G \max_D \; \mathbb{E}_{x}[\log D(x)] + \mathbb{E}_{z}[\log(1 - D(G(z)))]$$</div>
+<p>Samples are sharp, but training is unstable and the generator can collapse onto a few modes. Diffusion models, now the dominant family, learn to reverse a gradual noising process one small step at a time, trading slow sampling for stable training and the best sample quality. The next lecture keeps the unlabeled-data goal but aims at features rather than samples.</p>
+<h3 id="15-self-supervised-and-contrastive-learning">15 · Self-supervised and contrastive learning</h3>
+<p>Labels are expensive; pixels are free. Self-supervised learning invents a task whose labels come from the data, trains on it, and evaluates the features with a linear classifier on frozen features (linear probe) or by fine-tuning.</p>
+<p>Contrastive learning generalizes them. Make two random augmentations of one image (crop, flip, colour distortion, blur) — a positive pair — and treat other images in the batch as negatives. Train the encoder so positives are close and negatives far. The InfoNCE loss for anchor $z_i$ and its positive $z_j$ is</p>
+<div class="math-display">$$L_i = -\log \frac{\exp(\mathrm{sim}(z_i, z_j) / \tau)}{\sum_{k \neq i} \exp(\mathrm{sim}(z_i, z_k) / \tau)}$$</div>
+<p>with cosine similarity and temperature $\tau$: a softmax classifier over &ldquo;which candidate is my partner&rdquo;.</p>
+<p>SimCLR is the plain version: large batches supply negatives, a small projection head sits between encoder and loss, and the composition of augmentations matters more than any one of them. MoCo avoids giant batches with a queue of past embeddings as negatives, produced by a slowly updated momentum copy of the encoder so the queue stays consistent. Later methods (BYOL and relatives) drop negatives and avoid collapse through asymmetry between the branches.</p>
+<p>Masked autoencoders suit ViTs: hide a large fraction of patches, encode only the visible ones, and reconstruct the missing pixels with a light decoder. It is simple, scales well and fine-tunes strongly. Pitfalls are weak augmentation (the task becomes trivial), an untuned temperature, and judging only by linear probe when the downstream use is fine-tuning. Next, the same ideas leave the still image.</p>
+<h3 id="16-video-and-3d">16 · Video and 3D</h3>
+<p>Video adds a time axis, and the simplest baselines are strong: classify a single frame, or average predictions across frames. Fusing frames earlier lets the model see motion. Early fusion stacks frames along the channel axis; late fusion runs a 2D CNN per frame and merges at the end; a 3D CNN slides filters over space and time together at a large compute cost. Two-stream networks add a branch on precomputed optical flow. SlowFast pairs a low-frame-rate branch for semantics with a fast, lightweight branch for motion. The constraint is memory: train on short clips and average clip predictions at test time.</p>
+<p>3D vision begins with a choice of representation.</p>
+<table>
+<thead>
+<tr>
+<th>Representation</th>
+<th>Strength</th>
+<th>Weakness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Depth map</td>
+<td>A 2D CNN predicts it directly</td>
+<td>Only the visible surface</td>
+</tr>
+<tr>
+<td>Voxel grid</td>
+<td>3D convolution just works</td>
+<td>Memory cubic in resolution</td>
+</tr>
+<tr>
+<td>Point cloud</td>
+<td>Compact, matches sensors</td>
+<td>Unordered; needs permutation-invariant nets (PointNet)</td>
+</tr>
+<tr>
+<td>Implicit function</td>
+<td>Continuous, any resolution</td>
+<td>Slow to query and render</td>
+</tr>
+</tbody>
+</table>
+<p>Neural radiance fields learn a scene as a function from position and view direction to colour and density, rendered by integrating along camera rays. Both areas are pointers rather than full treatments; what closes the sequence is not a technique but a caution.</p>
+<h3 id="17-fairness-ethics-and-dataset-bias">17 · Fairness, ethics and dataset bias</h3>
+<p>Every model in the course inherits the world view of its training data. Datasets are built by particular people from particular sources with particular labeling instructions, and the model learns those choices as truth. Documented consequences include face-analysis systems whose error rates differ sharply across skin tone and gender, image datasets whose person categories carried offensive or arbitrary labels, and geographic skew where most images come from a few wealthy countries so everyday objects elsewhere are misclassified.</p>
+<p>The concerns go past accuracy gaps. Vision systems are used for surveillance and identification, where the cost of an error falls on someone who never consented to be in the data.</p>
+<p>The practical advice is discipline. Document datasets (what, from where, by whom, for what) and models (intended use, evaluation across subgroups, known failures). Report performance by demographic and geographic slice, not only in aggregate. Treat a benchmark score as evidence about the benchmark, not the world. Ask whether the task should exist at all, and keep a person accountable for decisions the model informs. None of this has an equation, which is exactly why it is easy to skip.</p>
+<h2 id="key-equations-at-a-glance">Key equations at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Equation</th>
+<th>When it applies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hinge loss</td>
+<td>$L_i = \sum_{j \neq y_i} \max(0, s_j - s_{y_i} + 1)$</td>
+<td>Multiclass SVM</td>
+</tr>
+<tr>
+<td>Softmax loss</td>
+<td>$L_i = -\log \big( e^{s_{y_i}} / \sum_j e^{s_j} \big)$</td>
+<td>Cross-entropy classification; subtract the max first</td>
+</tr>
+<tr>
+<td>SGD with momentum</td>
+<td>$v \leftarrow \rho v + \nabla_w L, \; w \leftarrow w - \alpha v$</td>
+<td>Default optimizer for CNNs</td>
+</tr>
+<tr>
+<td>Xavier / Kaiming init</td>
+<td>$\mathrm{Var}(W) = 1 / n_{\mathrm{in}}$ or $2 / n_{\mathrm{in}}$</td>
+<td>Tanh-like units / ReLU units</td>
+</tr>
+<tr>
+<td>Batch norm</td>
+<td>$\hat{x} = (x - \mu_{\mathcal{B}}) / \sqrt{\sigma^2_{\mathcal{B}} + \epsilon}, \; y = \gamma \hat{x} + \beta$</td>
+<td>Training; running statistics at test time</td>
+</tr>
+<tr>
+<td>Conv output size</td>
+<td>$W_{\mathrm{out}} = (W - K + 2P) / S + 1$</td>
+<td>Sizing conv and pooling layers</td>
+</tr>
+<tr>
+<td>Residual block</td>
+<td>$y = \mathcal{F}(x) + x$</td>
+<td>ResNet and most deep models since</td>
+</tr>
+<tr>
+<td>Attention</td>
+<td>$\mathrm{softmax}(QK^{\top} / \sqrt{d_k}) V$</td>
+<td>Transformers, ViT, attention captioning</td>
+</tr>
+<tr>
+<td>IoU</td>
+<td>$\lvert A \cap B \rvert / \lvert A \cup B \rvert$</td>
+<td>Box matching and NMS in detection</td>
+</tr>
+<tr>
+<td>VAE ELBO</td>
+<td>$\mathbb{E}_{q}[\log p(x \mid z)] - \mathrm{KL}(q(z \mid x) \,\Vert\, p(z))$</td>
+<td>Training a variational autoencoder</td>
+</tr>
+<tr>
+<td>GAN objective</td>
+<td>$\min_G \max_D \mathbb{E}_x[\log D(x)] + \mathbb{E}_z[\log(1 - D(G(z)))]$</td>
+<td>Adversarial training</td>
+</tr>
+<tr>
+<td>InfoNCE</td>
+<td>$-\log \dfrac{\exp(\mathrm{sim}(z_i, z_j)/\tau)}{\sum_{k \neq i} \exp(\mathrm{sim}(z_i, z_k)/\tau)}$</td>
+<td>Contrastive self-supervised learning</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-mistakes">Common mistakes</h2>
+<ul>
+<li>Tuning hyperparameters on the test set. Split off a validation set and touch the test set once, at the end.</li>
+<li>Computing softmax on raw scores and getting NaN. Subtract the maximum score before exponentiating; the result is unchanged and the overflow is gone.</li>
+<li>Using Xavier or tiny random weights with ReLU in a deep network, so activations shrink to zero. Use Kaiming initialization and check activation statistics per layer.</li>
+<li>Leaving batch norm and dropout in training mode at evaluation. Switch to eval mode so batch norm uses running statistics and dropout is off.</li>
+<li>Searching the learning rate on a linear grid. Sample on a log scale, run short coarse trials, then refine around the best region.</li>
+<li>Miscounting convolution shapes. Apply $(W - K + 2P)/S + 1$ layer by layer, and remember the parameter count depends on filter size and channels, not image size.</li>
+<li>Reading high confidence as understanding. Saliency maps, per-subgroup evaluation and adversarial tests each expose a way the model can be right for the wrong reason.</li>
+</ul>
+<h2 id="related-courses">Related courses</h2>
+<ul>
+<li><a href="cs229.html">CS229</a> — supplies the supervised-learning foundations (losses, regularization, gradient descent) that the first lectures here assume.</li>
+<li><a href="cs230.html">CS230</a> — covers the same training machinery in a general setting, with less on vision-specific architectures.</li>
+<li><a href="cs224n.html">CS224n</a> — develops RNNs, attention and Transformers for language; the vision Transformer lecture borrows that toolkit almost unchanged.</li>
+<li><a href="cs336.html">CS336</a> — goes deep on hardware, mixed precision and scaling, expanding the brief hardware lecture here.</li>
+<li><a href="cs234.html">CS234</a> — reinforcement learning, where vision models become the perception front end for agents acting in video or 3D environments.</li>
+</ul>
+      <a class="back" href="../study.html">&larr; All courses</a>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="wrap"><span>&copy; 2026 Kanghoun Lee &middot; Seoul</span><nav aria-label="Footer navigation"><a href="../#about">About</a><a href="../study.html">Study</a><a href="https://github.com/nightandweather">GitHub &#8599;</a></nav></div></footer>
+</body></html>

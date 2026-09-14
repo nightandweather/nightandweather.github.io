@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en"><head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HGZPVGV9N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-3HGZPVGV9N");
+  </script>
+  <meta name="google-adsense-account" content="ca-pub-4242632384470714">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Applied deep learning from the forward pass to shipping a project: optimization, CNNs, detection, sequence models, GANs, and project strategy.">
+  <title>CS230 Deep Learning &mdash; Kanghoun Lee</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/study/cs230.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CS230 Deep Learning">
+  <meta property="og:description" content="Applied deep learning from the forward pass to shipping a project: optimization, CNNs, detection, sequence models, GANs, and project strategy.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
+  <meta property="og:url" content="https://nightandweather.github.io/study/cs230.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../study.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+</head>
+<body><a class="skip-link" href="#main-content">Skip to content</a>
+<header class="nav wrap"><a class="wordmark" href="../" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a><nav aria-label="Primary navigation"><a href="../work.html">Work</a><a href="../experiments.html">Experiments</a><a href="../field-notes.html">Field Notes</a><a href="../study.html" aria-current="page">Study</a><a href="../opportunities.html">Calendar</a><a href="../rejections.html">Rejections</a></nav></header>
+<main id="main-content" class="study-page">
+  <section class="study-hero study-hero-tinted" style="--tone:#e8f5cf"><div class="wrap"><p class="kicker">Stanford CS230 &middot; Practice</p><h1>Deep Learning</h1><p class="lead">Applied deep learning from the forward pass to shipping a project: optimization, CNNs, detection, sequence models, GANs, and project strategy.</p></div></section>
+  <div class="study-layout wrap">
+    <aside class="study-side">
+      <dl class="study-facts"><dt>Taught by</dt><dd>Andrew Ng, Kian Katanforoosh</dd><dt>Notes based on</dt><dd>Public lecture sequence and the Deep Learning Specialization structure it pairs with</dd><dt>Lectures covered</dt><dd>15</dd><dt>Official page</dt><dd><a href="https://cs230.stanford.edu/" rel="noopener">CS230 &#8599;</a></dd></dl>
+      <nav class="study-jump" aria-label="Lectures"><p class="eyebrow">Lectures</p><ol><li><a href="#01-what-deep-learning-is-and-when-it-wins">01 · What deep learning is and when it wins</a></li><li><a href="#02-neural-network-basics-forward-pass-backpropagation-vectorization">02 · Neural network basics: forward pass, backpropagation, vectorization</a></li><li><a href="#03-activations-and-initialization">03 · Activations and initialization</a></li><li><a href="#04-the-full-cycle-of-a-deep-learning-project">04 · The full cycle of a deep learning project</a></li><li><a href="#05-train-dev-and-test-strategy-and-bias-variance-in-the-deep-learning-era">05 · Train, dev, and test strategy and bias-variance in the deep learning era</a></li><li><a href="#06-regularization-l2-dropout-augmentation-early-stopping">06 · Regularization: L2, dropout, augmentation, early stopping</a></li><li><a href="#07-optimization-mini-batch-momentum-rmsprop-adam-schedules-batch-norm">07 · Optimization: mini-batch, momentum, RMSProp, Adam, schedules, batch norm</a></li><li><a href="#08-hyperparameter-search-and-orchestration">08 · Hyperparameter search and orchestration</a></li><li><a href="#09-cnn-foundations-and-classic-architectures">09 · CNN foundations and classic architectures</a></li><li><a href="#10-detection-and-segmentation-practice">10 · Detection and segmentation practice</a></li><li><a href="#11-face-verification-and-one-shot-learning">11 · Face verification and one-shot learning</a></li><li><a href="#12-sequence-models-word-embeddings-and-attention">12 · Sequence models, word embeddings, and attention</a></li><li><a href="#13-gans-and-adversarial-examples">13 · GANs and adversarial examples</a></li><li><a href="#14-interpretability-saliency-and-class-activation-maps">14 · Interpretability: saliency and class activation maps</a></li><li><a href="#15-reading-papers-and-ai-project-strategy">15 · Reading papers and AI project strategy</a></li></ol></nav>
+    </aside>
+    <article class="study-body note-body">
+      <p class="study-disclaimer">Personal study notes written in my own words from publicly available lectures and course pages. Not affiliated with or endorsed by Stanford University. No assignment solutions are published here.</p>
+<h2 id="what-the-course-is-about">What the course is about</h2>
+<p>CS230 is the course that turns deep learning from a set of equations into a working project. The lectures assume you already know what a gradient is and can write a loss function; the emphasis is on the decisions that decide whether a model ships: how to split data, which metric to chase, how to diagnose why a model is failing, and how to organize a search over architectures and hyperparameters without wasting a week of GPU time. Where a theory course asks why a method works, this course asks what to do on Tuesday when dev accuracy is stuck.</p>
+<p>You should be comfortable with linear algebra, basic probability, Python, and NumPy. Familiarity with logistic regression and gradient descent (the CS229 level) makes the first weeks much faster, because the neural network material is presented as a direct generalization of a single logistic unit.</p>
+<p>The lecture arc has three layers. The first builds the machinery: forward and backward passes, activations, initialization, regularization, optimizers, and normalization. The second is the project lifecycle: data collection, train/dev/test strategy, bias-variance diagnosis, hyperparameter search, and error analysis. The third is a tour of the architectures that dominate applied work (CNNs, detection and segmentation heads, siamese networks, recurrent and attention models, GANs) with just enough depth to read a paper and reproduce its core idea. The notes below follow that order.</p>
+<h2 id="lecture-notes">Lecture notes</h2>
+<h3 id="01-what-deep-learning-is-and-when-it-wins">01 · What deep learning is and when it wins</h3>
+<p>Deep learning is function approximation with many stacked, differentiable layers trained end to end on a loss. The practical claim behind the field is simple: for tasks with large labeled datasets and rich raw inputs (pixels, audio, text), models that learn their own features beat models that rely on hand-designed features, and the gap grows with data. On a small tabular dataset, gradient-boosted trees or a linear model often win, and a deep model mostly adds variance.</p>
+<p>The mental picture to keep is a curve of performance versus data size. Traditional methods plateau early. Larger networks keep improving as data grows, which is why scale (data, compute, model size) is the lever that drove the last decade of progress. Two supporting factors made this possible: GPUs, which make the dense matrix multiplies cheap, and algorithmic changes such as ReLU that let gradients flow through deep stacks.</p>
+<p>Deep learning is not free. It needs labeled data at a scale that is often the real project cost, it is hard to interpret, and it fails silently on distribution shift. A useful habit is to ask three questions before starting: is there enough data, is the input rich enough that learned features matter, and is there a clear metric to optimize.</p>
+<p>The next step is to open the box and see what a single layer computes, then stack layers and differentiate through them.</p>
+<h3 id="02-neural-network-basics-forward-pass-backpropagation-vectorization">02 · Neural network basics: forward pass, backpropagation, vectorization</h3>
+<p>A layer computes an affine map followed by a nonlinearity. For layer $l$ with weights $W^{[l]}$ and bias $b^{[l]}$:</p>
+<div class="math-display">$$z^{[l]} = W^{[l]} a^{[l-1]} + b^{[l]}, \qquad a^{[l]} = g^{[l]}(z^{[l]})$$</div>
+<p>Stacking these from the input $a^{[0]} = x$ to the output gives the forward pass. The loss compares the final activation with the label; for binary classification the standard choice is cross-entropy. Backpropagation is the chain rule applied layer by layer from the loss backward, caching each $z^{[l]}$ and $a^{[l-1]}$ on the way forward so that the gradients $dW^{[l]}$ and $db^{[l]}$ can be computed without recomputation.</p>
+<p>Vectorization is the difference between a working prototype and a toy. Instead of looping over examples, stack the $m$ examples as columns of a matrix $X$ and compute $Z = W X + b$ once, broadcasting the bias. The gradient of the weights is then a single matrix product with a $1/m$ factor.</p>
+<pre><code class="language-python">import numpy as np
+def dense_forward(A_prev, W, b):
+    Z = W @ A_prev + b            # (n_l, m)
+    A = np.maximum(0, Z)          # ReLU
+    return A, (A_prev, W, Z)
+def dense_backward(dA, cache):
+    A_prev, W, Z = cache
+    dZ = dA * (Z &gt; 0)
+    m = A_prev.shape[1]
+    return (dZ @ A_prev.T) / m, dZ.sum(axis=1, keepdims=True) / m, W.T @ dZ
+</code></pre>
+<p>What goes wrong: shape bugs. Every tensor should have its shape written next to it, and a gradient check on a tiny network (compare backprop with finite differences) catches most sign and transpose errors. The next question is which nonlinearity $g$ to use and how to initialize $W$ so that signals neither vanish nor explode as depth grows.</p>
+<h3 id="03-activations-and-initialization">03 · Activations and initialization</h3>
+<p>The nonlinearity is what makes depth useful; without it a stack of affine maps collapses into one affine map. The choices that matter in practice:</p>
+<table>
+<thead>
+<tr>
+<th>Activation</th>
+<th>Formula</th>
+<th>Typical use</th>
+<th>Known problem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sigmoid</td>
+<td>$\sigma(z) = 1/(1+e^{-z})$</td>
+<td>Output of binary classifier</td>
+<td>Saturates, gradients vanish for large $\lvert z \rvert$</td>
+</tr>
+<tr>
+<td>Tanh</td>
+<td>$\tanh(z)$</td>
+<td>Older hidden layers, RNN gates</td>
+<td>Same saturation, but zero-centered</td>
+</tr>
+<tr>
+<td>ReLU</td>
+<td>$\max(0, z)$</td>
+<td>Default hidden layer</td>
+<td>Dead units when $z$ stays negative</td>
+</tr>
+<tr>
+<td>Leaky ReLU</td>
+<td>$\max(\alpha z, z)$</td>
+<td>When dead ReLUs are a problem</td>
+<td>One more hyperparameter</td>
+</tr>
+<tr>
+<td>Softmax</td>
+<td>$e^{z_i} / \sum_j e^{z_j}$</td>
+<td>Multi-class output</td>
+<td>Numerically unstable without max subtraction</td>
+</tr>
+</tbody>
+</table>
+<p>Initialization decides whether training starts at all. Setting all weights to zero makes every unit in a layer identical forever, because they receive identical gradients. Random weights that are too large push sigmoid or tanh units into saturation; too small and the activations shrink to zero through the layers. The standard fix scales the variance of the weights by the fan-in $n_{\text{in}}$. For ReLU the He initialization draws $W \sim \mathcal{N}(0, 2/n_{\text{in}})$; for tanh the Xavier initialization uses $1/n_{\text{in}}$. Biases start at zero.</p>
+<p>A practical check: after a random initialization, look at the histogram of activations per layer. If they collapse toward zero or pile up at the saturation values, the scale is wrong.</p>
+<p>With a network that trains, the question becomes what to train it on and how to tell if it is working, which is the project lifecycle.</p>
+<h3 id="04-the-full-cycle-of-a-deep-learning-project">04 · The full cycle of a deep learning project</h3>
+<p>A model is a small part of a deployed system. The cycle that the course keeps returning to looks like this: define the task and the metric, collect and label data, split it, train a first model quickly, analyze errors, then loop back to data or model changes, and finally deploy and monitor. Most of the calendar time goes to the data steps, not the model.</p>
+<p>Data collection questions come first. Where will the examples come from, what does a label mean exactly, and does the data you can get match the data the system will see in production? A face-unlock system trained on studio photos and deployed on phone cameras at night is the canonical mismatch. Labeling guidelines should be written down, and a sample should be double-labeled to estimate human agreement, because that number is a ceiling on what the metric can mean.</p>
+<p>The metric should be a single number you can optimize, plus satisficing constraints (latency under some bound, model size under some limit). Two competing metrics make every comparison a judgment call; combine them (an F1 score, a weighted average) or pick one to optimize and treat the rest as thresholds.</p>
+<p>The first model should be built in days, not weeks. Its purpose is not to be good but to reveal which errors dominate. Deployment adds a monitoring loop: the input distribution drifts, so the dev set and the metric need periodic refreshing from live traffic.</p>
+<p>This lifecycle depends on a careful data split, which is the next lecture.</p>
+<h3 id="05-train-dev-and-test-strategy-and-bias-variance-in-the-deep-learning-era">05 · Train, dev, and test strategy and bias-variance in the deep learning era</h3>
+<p>The training set fits parameters, the dev (validation) set chooses among models and hyperparameters, and the test set gives an unbiased final estimate. The dev and test sets must come from the same distribution, and that distribution should be the one you care about in production. With millions of examples, the old 60/20/20 split is wasteful; a dev set of a few thousand examples is enough to distinguish candidate models, and the rest goes to training.</p>
+<p>Bias-variance analysis in this setting uses four numbers. Let human-level error stand in for the Bayes error estimate.</p>
+<table>
+<thead>
+<tr>
+<th>Gap</th>
+<th>Name</th>
+<th>Typical fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Human error to training error</td>
+<td>Avoidable bias</td>
+<td>Bigger network, train longer, better optimizer, different architecture</td>
+</tr>
+<tr>
+<td>Training error to train-dev error</td>
+<td>Variance</td>
+<td>More data, regularization, augmentation</td>
+</tr>
+<tr>
+<td>Train-dev error to dev error</td>
+<td>Data mismatch</td>
+<td>Make training data more like dev, synthesize dev-like data</td>
+</tr>
+<tr>
+<td>Dev error to test error</td>
+<td>Overfit to dev</td>
+<td>Larger dev set</td>
+</tr>
+</tbody>
+</table>
+<p>The train-dev set is a held-out slice of the training distribution. Without it you cannot tell variance from mismatch: a model that has 1% training error and 10% dev error might be overfitting, or it might be doing fine on its own distribution and failing on a different one. The two problems have opposite fixes.</p>
+<p>The main thing that goes wrong is chasing the wrong gap. Adding data when the problem is avoidable bias does nothing; adding capacity when the problem is variance makes things worse. Diagnose first. When the diagnosis says variance, the tools are the regularization methods that come next.</p>
+<h3 id="06-regularization-l2-dropout-augmentation-early-stopping">06 · Regularization: L2, dropout, augmentation, early stopping</h3>
+<p>Regularization trades a little bias for less variance. L2 (weight decay) adds $\frac{\lambda}{2m} \sum_l \lVert W^{[l]} \rVert_F^2$ to the cost, which shrinks weights toward zero at every step and keeps activations in the near-linear region where the network behaves like a simpler model. The gradient step becomes $W \leftarrow (1 - \alpha \lambda / m) W - \alpha\, dW$.</p>
+<p>Dropout randomly zeros each hidden unit with probability $1 - p$ during training and rescales the survivors by $1/p$ (inverted dropout) so that expected activations match at test time, when no units are dropped. The effect is that no unit can rely on any single input, which spreads the weights out. Dropout should be turned off during evaluation; forgetting this is a common source of noisy dev numbers.</p>
+<p>Data augmentation adds variance-reducing examples for free: flips, crops, small rotations, color jitter for images; noise or speed perturbation for audio. The rule is that the transform must preserve the label. Horizontal flips are fine for cats, wrong for digits.</p>
+<p>Early stopping halts training when dev error stops improving. It works, but it couples two jobs (fitting the training set and controlling variance) into one knob, which makes the bias-variance analysis of the previous lecture harder to read. The course&rsquo;s preference is to fit training data as well as possible and control variance separately with L2 or dropout.</p>
+<p>What goes wrong: applying dropout to the input layer or the output layer, or regularizing when the diagnosis said bias. The next lecture covers the other side, making training itself faster and more stable.</p>
+<h3 id="07-optimization-mini-batch-momentum-rmsprop-adam-schedules-batch-norm">07 · Optimization: mini-batch, momentum, RMSProp, Adam, schedules, batch norm</h3>
+<p>Mini-batch gradient descent processes a batch of 32 to 512 examples per step instead of the full set. The gradient is noisy, but you take many more steps per epoch and the noise helps escape flat regions. Batch sizes that are powers of two fit hardware well.</p>
+<p>Momentum smooths the noisy gradient with an exponentially weighted average: $v \leftarrow \beta v + (1-\beta)\, dW$, then $W \leftarrow W - \alpha v$, with $\beta \approx 0.9$. RMSProp divides by a running average of squared gradients so that directions with consistently large gradients take smaller steps. Adam combines both, with bias correction for the early steps:</p>
+<div class="math-display">$$m_t = \beta_1 m_{t-1} + (1-\beta_1)\, g_t, \qquad v_t = \beta_2 v_{t-1} + (1-\beta_2)\, g_t^2$$</div>
+<div class="math-display">$$\hat m_t = \frac{m_t}{1-\beta_1^t}, \qquad \hat v_t = \frac{v_t}{1-\beta_2^t}, \qquad \theta_t = \theta_{t-1} - \alpha \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}$$</div>
+<p>Default values $\beta_1 = 0.9$, $\beta_2 = 0.999$, $\epsilon = 10^{-8}$ rarely need tuning; the learning rate $\alpha$ always does. Learning-rate decay (step, exponential, or cosine) lets the model settle into a narrower minimum late in training.</p>
+<p>Batch normalization normalizes each unit&rsquo;s pre-activation across the mini-batch, then lets the network undo the normalization with learned scale $\gamma$ and shift $\beta$:</p>
+<div class="math-display">$$\hat z^{(i)} = \frac{z^{(i)} - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}, \qquad \tilde z^{(i)} = \gamma \hat z^{(i)} + \beta$$</div>
+<p>It makes deeper networks train with larger learning rates and reduces sensitivity to initialization. At test time the batch statistics are replaced by running averages collected during training. The common bug is forgetting that switch, or using batch sizes so small that the batch statistics are noise.</p>
+<p>Once training is stable, the remaining question is which of the dozens of knobs to search, and how.</p>
+<h3 id="08-hyperparameter-search-and-orchestration">08 · Hyperparameter search and orchestration</h3>
+<p>Hyperparameters are not equally important. The learning rate matters most; then momentum terms, number of hidden units, mini-batch size, and number of layers; then the Adam constants, which almost never move. Because the important ones are unknown in advance, random search beats grid search: a grid with five values per axis tests only five distinct learning rates, while twenty-five random points test twenty-five.</p>
+<p>Sample on the right scale. A learning rate between $10^{-4}$ and $1$ should be drawn uniformly in $\log_{10}$ space, not linearly, or almost every draw lands near the top of the range. The same applies to $1 - \beta$ for momentum, where the difference between $0.9$ and $0.99$ is a tenfold change in effective averaging window.</p>
+<p>Search coarse to fine: sample broadly, find the region where good runs cluster, then resample within it. Two operating modes exist. If compute is scarce, babysit one model, watching the curves and adjusting the learning rate by hand. If compute is plentiful, launch many runs in parallel and compare at the end.</p>
+<p>Orchestration is the unglamorous part: every run should log its configuration, seed, git commit, and metric history to a place where they can be compared later. Runs that cannot be reproduced are wasted. Save checkpoints so a promising run can be resumed rather than restarted.</p>
+<p>What goes wrong: tuning on the test set, comparing runs with different seeds and reading noise as signal, and re-using hyperparameters from one dataset on another without re-searching. With the training toolkit complete, the next lectures cover the architectures it is applied to, starting with convolutions.</p>
+<h3 id="09-cnn-foundations-and-classic-architectures">09 · CNN foundations and classic architectures</h3>
+<p>A convolutional layer slides a small filter over the input and computes a dot product at each position. Two properties make it the right tool for images: parameter sharing (the same edge detector is useful everywhere) and sparse connectivity (each output depends on a local patch). The output size for input width $n$, filter size $f$, padding $p$, and stride $s$ is $\lfloor (n + 2p - f)/s \rfloor + 1$. Pooling shrinks the spatial size and adds a little translation invariance; max pooling is the default.</p>
+<p>The classic architectures tell a story of increasing depth:</p>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Idea that mattered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LeNet-5</td>
+<td>Conv, pool, conv, pool, dense: the template</td>
+</tr>
+<tr>
+<td>AlexNet</td>
+<td>Same template, much larger, ReLU, GPUs</td>
+</tr>
+<tr>
+<td>VGG</td>
+<td>Only 3x3 convs and 2x2 pools, uniform and deep</td>
+</tr>
+<tr>
+<td>Inception</td>
+<td>Parallel filter sizes per block, 1x1 convs to cut channels</td>
+</tr>
+<tr>
+<td>ResNet</td>
+<td>Skip connections allow training at 50 to 150 layers</td>
+</tr>
+</tbody>
+</table>
+<p>A 1x1 convolution mixes channels without touching spatial structure, which makes it a cheap way to reduce depth before an expensive 3x3 or 5x5 filter. The skip connection in ResNet computes $a^{[l+2]} = g(z^{[l+2]} + a^{[l]})$. Because the identity is easy to learn (set the residual weights to zero), adding blocks cannot hurt training error, which is exactly the failure that plain deep networks showed.</p>
+<p>What goes wrong: mismatched channel counts across a skip connection (fix with a 1x1 projection), and forgetting that a convolution&rsquo;s receptive field grows slowly, so early layers see only tiny patches. Transfer learning from an ImageNet-pretrained model is the default starting point for any image task with limited data.</p>
+<p>Classification produces one label per image. The next lecture asks where the objects are.</p>
+<h3 id="10-detection-and-segmentation-practice">10 · Detection and segmentation practice</h3>
+<p>Object detection outputs a bounding box and a class for each object. The YOLO-style approach divides the image into an $S \times S$ grid and has each cell predict, for a few anchor box shapes, a confidence $p_c$, box offsets $(b_x, b_y, b_w, b_h)$, and class probabilities. The whole image is processed in one forward pass of a convolutional network, which is why it is fast enough for video.</p>
+<p>Two pieces of geometry run the training and the post-processing. Intersection over union measures how well two boxes agree:</p>
+<div class="math-display">$$\text{IoU}(A, B) = \frac{\lvert A \cap B \rvert}{\lvert A \cup B \rvert}$$</div>
+<p>During training, a predicted box is counted as correct when its IoU with the ground truth exceeds a threshold, commonly $0.5$. At inference the network produces many overlapping boxes for the same object; non-max suppression keeps the highest-confidence box, discards every other box of the same class with IoU above a threshold, and repeats. Anchor boxes let one cell predict two objects of different shapes, such as a tall pedestrian and a wide car sharing a center.</p>
+<p>Semantic segmentation labels every pixel. The U-Net architecture is an encoder that shrinks spatial size while growing channels, then a decoder that upsamples with transposed convolutions back to full resolution. Skip connections copy encoder feature maps to the matching decoder stage, which restores the fine edges the bottleneck lost. The loss is per-pixel cross-entropy, sometimes combined with a Dice term when the foreground is rare.</p>
+<p>What goes wrong: class imbalance (most grid cells contain nothing, so the loss must weight objects up), label boxes drawn inconsistently across annotators, and NMS thresholds tuned for one object density and applied to another. The next lecture handles the case where the number of classes is unknown in advance.</p>
+<h3 id="11-face-verification-and-one-shot-learning">11 · Face verification and one-shot learning</h3>
+<p>Face verification asks whether two images show the same person; face recognition asks which of $K$ people an image shows. A softmax over $K$ people fails for the obvious reason that new employees join and each person has one enrollment photo. The fix is one-shot learning: learn an embedding function $f(x)$ such that distance in embedding space reflects identity, then compare a new image to a stored embedding.</p>
+<p>A siamese network runs the same convolutional encoder on two images and trains on the distance $d(x_1, x_2) = \lVert f(x_1) - f(x_2) \rVert^2$. The triplet loss trains the encoder on an anchor $A$, a positive $P$ of the same identity, and a negative $N$ of a different identity:</p>
+<div class="math-display">$$\mathcal{L}(A, P, N) = \max\big(\lVert f(A) - f(P) \rVert^2 - \lVert f(A) - f(N) \rVert^2 + \alpha,\; 0\big)$$</div>
+<p>The margin $\alpha$ prevents the trivial solution of mapping every image to the same point. Triplet selection matters: random negatives are too easy and produce zero loss almost immediately, so training mines hard triplets where $d(A, N)$ is close to $d(A, P)$. An alternative is to treat verification as binary classification on the pair, feeding the elementwise difference of the two embeddings to a logistic unit.</p>
+<p>At deployment, embeddings for enrolled faces are precomputed and stored, so the per-query cost is one forward pass and a nearest-neighbor lookup. Normalizing embeddings to unit length makes the threshold on distance stable across identities.</p>
+<p>What goes wrong: the embedding collapses when the margin is too small or the negatives too easy, and dev-set pairs that share photographic conditions with training pairs give an optimistic verification rate. The same embedding-and-compare idea reappears in the next lecture, applied to words.</p>
+<h3 id="12-sequence-models-word-embeddings-and-attention">12 · Sequence models, word embeddings, and attention</h3>
+<p>A recurrent network processes a sequence one step at a time, carrying a hidden state $a^{\langle t \rangle} = g(W_a [a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_a)$. The same weights are used at every step, so the model handles variable-length input, and backpropagation through time is ordinary backprop on the unrolled graph. Plain RNNs struggle with long dependencies because gradients through many steps vanish or explode; gradient clipping fixes exploding, but not vanishing.</p>
+<p>Gated units fix vanishing. The GRU keeps a memory cell and learns an update gate $\Gamma_u$ that decides how much of the old state to keep; when $\Gamma_u \approx 0$ the cell passes through unchanged and the gradient with it. The LSTM separates this into forget, update, and output gates and is the more common default. A bidirectional RNN runs one pass forward and one backward and concatenates the states, which helps whenever the whole sequence is available at prediction time, as in tagging, but not in real-time generation.</p>
+<p>Word embeddings replace one-hot vectors with dense learned vectors so that similar words are close. They can be learned as a byproduct of a language modeling task (skip-gram, negative sampling) and transferred to small downstream datasets; averaging or sequencing them gives a sentence representation.</p>
+<p>Attention removes the bottleneck of encoding a whole input sequence into one vector. For each output step $t$ the decoder computes weights $\alpha^{\langle t, t' \rangle}$ over the encoder states, normalized with a softmax, and forms the context as the weighted sum. The weights are learned by a small network on the previous decoder state and each encoder state. This is the mechanism that transformers later generalize with self-attention.</p>
+<p>What goes wrong: padding tokens counted in the loss, and evaluating a machine translation model with a metric that ignores fluency. The next lecture turns from prediction to generation.</p>
+<h3 id="13-gans-and-adversarial-examples">13 · GANs and adversarial examples</h3>
+<p>A generative adversarial network trains two networks against each other. The generator $G$ maps noise $z$ to a sample; the discriminator $D$ outputs the probability that an input is real. The minimax objective is</p>
+<div class="math-display">$$\min_G \max_D \; \mathbb{E}_{x \sim p_{\text{data}}}[\log D(x)] + \mathbb{E}_{z \sim p_z}[\log(1 - D(G(z)))]$$</div>
+<p>In practice the generator maximizes $\log D(G(z))$ instead of minimizing $\log(1 - D(G(z)))$, because the latter has vanishing gradients early in training when the discriminator wins easily. Training alternates a few discriminator steps with one generator step. Failure modes are well known: mode collapse (the generator produces a few samples that fool $D$ and ignores the rest of the distribution), oscillation instead of convergence, and a discriminator that becomes too good and stops giving useful gradient. Conditional GANs add a label or an image as input to both networks, which is the basis of image-to-image translation.</p>
+<p>Adversarial examples are the other side of the same idea. A tiny perturbation $\delta$, invisible to a person, can flip a classifier&rsquo;s prediction. The fast gradient sign method computes $\delta = \epsilon \cdot \text{sign}(\nabla_x \mathcal{L}(x, y))$: step in the direction that increases the loss, clipped per pixel. The reason it works is that networks are close to linear in high dimensions, so many small aligned changes add up. Defenses include adversarial training (adding perturbed examples to the training set) and preprocessing, and none is complete.</p>
+<p>What goes wrong: judging a GAN by loss curves, which say little about sample quality, and assuming a model is robust because clean test accuracy is high. Both problems ask what the network is actually looking at, which is the subject of the next lecture.</p>
+<h3 id="14-interpretability-saliency-and-class-activation-maps">14 · Interpretability: saliency and class activation maps</h3>
+<p>A trained classifier gives a number; interpretability methods try to say why. The simplest is the saliency map: take the gradient of the class score with respect to the input pixels, $\partial s_c / \partial x$, and display its magnitude. Pixels with large gradient are the ones where a small change moves the score most. Saliency maps are cheap and often noisy, but they catch a certain kind of bug, such as a model that classifies snow rather than the animal standing in it.</p>
+<p>Class activation maps work at the feature-map level. For a network that ends in global average pooling followed by a dense layer, the class score is a weighted sum of the pooled feature maps, so the same weights can be applied to the unpooled maps to produce a coarse heatmap of where the class evidence sits. Grad-CAM generalizes this to any architecture by using the gradient of the score with respect to the last convolutional feature maps as the weights, then upsampling the weighted sum to the input size.</p>
+<p>Other tools: occlusion sensitivity (slide a gray patch across the image and watch the score drop), visualizing what individual filters respond to by gradient ascent on the input, and inspecting nearest neighbors in embedding space.</p>
+<p>None of these is a proof. They are diagnostic aids that tell you where to look, and they should be used the same way as error analysis: sample failures, look at the map, and ask whether the evidence the model used is evidence a person would accept. What goes wrong is treating a clean heatmap as validation; a model can attend to the right region for the wrong reason.</p>
+<p>The final lecture pulls the project material together into a strategy for the whole course of a project.</p>
+<h3 id="15-reading-papers-and-ai-project-strategy">15 · Reading papers and AI project strategy</h3>
+<p>Two skills separate practitioners who keep improving from those who plateau: reading the literature efficiently and deciding what to do next on a project. For papers, the method is multiple passes. First the title, abstract, and figures, which tell you whether to continue. Then the introduction, conclusion, and the figures again, skipping the math. Then the full paper, skipping only the parts you do not need. For each paper, be able to state what the authors tried to do, what the key elements were, what you can use, and what to read next. Compile a list of ten to twenty papers on a topic and read a few deeply rather than all shallowly.</p>
+<p>Project strategy starts with error analysis. Take a hundred misclassified dev examples and tally the causes: blurry images, mislabeled examples, a confusable class. The tally gives a ceiling on how much each fix could help, which decides where to spend the next week. Mislabeled dev examples matter only if they are a large share of the error; mislabeled training examples matter less, because a network is robust to random label noise.</p>
+<p>Transfer learning applies when the target task has little data and a related task has much: pretrain on the large task, replace the output layer, and fine-tune. Whether to freeze early layers depends on how much target data there is. Multi-task learning shares a network across tasks with a summed loss when the tasks are related and data per task is similar in size.</p>
+<p>Collect more data when the diagnosis says variance or mismatch, and only when the data you can collect resembles the dev distribution. End-to-end learning replaces a pipeline with one model; it wins when there is enough data for the whole mapping and loses when hand-designed intermediate stages encode knowledge the data cannot supply.</p>
+<h2 id="key-equations-at-a-glance">Key equations at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Equation</th>
+<th>When it applies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Layer forward pass</td>
+<td>$z^{[l]} = W^{[l]} a^{[l-1]} + b^{[l]}$, $a^{[l]} = g(z^{[l]})$</td>
+<td>Every dense layer; conv layers replace the product with a convolution</td>
+</tr>
+<tr>
+<td>Cross-entropy loss</td>
+<td>$\mathcal{L} = -\frac{1}{m} \sum_i y^{(i)} \log \hat y^{(i)} + (1 - y^{(i)}) \log (1 - \hat y^{(i)})$</td>
+<td>Binary classification with a sigmoid output</td>
+</tr>
+<tr>
+<td>He initialization</td>
+<td>$W \sim \mathcal{N}(0, 2 / n_{\text{in}})$</td>
+<td>ReLU hidden layers</td>
+</tr>
+<tr>
+<td>L2 regularization</td>
+<td>$J_{\text{reg}} = J + \frac{\lambda}{2m} \sum_l \lVert W^{[l]} \rVert_F^2$</td>
+<td>Variance is the diagnosed problem</td>
+</tr>
+<tr>
+<td>Momentum</td>
+<td>$v \leftarrow \beta v + (1-\beta)\, dW$, $W \leftarrow W - \alpha v$</td>
+<td>Noisy mini-batch gradients</td>
+</tr>
+<tr>
+<td>Adam update</td>
+<td>$\theta_t = \theta_{t-1} - \alpha\, \hat m_t / (\sqrt{\hat v_t} + \epsilon)$ with bias-corrected $\hat m_t, \hat v_t$</td>
+<td>Default optimizer for most tasks</td>
+</tr>
+<tr>
+<td>Batch norm</td>
+<td>$\tilde z = \gamma \frac{z - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}} + \beta$</td>
+<td>Deep networks, moderate batch sizes</td>
+</tr>
+<tr>
+<td>Conv output size</td>
+<td>$\lfloor (n + 2p - f) / s \rfloor + 1$</td>
+<td>Any conv or pooling layer</td>
+</tr>
+<tr>
+<td>Residual block</td>
+<td>$a^{[l+2]} = g(z^{[l+2]} + a^{[l]})$</td>
+<td>Networks deeper than about 20 layers</td>
+</tr>
+<tr>
+<td>IoU</td>
+<td>$\lvert A \cap B \rvert / \lvert A \cup B \rvert$</td>
+<td>Box matching in detection, NMS thresholds</td>
+</tr>
+<tr>
+<td>Triplet loss</td>
+<td>$\max(\lVert f(A) - f(P) \rVert^2 - \lVert f(A) - f(N) \rVert^2 + \alpha, 0)$</td>
+<td>Embedding learning for verification</td>
+</tr>
+<tr>
+<td>GAN objective</td>
+<td>$\min_G \max_D \mathbb{E}_x[\log D(x)] + \mathbb{E}_z[\log(1 - D(G(z)))]$</td>
+<td>Adversarial generative training</td>
+</tr>
+<tr>
+<td>FGSM perturbation</td>
+<td>$\delta = \epsilon \cdot \text{sign}(\nabla_x \mathcal{L})$</td>
+<td>Constructing adversarial examples</td>
+</tr>
+<tr>
+<td>Attention weights</td>
+<td>$\alpha^{\langle t, t' \rangle} = \text{softmax}_{t'}(e^{\langle t, t' \rangle})$</td>
+<td>Sequence-to-sequence with long inputs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-mistakes">Common mistakes</h2>
+<ul>
+<li>Drawing the dev and test sets from a convenient distribution rather than the production distribution. Fix: build dev and test from the data the system will actually see, even if the training set has to come from elsewhere.</li>
+<li>Reading a large training-to-dev gap as variance without a train-dev set, then adding regularization when the real problem is data mismatch. Fix: hold out a slice of the training distribution and compare the four error numbers.</li>
+<li>Sampling the learning rate uniformly on a linear scale. Fix: sample the exponent uniformly and use $10^r$; do the same for $1 - \beta$.</li>
+<li>Leaving dropout on or using batch statistics in batch norm at evaluation time. Fix: switch the model to evaluation mode and use running averages before computing any dev number.</li>
+<li>Initializing all weights to the same value or to a scale that ignores fan-in. Fix: He initialization for ReLU, Xavier for tanh, and check activation histograms after the first forward pass.</li>
+<li>Training a siamese network on random triplets and seeing the loss hit zero in an epoch. Fix: mine hard or semi-hard negatives so the margin term stays active.</li>
+<li>Applying non-max suppression across classes, so a person standing next to a bicycle deletes the bicycle. Fix: run NMS per class.</li>
+<li>Tuning hyperparameters against the test set. Fix: touch the test set once at the end; every model selection decision uses dev.</li>
+</ul>
+<h2 id="related-courses">Related courses</h2>
+<ul>
+<li><a href="cs229.html">CS229</a> — the logistic regression, gradient descent, and bias-variance foundations that CS230 generalizes to deep networks.</li>
+<li><a href="cs231n.html">CS231n</a> — goes much deeper on convolutional architectures, detection, and segmentation than the survey here.</li>
+<li><a href="cs224n.html">CS224n</a> — the full treatment of embeddings, recurrent models, attention, and transformers that lecture 12 sketches.</li>
+<li><a href="cs234.html">CS234</a> — reinforcement learning, which reuses the same networks as function approximators for policies and values.</li>
+<li><a href="cs336.html">CS336</a> — building language models from scratch, where the optimization and orchestration habits from lectures 07 and 08 matter at scale.</li>
+</ul>
+      <a class="back" href="../study.html">&larr; All courses</a>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="wrap"><span>&copy; 2026 Kanghoun Lee &middot; Seoul</span><nav aria-label="Footer navigation"><a href="../#about">About</a><a href="../study.html">Study</a><a href="https://github.com/nightandweather">GitHub &#8599;</a></nav></div></footer>
+</body></html>

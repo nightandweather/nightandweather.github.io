@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en"><head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HGZPVGV9N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-3HGZPVGV9N");
+  </script>
+  <meta name="google-adsense-account" content="ca-pub-4242632384470714">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Study notes on building a language model end to end: tokenizer, Transformer, training systems, scaling laws, data, inference and alignment.">
+  <title>CS336 Language Modeling from Scratch &mdash; Kanghoun Lee</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/study/cs336.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CS336 Language Modeling from Scratch">
+  <meta property="og:description" content="Study notes on building a language model end to end: tokenizer, Transformer, training systems, scaling laws, data, inference and alignment.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
+  <meta property="og:url" content="https://nightandweather.github.io/study/cs336.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../study.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+</head>
+<body><a class="skip-link" href="#main-content">Skip to content</a>
+<header class="nav wrap"><a class="wordmark" href="../" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a><nav aria-label="Primary navigation"><a href="../work.html">Work</a><a href="../experiments.html">Experiments</a><a href="../field-notes.html">Field Notes</a><a href="../study.html" aria-current="page">Study</a><a href="../opportunities.html">Calendar</a><a href="../rejections.html">Rejections</a></nav></header>
+<main id="main-content" class="study-page">
+  <section class="study-hero study-hero-tinted" style="--tone:#e3e6ea"><div class="wrap"><p class="kicker">Stanford CS336 &middot; Systems</p><h1>Language Modeling from Scratch</h1><p class="lead">Study notes on building a language model end to end: tokenizer, Transformer, training systems, scaling laws, data, inference and alignment.</p></div></section>
+  <div class="study-layout wrap">
+    <aside class="study-side">
+      <dl class="study-facts"><dt>Taught by</dt><dd>Percy Liang, Tatsunori Hashimoto</dd><dt>Notes based on</dt><dd>Public lecture sequence (2025 offering)</dd><dt>Lectures covered</dt><dd>15</dd><dt>Official page</dt><dd><a href="https://stanford-cs336.github.io/" rel="noopener">CS336 &#8599;</a></dd></dl>
+      <nav class="study-jump" aria-label="Lectures"><p class="eyebrow">Lectures</p><ol><li><a href="#01-why-build-a-language-model-from-scratch">01 · Why build a language model from scratch</a></li><li><a href="#02-tokenization">02 · Tokenization</a></li><li><a href="#03-the-transformer-block-by-block">03 · The Transformer, block by block</a></li><li><a href="#04-modern-architecture-choices">04 · Modern architecture choices</a></li><li><a href="#05-training-basics-and-resource-accounting">05 · Training basics and resource accounting</a></li><li><a href="#06-optimizers-and-training-stability">06 · Optimizers and training stability</a></li><li><a href="#07-gpu-kernels-and-performance">07 · GPU kernels and performance</a></li><li><a href="#08-parallelism-across-devices">08 · Parallelism across devices</a></li><li><a href="#09-scaling-laws">09 · Scaling laws</a></li><li><a href="#10-inference">10 · Inference</a></li><li><a href="#11-data">11 · Data</a></li><li><a href="#12-evaluation">12 · Evaluation</a></li><li><a href="#13-alignment-sft-rlhf-dpo-and-rl-for-reasoning">13 · Alignment: SFT, RLHF, DPO and RL for reasoning</a></li><li><a href="#14-mixture-of-experts">14 · Mixture of experts</a></li><li><a href="#15-reproducibility-and-what-a-small-run-can-tell-you">15 · Reproducibility and what a small run can tell you</a></li></ol></nav>
+    </aside>
+    <article class="study-body note-body">
+      <p class="study-disclaimer">Personal study notes written in my own words from publicly available lectures and course pages. Not affiliated with or endorsed by Stanford University. No assignment solutions are published here.</p>
+<h2 id="what-the-course-is-about">What the course is about</h2>
+<p>Most deep learning courses teach you to call a library. This one asks you to build the library. A modern language model is not one idea but a stack of them: a tokenizer, a Transformer, an optimizer, a memory budget, GPUs that must be kept busy, a data pipeline that decides what the model reads, a way to check whether it learned anything, and a final stage that turns a text predictor into an assistant. Each layer has its own failure modes, and a bug in any one of them looks, from the outside, like &ldquo;the loss is not going down&rdquo;. The course walks through every layer with the goal that you could rebuild a small but honest version of the whole pipeline yourself.</p>
+<p>You should be comfortable with the material in <a href="cs224n.html">CS224n</a>: what attention is, what a Transformer block does, how cross-entropy training works. You should also be able to read PyTorch and reason about tensor shapes without help. A little familiarity with how a GPU executes matrix multiplications helps but is taught along the way.</p>
+<p>The lectures follow the order in which you would build a model: the model itself (tokens, architecture, training loop), the resources it consumes (FLOPs, memory, kernels, multiple devices), the decisions that determine whether the compute was well spent (scaling laws, data, evaluation), and the steps that make it useful (inference, alignment). The notes below keep that order.</p>
+<h2 id="lecture-notes">Lecture notes</h2>
+<h3 id="01-why-build-a-language-model-from-scratch">01 · Why build a language model from scratch</h3>
+<p>The core idea is that understanding a language model means understanding the whole stack, not just the modeling code. The stack has four layers that the rest of the course visits in turn: data (what the model reads), systems (how the computation runs on hardware), scaling (how to decide model size, data size and hyperparameters before spending a large budget), and alignment (how to shape a next-token predictor into something that follows instructions).</p>
+<p>Frontier models are trained at a scale nobody can reproduce in a class, so the course works at small scale and asks which lessons transfer. Most engineering decisions can be studied on a model with tens of millions of parameters if you are careful about what you measure. The quantity that ties everything together is compute, counted in floating-point operations. A rough budget for a training run is</p>
+<div class="math-display">$$C \approx 6 N D,$$</div>
+<p>where $N$ is the number of non-embedding parameters and $D$ the number of training tokens. This estimate reappears in almost every lecture, because it turns &ldquo;how big should the model be&rdquo; and &ldquo;how much data do I need&rdquo; into a single trade-off.</p>
+<p>What goes wrong: treating the model architecture as the interesting part and the rest as plumbing. In practice the tokenizer, the data filter and the learning-rate schedule change results more than most architectural tweaks. The next lecture starts at the very bottom of the stack, with how text becomes integers.</p>
+<h3 id="02-tokenization">02 · Tokenization</h3>
+<p>A tokenizer maps a string to a sequence of integers and back. Characters or raw bytes give a tiny vocabulary but very long sequences; whole words give short sequences but an unbounded vocabulary and no way to handle unseen words. Byte-pair encoding (BPE) sits between the two. It starts from the 256 possible bytes so that any string is representable, then repeatedly merges the most frequent adjacent pair of tokens in the training corpus into a new token:</p>
+<div class="math-display">$$(a, b)^{\star} = \arg\max_{(a,b)} \; \mathrm{count}(a, b),$$</div>
+<p>adding the merged symbol $ab$ to the vocabulary and recording the merge. Training stops when the vocabulary reaches the desired size. Encoding new text applies the recorded merges in the same order, so the merge list, not the vocabulary alone, defines the tokenizer. A pre-tokenization step (a regular expression that splits on whitespace and punctuation boundaries) is applied first so merges never cross word boundaries.</p>
+<p>Vocabulary size is a trade-off. A larger vocabulary compresses text into fewer tokens, which makes attention cheaper per document and fits more text in the context window, but the embedding and output matrices grow and rare tokens get few updates. Typical sizes run from tens of thousands to over a hundred thousand.</p>
+<pre><code class="language-python">from collections import Counter
+def most_frequent_pair(seqs):
+    pairs = Counter()
+    for s in seqs:
+        pairs.update(zip(s, s[1:]))
+    return max(pairs, key=pairs.get)
+</code></pre>
+<p>What goes wrong: treating tokenization as solved. Numbers split unpredictably, whitespace handling differs between implementations, and a tokenizer trained on English wastes tokens on other scripts. Naive BPE training that rescans the whole corpus per merge is also far too slow; you need incremental pair counts. With integers in hand, the next lecture builds the model that consumes them.</p>
+<h3 id="03-the-transformer-block-by-block">03 · The Transformer, block by block</h3>
+<p>A decoder-only Transformer is an embedding table, a stack of identical blocks, a final normalization and a linear layer that produces logits over the vocabulary. Each block has an attention sublayer and a feed-forward sublayer, both wrapped in residual connections. Attention lets each position mix information from earlier positions:</p>
+<div class="math-display">$$\mathrm{Attention}(Q, K, V) = \mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}} + M\right) V,$$</div>
+<p>where $M$ is a causal mask with $M_{ij} = -\infty$ for $j &gt; i$ and $0$ otherwise, so no position sees the future. Dividing by $\sqrt{d_k}$ keeps the logits at a sensible scale as the head dimension grows. Multiple heads run this in parallel on different projections and concatenate.</p>
+<p>Where normalization sits matters. The original Transformer applied LayerNorm after each residual addition (post-norm). Nearly all modern models apply it before each sublayer (pre-norm), which keeps the residual stream an unnormalized sum and trains more stably at depth. The normalization itself is usually RMSNorm, which drops the mean subtraction and the bias:</p>
+<div class="math-display">$$\mathrm{RMSNorm}(x) = \frac{x}{\sqrt{\frac{1}{d}\sum_{i=1}^{d} x_i^2 + \epsilon}} \odot g.$$</div>
+<p>It is cheaper than LayerNorm and works as well in practice.</p>
+<p>What goes wrong: forgetting the mask when writing your own attention (the model sees the answer and the loss looks impossibly good), computing the softmax in low precision, or initializing residual projections too large so activations grow with depth. The next lecture covers the remaining choices that separate a 2017 Transformer from a current one.</p>
+<h3 id="04-modern-architecture-choices">04 · Modern architecture choices</h3>
+<p>Several small changes have become near-universal. The feed-forward layer is usually a gated linear unit with the SiLU (Swish) activation, called SwiGLU:</p>
+<div class="math-display">$$\mathrm{FFN}(x) = \big(\mathrm{SiLU}(x W_1) \odot x W_3\big) W_2 .$$</div>
+<p>It has three matrices instead of two, so the hidden width is reduced (often to about $\tfrac{8}{3} d$) to keep the parameter count comparable. Bias terms are dropped from linear layers throughout; they add little and complicate distributed training.</p>
+<p>Positional information is injected with rotary position embeddings (RoPE) rather than added vectors. Each pair of dimensions in a query or key is treated as a 2D vector and rotated by an angle proportional to its position, with a different base frequency per pair:</p>
+<div class="math-display">$$\begin{pmatrix} q'_{2i} \\ q'_{2i+1} \end{pmatrix} = \begin{pmatrix} \cos m\theta_i &amp; -\sin m\theta_i \\ \sin m\theta_i &amp; \cos m\theta_i \end{pmatrix} \begin{pmatrix} q_{2i} \\ q_{2i+1} \end{pmatrix}, \qquad \theta_i = \Theta^{-2i/d}.$$</div>
+<p>Because rotating by $m\theta$ and then by $-n\theta$ leaves an angle of $(m-n)\theta$, the dot product between a query at position $m$ and a key at position $n$ depends only on their relative offset. RoPE is applied to $Q$ and $K$ only, never to $V$.</p>
+<p>In grouped-query attention (GQA), several query heads share one key/value head; multi-query attention is the extreme with a single shared K/V head. Both cut the KV cache at inference with a small quality cost.</p>
+<table>
+<thead>
+<tr>
+<th>Choice</th>
+<th>Original Transformer</th>
+<th>Common today</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Norm placement</td>
+<td>Post-norm LayerNorm</td>
+<td>Pre-norm RMSNorm</td>
+</tr>
+<tr>
+<td>Activation</td>
+<td>ReLU</td>
+<td>SwiGLU</td>
+</tr>
+<tr>
+<td>Positions</td>
+<td>Sinusoidal, added</td>
+<td>RoPE on Q and K</td>
+</tr>
+<tr>
+<td>Biases</td>
+<td>Present</td>
+<td>Removed</td>
+</tr>
+<tr>
+<td>K/V heads</td>
+<td>One per query head</td>
+<td>Shared (GQA / MQA)</td>
+</tr>
+</tbody>
+</table>
+<p>What goes wrong: applying RoPE after the head split incorrectly so the pairing of dimensions is wrong, or mismatching the base frequency between training and inference. The next lecture asks what all of this costs.</p>
+<h3 id="05-training-basics-and-resource-accounting">05 · Training basics and resource accounting</h3>
+<p>The training loop is simple: sample a batch of token sequences, run the model, compute the cross-entropy of each next token, backpropagate, step the optimizer. The interesting part is knowing in advance what it will cost.</p>
+<p>Compute. A forward pass through a linear layer with $p$ parameters costs about $2p$ FLOPs per token (one multiply and one add per weight). The backward pass costs roughly twice the forward pass (gradients with respect to inputs and with respect to weights). So one training token costs about $6N$ FLOPs, giving $C \approx 6ND$ for the run. Attention adds a term that grows with sequence length, but for typical context lengths it is a modest fraction of the total.</p>
+<p>Memory. With AdamW in mixed precision, each parameter needs a bf16 copy for the forward pass, a bf16 gradient, an fp32 master copy and two fp32 optimizer moments, roughly 16 bytes per parameter before activations. Activations scale with batch size, sequence length and depth and often dominate; that is what activation checkpointing (lecture 08) attacks.</p>
+<p>Precision. Mixed precision keeps matrix multiplications in bf16 or fp16 and accumulates in fp32. bf16 has the same exponent range as fp32 and so rarely overflows, which is why it displaced fp16 and its loss-scaling tricks. Reductions such as the softmax and the norm statistics should stay in fp32.</p>
+<p>Throughput is reported as model FLOPs utilization (MFU): the FLOPs implied by $6ND$ per second divided by the hardware&rsquo;s peak. Values well under one are normal; the gap is what the systems lectures try to close.</p>
+<p>What goes wrong: estimating memory from weights alone and running out at the first backward pass, or changing precision without checking the loss curve is unchanged. Next: the optimizer that consumes those bytes.</p>
+<h3 id="06-optimizers-and-training-stability">06 · Optimizers and training stability</h3>
+<p>AdamW is the default. For each parameter it keeps running estimates of the gradient mean and the squared gradient, then takes a step scaled by their ratio, with weight decay applied directly to the weights rather than through the gradient:</p>
+<div class="math-display">$$m_t = \beta_1 m_{t-1} + (1-\beta_1) g_t, \qquad v_t = \beta_2 v_{t-1} + (1-\beta_2) g_t^2,$$</div>
+<div class="math-display">$$\theta_t = \theta_{t-1} - \eta \left( \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon} + \lambda \theta_{t-1} \right),$$</div>
+<p>where $\hat m_t$ and $\hat v_t$ are bias-corrected. Language models commonly use $\beta_2$ a little lower than the classic 0.999 so the second moment adapts faster.</p>
+<p>The learning-rate schedule has two parts: a linear warmup from zero over the first few hundred to few thousand steps, then a cosine decay to a small fraction of the peak. Warmup matters because Adam&rsquo;s moment estimates are unreliable early and a full-size step then can destabilize the run. Gradient clipping rescales the whole gradient when its global norm exceeds a threshold, which caps the damage from a single bad batch.</p>
+<p>Even so, large runs show loss spikes: a sudden jump in loss that may or may not recover. Two mitigations are common. Z-loss adds a small penalty on the log of the softmax normalizer so the output logits do not drift to huge magnitudes. QK-norm applies a normalization to queries and keys before the dot product so attention logits cannot blow up. Both target the same symptom: a softmax somewhere becoming nearly one-hot and producing enormous gradients.</p>
+<p>What goes wrong: a peak learning rate copied from a model of a different size, no warmup, or weight decay applied to norm gains and embeddings where it is usually excluded. When the optimizer is settled, the remaining speed comes from the hardware, which is the next topic.</p>
+<h3 id="07-gpu-kernels-and-performance">07 · GPU kernels and performance</h3>
+<p>A GPU has far more arithmetic throughput than memory bandwidth. The roofline model captures the consequence: for an operation with arithmetic intensity $I$ (FLOPs per byte moved), achievable throughput is</p>
+<div class="math-display">$$\min\big(\text{peak FLOPs},\; I \times \text{memory bandwidth}\big).$$</div>
+<p>Large matrix multiplications have high intensity and are compute-bound. Elementwise operations, normalizations, softmax and small matmuls have low intensity and are memory-bound: the GPU waits for bytes. A training step mixes both, which is why MFU is rarely close to one.</p>
+<p>The main lever for memory-bound work is fusion: combining several elementwise operations into one kernel so intermediate tensors never round-trip to high-bandwidth memory. Frameworks do some of this automatically (<code>torch.compile</code>), and writing a fused kernel directly is practical with Triton, a Python-like language that compiles to GPU code and handles the low-level tiling for you.</p>
+<p>FlashAttention is fusion applied to attention. Naive attention writes the full $T \times T$ score matrix to memory, reads it back for the softmax, then again for the multiply by $V$. FlashAttention loads blocks of $Q$, $K$ and $V$ into fast on-chip memory, computes the softmax incrementally with a running maximum and running sum (the &ldquo;online softmax&rdquo; trick), and accumulates the output without ever materializing the score matrix. Memory traffic drops from quadratic to linear in sequence length, and the backward pass recomputes scores instead of storing them.</p>
+<p>Profile before optimizing. A profiler timeline shows whether time goes to matmuls, small kernels, data loading or host-device synchronization. GPU calls are asynchronous: time them with proper synchronization or the numbers are meaningless.</p>
+<p>What goes wrong: micro-optimizing a kernel that is one percent of the step, or measuring a &ldquo;speedup&rdquo; that came from a different batch size. When one GPU is not enough, the next lecture spreads the work.</p>
+<h3 id="08-parallelism-across-devices">08 · Parallelism across devices</h3>
+<p>Large models do not fit, or do not train fast enough, on one device. Real systems combine several ways of splitting the work.</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>What is split</th>
+<th>Communication</th>
+<th>Main limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data parallel</td>
+<td>Batch</td>
+<td>All-reduce gradients</td>
+<td>Full model and optimizer state on every device</td>
+</tr>
+<tr>
+<td>ZeRO / FSDP</td>
+<td>Optimizer state, gradients, weights</td>
+<td>Gather weights, reduce-scatter gradients</td>
+<td>Extra communication per layer</td>
+</tr>
+<tr>
+<td>Tensor parallel</td>
+<td>Individual matrices</td>
+<td>All-reduce inside each block</td>
+<td>Needs fast interconnect, usually within a node</td>
+</tr>
+<tr>
+<td>Pipeline parallel</td>
+<td>Layers, in stages</td>
+<td>Activations between stages</td>
+<td>Bubbles while stages wait</td>
+</tr>
+</tbody>
+</table>
+<p>Data parallelism is simplest: each device runs the same model on a different slice of the batch and gradients are averaged. Its cost is memory, since the 16 bytes per parameter from lecture 05 are replicated everywhere. ZeRO (and PyTorch&rsquo;s FSDP) removes the replication in stages: shard the optimizer state, then the gradients, then the weights, gathering each layer&rsquo;s weights just before it runs and freeing them after. Tensor parallelism splits a single matrix multiplication across devices; attention heads split the same way. Pipeline parallelism assigns consecutive layers to different devices and streams micro-batches through, with idle time at the start and end of each step.</p>
+<p>Activation checkpointing is orthogonal to all of these: store only the block inputs and recompute the rest during backward. It trades roughly a third more compute for a large memory reduction, which often allows a bigger batch and a faster run overall.</p>
+<p>What goes wrong: choosing a layout by memory alone and discovering the network is the bottleneck, or mixing sharding with a custom optimizer that assumes full tensors. With a working multi-device setup, the next question is how big a model to train.</p>
+<h3 id="09-scaling-laws">09 · Scaling laws</h3>
+<p>Loss falls predictably as you add parameters, data and compute, and the fall is close to a power law over many orders of magnitude. That regularity is what lets a team plan a large run from small ones.</p>
+<p>Two influential studies disagree on how to split a compute budget. Kaplan and colleagues fit curves that favored growing the model much faster than the data. The Chinchilla study, using a different experimental protocol (in particular, tuning the learning-rate schedule to each run length), found that model size and token count should grow at about the same rate, and that many earlier models were undertrained for their size. A common rule of thumb from that work is roughly twenty training tokens per parameter for a compute-optimal run. The parametric form they fit is</p>
+<div class="math-display">$$L(N, D) = E + \frac{A}{N^{\alpha}} + \frac{B}{D^{\beta}},$$</div>
+<p>where $E$ is an irreducible loss floor, and the two remaining terms measure how much loss is due to too few parameters and too few tokens respectively. Minimizing $L$ subject to $6ND = C$ gives the compute-optimal $N$ and $D$ for a budget $C$.</p>
+<p>Compute-optimal is not deployment-optimal. If a model will be served heavily, inference cost dominates and it pays to train a smaller model on far more tokens than the rule suggests. Scaling laws are also used for hyperparameters: fit the best learning rate or batch size as a function of model size across a ladder of small runs, then extrapolate. Parameterizations under which the optimal learning rate transfers across widths make that extrapolation more reliable.</p>
+<p>What goes wrong: fitting a law from three points and trusting the extrapolation, or comparing runs that used different schedules. The next lecture leaves training and looks at what the model costs to run.</p>
+<h3 id="10-inference">10 · Inference</h3>
+<p>Generation is sequential: each new token requires a forward pass conditioned on everything before it. Recomputing attention over the whole prefix each step would be quadratic in length, so the keys and values of past tokens are stored in a KV cache. Its size per sequence is</p>
+<div class="math-display">$$\text{KV bytes} = 2 \times L \times n_{\text{kv}} \times d_{\text{head}} \times T \times b,$$</div>
+<p>for $L$ layers, $n_{\text{kv}}$ key/value heads, head dimension $d_{\text{head}}$, $T$ tokens and $b$ bytes per element. This is why GQA matters at serving time: fewer K/V heads shrink the cache directly.</p>
+<p>Inference has two phases. Prefill processes the prompt in one parallel pass and is compute-bound like training. Decode produces one token per step per sequence, reads all the weights and the whole cache for a single token&rsquo;s worth of arithmetic, and is memory-bound. Batching many sequences together raises throughput, but every extra sequence adds latency for the others; serving systems tune that balance.</p>
+<p>Two techniques attack the decode bottleneck. Speculative decoding runs a small draft model to propose several tokens, then has the large model verify them in a single parallel pass; a rejection-sampling rule keeps the output distribution identical to the large model alone, and accepted tokens come nearly free. Quantization stores weights (and sometimes the cache) in 8-bit or 4-bit integers so fewer bytes are read per step; since decode is bandwidth-bound this converts directly into speed, with some accuracy loss that post-training calibration methods try to minimize.</p>
+<p>What goes wrong: reporting throughput at batch size one, or quantizing without re-running the evaluation suite. Next, the question of what the model should have been trained on in the first place.</p>
+<h3 id="11-data">11 · Data</h3>
+<p>Data decisions are the least visible and often the most important part of a training run. The raw material is usually web crawl: HTML with navigation, boilerplate and ads. The pipeline has recognizable stages.</p>
+<p>Extraction pulls the main text out of HTML and language identification keeps the languages you want. Heuristic filters drop documents that are too short, have too many symbols, or repeat lines; these rules are cheap and remove a surprising amount of junk. Deduplication removes exact and near duplicates, the latter typically by MinHash signatures with locality-sensitive hashing so that similar documents land in the same bucket. Duplicates waste compute and encourage memorization. Quality classifiers go further: train a fast linear classifier to separate a trusted reference set (curated pages, textbooks) from random crawl, then keep documents it scores highly. This is one of the most effective single interventions, but it encodes the biases of the reference set.</p>
+<p>Mixing decides the proportions of web text, code, books and other sources. Upweighting a small high-quality source for a few epochs helps; repeating it many times hurts. Decontamination removes documents that overlap the evaluation benchmarks, or later scores are meaningless.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Purpose</th>
+<th>Typical tool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extraction</td>
+<td>HTML to text</td>
+<td>Rule-based extractor</td>
+</tr>
+<tr>
+<td>Heuristic filtering</td>
+<td>Remove junk cheaply</td>
+<td>Length and character-ratio rules</td>
+</tr>
+<tr>
+<td>Deduplication</td>
+<td>Remove copies</td>
+<td>Hashing, MinHash + LSH</td>
+</tr>
+<tr>
+<td>Quality filtering</td>
+<td>Keep text like the target</td>
+<td>Linear classifier</td>
+</tr>
+<tr>
+<td>Decontamination</td>
+<td>Protect evaluations</td>
+<td>n-gram overlap against test sets</td>
+</tr>
+</tbody>
+</table>
+<p>What goes wrong: filtering so aggressively that the data becomes homogeneous, or deduplicating after tokenization when the tokenizer itself was trained on the duplicates. Whether any of this helped is the subject of the next lecture.</p>
+<h3 id="12-evaluation">12 · Evaluation</h3>
+<p>The training objective gives one number for free: perplexity, the exponential of the mean per-token negative log-likelihood on held-out text. It is precise, cheap and sensitive, which makes it the right metric for comparing tokenizers, architectures or data recipes at small scale, provided the tokenizer is held fixed, since perplexity per token is not comparable across vocabularies.</p>
+<p>Perplexity does not tell you whether the model can answer a question. Downstream evaluation uses benchmarks: multiple-choice knowledge tests, grade-school math word problems, code generation with unit tests, reading comprehension, and so on. These come with their own choices. Scoring by comparing the log-likelihood of each option is stable for small models; scoring by generating an answer and matching it is closer to real use but depends on the prompt format and the parsing rule. Few-shot prompts change results substantially. Report the exact protocol or the number is not reproducible.</p>
+<p>Three caveats recur. Contamination: a benchmark that appeared in the training data measures memory, not ability, and paraphrases slip past n-gram checks. Saturation: once models cluster near the ceiling of a benchmark it stops discriminating. Noise: small evaluation sets give confidence intervals of several points, so many &ldquo;improvements&rdquo; are within noise. For instruction-tuned models, evaluation shifts toward human or model-judged preference comparisons, each with their own biases.</p>
+<p>What goes wrong: choosing a training recipe because it moved one benchmark, or comparing your model&rsquo;s score to a published one that used a different prompt format. The next lecture turns a pretrained model into an assistant.</p>
+<h3 id="13-alignment-sft-rlhf-dpo-and-rl-for-reasoning">13 · Alignment: SFT, RLHF, DPO and RL for reasoning</h3>
+<p>A pretrained model continues text. To make it follow instructions and refuse harmful requests, it is trained further on demonstrations and preferences.</p>
+<p>Supervised fine-tuning (SFT) is next-token training on prompt-response pairs, with the loss applied only to response tokens. A few thousand carefully written examples go a long way; the model is learning a format, not new content.</p>
+<p>Reinforcement learning from human feedback (RLHF) starts from pairs of responses to the same prompt, labeled by which one a human preferred. A reward model is trained on these pairs with a Bradley-Terry loss so its scalar output ranks responses the way humans do. The policy is then optimized, usually with PPO, to maximize reward minus a KL penalty that keeps it near the SFT model. This works but needs a reward model, a reference model, a value model and on-policy sampling.</p>
+<p>Direct preference optimization (DPO) removes the reward model. Under the KL-regularized objective the optimal policy and the reward are related in closed form; substituting into the Bradley-Terry loss gives a loss on the policy directly:</p>
+<div class="math-display">$$\mathcal{L}_{\text{DPO}} = -\,\mathbb{E}\left[ \log \sigma\!\left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)} \right) \right],$$</div>
+<p>where $y_w$ is the preferred and $y_l$ the rejected response. Training is a supervised loop over a fixed preference dataset.</p>
+<p>For reasoning tasks with checkable answers (math, code with tests) the reward can be a verifier. GRPO-style methods sample a group of responses per prompt, score each, and use the reward relative to the group mean (divided by the group standard deviation) as the advantage, which removes the need for a value network. Longer chains of reasoning tend to emerge as a side effect.</p>
+<p>What goes wrong: DPO with a reference model that differs from the one that produced the preference data, or reward hacking, where the policy finds outputs the reward model likes but humans do not. The next lecture returns to architecture with a change that alters the compute accounting.</p>
+<h3 id="14-mixture-of-experts">14 · Mixture of experts</h3>
+<p>A mixture-of-experts (MoE) layer replaces one feed-forward network with several (the experts) and a small router that sends each token to a few of them. Parameter count grows with the number of experts, but compute per token stays close to a single dense FFN because only the chosen experts run. This breaks the usual link between parameters and FLOPs: for the same training cost you get far more parameters, and typically a lower loss.</p>
+<p>The router is usually a linear layer followed by a softmax over experts; the top-$k$ scores select the experts and weight their outputs. Two problems follow. First, the selection is discrete, so the router only receives gradient through the chosen experts and training is noisier than for dense models. Second, without intervention the router collapses onto a few favorite experts, which wastes the others and overloads a few devices. An auxiliary load-balancing loss penalizes uneven assignment, and capacity limits cap how many tokens each expert may receive per batch, dropping the overflow. Newer designs use many small experts, some shared across all tokens, and adjust per-expert biases to balance load without an auxiliary loss.</p>
+<p>Systems cost is real. Experts are spread across devices (expert parallelism), and every MoE layer needs an all-to-all exchange to route tokens to the right device and back. Memory is dominated by mostly idle parameters, and inference batching is harder because tokens fan out to different experts.</p>
+<p>What goes wrong: comparing an MoE and a dense model by parameter count rather than by training compute, or reading a great loss curve without checking that experts are actually balanced. The final lecture asks what your small-scale experiments have actually proven.</p>
+<h3 id="15-reproducibility-and-what-a-small-run-can-tell-you">15 · Reproducibility and what a small run can tell you</h3>
+<p>Everything in this course is done at a scale far below frontier models, so the closing question is which conclusions transfer. Some do reliably. Tokenizer quality, data filtering and deduplication effects, optimizer settings expressed as functions of model width, the relative cost of kernels, and the shape of the loss curve all show up clearly in models with tens or hundreds of millions of parameters. Architectural comparisons transfer when they are made at matched compute and the runs are long enough for the schedule to finish.</p>
+<p>Some do not. Emergent capabilities on benchmarks appear only above a certain scale, so a small model cannot tell you whether a data change will unlock them. Stability problems such as loss spikes are often invisible at small scale and dominant at large scale. Absolute benchmark numbers from a small run are close to chance and their differences are noise.</p>
+<p>Reproducibility is mostly discipline. Fix seeds and log them. Record the exact tokenizer, data snapshot, filtering rules, model configuration, schedule and evaluation prompt for every run. Compare runs at equal compute, not equal steps, against a baseline with the same schedule. Prefer several seeds over one longer run when the question is whether an intervention helps. Report the loss curve, not just the endpoint, since a change that helps early and hurts late is common.</p>
+<p>The practical summary of the course: build each layer of the stack once yourself, measure everything, and treat every claim about scale as a hypothesis to be tested with a ladder of runs rather than a fact to be assumed.</p>
+<h2 id="key-equations-at-a-glance">Key equations at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Equation</th>
+<th>When it applies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BPE merge</td>
+<td>$(a,b)^{\star} = \arg\max_{(a,b)} \mathrm{count}(a,b)$</td>
+<td>Each merge step during tokenizer training</td>
+</tr>
+<tr>
+<td>Causal attention</td>
+<td>$\mathrm{softmax}\big(QK^{\top}/\sqrt{d_k} + M\big)V$, $M_{ij} = -\infty$ for $j &gt; i$</td>
+<td>Every attention layer of a decoder</td>
+</tr>
+<tr>
+<td>RMSNorm</td>
+<td>$x \odot g \,/\, \sqrt{\tfrac{1}{d}\sum_i x_i^2 + \epsilon}$</td>
+<td>Pre-norm before each sublayer and before the output head</td>
+</tr>
+<tr>
+<td>RoPE</td>
+<td>Rotate each dimension pair of $q$, $k$ by $m\theta_i$, $\theta_i = \Theta^{-2i/d}$</td>
+<td>Position encoding; relative offsets fall out of the dot product</td>
+</tr>
+<tr>
+<td>SwiGLU</td>
+<td>$(\mathrm{SiLU}(xW_1) \odot xW_3)W_2$</td>
+<td>Feed-forward sublayer</td>
+</tr>
+<tr>
+<td>AdamW step</td>
+<td>$\theta \leftarrow \theta - \eta\big(\hat m/(\sqrt{\hat v}+\epsilon) + \lambda\theta\big)$</td>
+<td>Every optimizer step; decay excluded from norms and embeddings</td>
+</tr>
+<tr>
+<td>Training FLOPs</td>
+<td>$C \approx 6ND$</td>
+<td>Budgeting a pretraining run</td>
+</tr>
+<tr>
+<td>Scaling law</td>
+<td>$L(N,D) = E + A/N^{\alpha} + B/D^{\beta}$</td>
+<td>Choosing $N$ and $D$ for a compute budget</td>
+</tr>
+<tr>
+<td>KV cache</td>
+<td>$2 \cdot L \cdot n_{\text{kv}} \cdot d_{\text{head}} \cdot T \cdot b$ bytes</td>
+<td>Memory per sequence during decoding</td>
+</tr>
+<tr>
+<td>Roofline</td>
+<td>$\min(\text{peak FLOPs}, I \cdot \text{bandwidth})$</td>
+<td>Deciding whether a kernel is compute- or memory-bound</td>
+</tr>
+<tr>
+<td>DPO loss</td>
+<td>$-\log\sigma\big(\beta\,\Delta_w - \beta\,\Delta_l\big)$ with $\Delta = \log \pi_\theta/\pi_{\text{ref}}$</td>
+<td>Preference tuning without a reward model</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-mistakes">Common mistakes</h2>
+<ul>
+<li>Estimating memory from parameter count alone. Fix: budget about 16 bytes per parameter for weights, gradients and AdamW state in mixed precision, then add activations.</li>
+<li>Skipping warmup or copying a peak learning rate from a differently sized model. Fix: warm up linearly, decay with cosine, and sweep the peak on a ladder of small runs.</li>
+<li>Timing GPU code without synchronization. Fix: synchronize before reading the clock, or use the profiler.</li>
+<li>Comparing an architectural change at equal steps instead of equal compute. Fix: match FLOPs and let each run finish its schedule.</li>
+<li>Evaluating on benchmarks that leaked into the training data. Fix: run n-gram decontamination against every evaluation set before training and report overlap.</li>
+<li>Running DPO against the wrong reference model. Fix: the reference must be the checkpoint that generated the preference pairs, or the implicit reward is miscalibrated.</li>
+<li>Reporting inference throughput at batch size one and calling it capacity. Fix: measure throughput and latency across batch sizes and report both.</li>
+<li>Judging a mixture-of-experts model by parameter count. Fix: compare against a dense model trained with the same compute and check expert load balance.</li>
+</ul>
+<h2 id="related-courses">Related courses</h2>
+<ul>
+<li><a href="cs224n.html">CS224n</a> covers attention and the Transformer from the modeling side; these notes assume it and go down the stack to tokenizers, kernels and scaling.</li>
+<li><a href="cs229.html">CS229</a> supplies the optimization background (gradient descent, regularization) that AdamW and the schedule discussion build on.</li>
+<li><a href="cs230.html">CS230</a> introduces mixed precision, batching and GPU basics at a lighter level than the systems lectures here.</li>
+<li><a href="cs234.html">CS234</a> gives the reinforcement learning foundations (policy gradients, PPO) behind RLHF and GRPO-style alignment.</li>
+</ul>
+      <a class="back" href="../study.html">&larr; All courses</a>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="wrap"><span>&copy; 2026 Kanghoun Lee &middot; Seoul</span><nav aria-label="Footer navigation"><a href="../#about">About</a><a href="../study.html">Study</a><a href="https://github.com/nightandweather">GitHub &#8599;</a></nav></div></footer>
+</body></html>

@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en"><head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HGZPVGV9N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-3HGZPVGV9N");
+  </script>
+  <meta name="google-adsense-account" content="ca-pub-4242632384470714">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Study notes on CS224n: word vectors, RNNs, attention, Transformers, pretraining, prompting, LLMs, and the analysis and ethics questions around them.">
+  <title>CS224n Natural Language Processing with Deep Learning &mdash; Kanghoun Lee</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/study/cs224n.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CS224n Natural Language Processing with Deep Learning">
+  <meta property="og:description" content="Study notes on CS224n: word vectors, RNNs, attention, Transformers, pretraining, prompting, LLMs, and the analysis and ethics questions around them.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
+  <meta property="og:url" content="https://nightandweather.github.io/study/cs224n.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../study.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+</head>
+<body><a class="skip-link" href="#main-content">Skip to content</a>
+<header class="nav wrap"><a class="wordmark" href="../" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a><nav aria-label="Primary navigation"><a href="../work.html">Work</a><a href="../experiments.html">Experiments</a><a href="../field-notes.html">Field Notes</a><a href="../study.html" aria-current="page">Study</a><a href="../opportunities.html">Calendar</a><a href="../rejections.html">Rejections</a></nav></header>
+<main id="main-content" class="study-page">
+  <section class="study-hero study-hero-tinted" style="--tone:#f0e8ff"><div class="wrap"><p class="kicker">Stanford CS224n &middot; Language</p><h1>Natural Language Processing with Deep Learning</h1><p class="lead">Study notes on CS224n: word vectors, RNNs, attention, Transformers, pretraining, prompting, LLMs, and the analysis and ethics questions around them.</p></div></section>
+  <div class="study-layout wrap">
+    <aside class="study-side">
+      <dl class="study-facts"><dt>Taught by</dt><dd>Christopher Manning and co-instructors</dd><dt>Notes based on</dt><dd>Public lecture sequence (recent winter offerings)</dd><dt>Lectures covered</dt><dd>17</dd><dt>Official page</dt><dd><a href="https://web.stanford.edu/class/cs224n/" rel="noopener">CS224n &#8599;</a></dd></dl>
+      <nav class="study-jump" aria-label="Lectures"><p class="eyebrow">Lectures</p><ol><li><a href="#01-word-vectors-word2vec-and-glove">01 · Word vectors: word2vec and GloVe</a></li><li><a href="#02-neural-classifiers-and-backpropagation">02 · Neural classifiers and backpropagation</a></li><li><a href="#03-dependency-parsing">03 · Dependency parsing</a></li><li><a href="#04-language-models-and-rnns">04 · Language models and RNNs</a></li><li><a href="#05-vanishing-gradients-lstms-and-grus">05 · Vanishing gradients, LSTMs, and GRUs</a></li><li><a href="#06-seq2seq-attention-and-machine-translation">06 · Seq2seq, attention, and machine translation</a></li><li><a href="#07-transformers">07 · Transformers</a></li><li><a href="#08-pretraining-bert-gpt-and-t5">08 · Pretraining: BERT, GPT, and T5</a></li><li><a href="#09-fine-tuning-and-prompting">09 · Fine-tuning and prompting</a></li><li><a href="#10-natural-language-generation-and-decoding">10 · Natural language generation and decoding</a></li><li><a href="#11-question-answering-and-reading-comprehension">11 · Question answering and reading comprehension</a></li><li><a href="#12-large-language-models-scaling-instruction-tuning-and-rlhf">12 · Large language models: scaling, instruction tuning, and RLHF</a></li><li><a href="#13-efficient-adaptation-adapters-lora-and-prefix-tuning">13 · Efficient adaptation: adapters, LoRA, and prefix tuning</a></li><li><a href="#14-coreference-and-linguistic-structure">14 · Coreference and linguistic structure</a></li><li><a href="#15-interpretability-and-analysis">15 · Interpretability and analysis</a></li><li><a href="#16-retrieval-augmented-generation">16 · Retrieval-augmented generation</a></li><li><a href="#17-bias-safety-and-ethics-in-nlp">17 · Bias, safety, and ethics in NLP</a></li></ol></nav>
+    </aside>
+    <article class="study-body note-body">
+      <p class="study-disclaimer">Personal study notes written in my own words from publicly available lectures and course pages. Not affiliated with or endorsed by Stanford University. No assignment solutions are published here.</p>
+<h2 id="what-the-course-is-about">What the course is about</h2>
+<p>Human language arrives as a stream of discrete symbols, and nothing about the symbol &ldquo;cat&rdquo; tells a computer that it is closer to &ldquo;dog&rdquo; than to &ldquo;carburetor&rdquo;. CS224n is about turning those symbols into vectors, building networks that read and write sequences of them, and understanding why the models that came out of this line of work — word2vec, LSTMs, Transformers, BERT, GPT-style language models — behave the way they do. The course sits at the point where linguistics, statistics, and deep learning meet, and it treats all three seriously.</p>
+<p>You should be comfortable with Python and NumPy, with matrix calculus at the level of taking gradients through a few layers, and with basic probability (conditional probability, expectations, maximum likelihood). Having seen logistic regression, gradient descent, and a feed-forward network before helps a lot; <a href="cs229.html">CS229</a> or <a href="cs230.html">CS230</a> covers that ground. No linguistics background is assumed, but the course introduces just enough syntax and semantics to make the modelling choices make sense.</p>
+<p>The lectures follow a clear arc. The first third builds representations and training machinery: word vectors, backpropagation, and a first structured task (dependency parsing). The middle third is sequence modelling: language models, recurrent networks, attention, and the Transformer. The final third is the pretraining era: how large models are trained, adapted, prompted, decoded, evaluated, and analysed, and what their deployment means for the people on the receiving end.</p>
+<h2 id="lecture-notes">Lecture notes</h2>
+<h3 id="01-word-vectors-word2vec-and-glove">01 · Word vectors: word2vec and GloVe</h3>
+<p>The distributional hypothesis says that a word&rsquo;s meaning is captured by the company it keeps. One-hot vectors ignore this — every pair is orthogonal — so the goal is a dense vector per word in which similar words sit close together. Word2vec learns these vectors by prediction. In the skip-gram model, a center word $c$ is used to predict each context word $o$ within a window of size $m$, and the objective is the average negative log-likelihood over a corpus of $T$ positions:</p>
+<div class="math-display">$$J(\theta) = -\frac{1}{T} \sum_{t=1}^{T} \sum_{-m \le j \le m,\; j \ne 0} \log P(w_{t+j} \mid w_t), \qquad P(o \mid c) = \frac{\exp(u_o^\top v_c)}{\sum_{w \in V} \exp(u_w^\top v_c)}$$</div>
+<p>Each word gets two vectors, $v$ as a center word and $u$ as a context word. The softmax denominator runs over the whole vocabulary, which is far too slow, so negative sampling replaces it with binary classification: push the true pair together and push $k$ random &ldquo;negative&rdquo; words apart.</p>
+<div class="math-display">$$J_{\text{neg}}(o, c) = -\log \sigma(u_o^\top v_c) - \sum_{i=1}^{k} \mathbb{E}_{w_i \sim P_n(w)} \log \sigma(-u_{w_i}^\top v_c)$$</div>
+<p>Negatives are usually drawn from a unigram distribution raised to the $3/4$ power, which lifts rare words. GloVe takes the other route: build the global co-occurrence matrix $X$ first and fit vectors so that dot products match log counts, with a weighting function $f$ that caps very frequent pairs and zeroes out unseen ones.</p>
+<div class="math-display">$$J_{\text{GloVe}} = \sum_{i,j=1}^{V} f(X_{ij})\left(w_i^\top \tilde{w}_j + b_i + \tilde{b}_j - \log X_{ij}\right)^2$$</div>
+<p>Vectors are evaluated intrinsically (similarity correlation with human ratings, analogies solved as $\arg\max$ cosine of $x_b - x_a + x_c$) and extrinsically (does swapping them into a named-entity tagger help). Common problems: a tiny window gives syntactic neighbours while a large one gives topical ones, rare words get noisy vectors, and one vector per word type blends all senses of a polysemous word. These vectors become the input layer of every model that follows.</p>
+<h3 id="02-neural-classifiers-and-backpropagation">02 · Neural classifiers and backpropagation</h3>
+<p>Softmax regression on word vectors draws a linear boundary; a hidden layer lets the model learn its own features. The running example is window classification: to tag the center word of a five-word window, concatenate the five vectors, pass them through a $\tanh$ layer, and score the classes. Training minimises cross-entropy, $-\log p_y$, and the gradient of the loss with respect to the scores has the memorable form $p - \text{onehot}(y)$: predicted minus observed.</p>
+<p>Backpropagation is the chain rule organised on a computation graph. Each node needs only its local gradient; multiplying the upstream gradient by the local one gives the downstream gradient, and the same intermediate values are reused instead of recomputed. Because word vectors are parameters too, the gradient flows all the way into the embedding rows that appear in the window.</p>
+<pre><code class="language-python">import numpy as np
+def forward_backward(x, y, W, b, U):
+    h = np.tanh(W @ x + b)                 # hidden layer
+    s = U @ h                              # class scores
+    p = np.exp(s - s.max()); p /= p.sum()  # softmax
+    loss = -np.log(p[y])
+    ds = p.copy(); ds[y] -= 1              # dL/ds = p - onehot(y)
+    dU = np.outer(ds, h)
+    dz = (U.T @ ds) * (1 - h**2)           # through tanh
+    return loss, dU, np.outer(dz, x), dz   # dW = outer(dz, x), db = dz
+</code></pre>
+<p>Two things go wrong in practice. Shapes: the gradient of a parameter always has the parameter&rsquo;s shape, and checking that catches most bugs. Fine-tuning embeddings on a small dataset moves only the words that appear in training, so a test word that was a near neighbour of &ldquo;good&rdquo; can be left behind when &ldquo;good&rdquo; migrates. Numerical gradient checking with finite differences is cheap insurance. The next task, parsing, applies exactly this classifier to a structured decision.</p>
+<h3 id="03-dependency-parsing">03 · Dependency parsing</h3>
+<p>A dependency parse connects words with directed arcs from a head to its dependent, forming a tree rooted at the main verb. Compared with constituency trees, dependencies are compact and map naturally onto &ldquo;who did what to whom&rdquo;, which is why they became the default structure for downstream use. Ambiguity is the hard part: prepositional-phrase attachment and coordination scope produce an exponential number of legal trees for one sentence.</p>
+<p>Transition-based parsing turns tree building into a sequence of classification decisions. A configuration holds a stack, a buffer of unread words, and the arcs so far; the parser repeatedly chooses SHIFT, LEFT-ARC, or RIGHT-ARC. Each choice needs a classifier over the configuration, and the neural version replaces hand-built feature templates with embeddings of the words, part-of-speech tags, and arc labels at fixed stack and buffer positions, concatenated and fed through one hidden layer. It runs in linear time and is greedy.</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Decision</th>
+<th>Complexity</th>
+<th>Strength</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transition-based</td>
+<td>Next action from local configuration</td>
+<td>Linear in sentence length</td>
+<td>Fast, simple to train</td>
+</tr>
+<tr>
+<td>Graph-based</td>
+<td>Score every possible arc, find best tree</td>
+<td>Roughly quadratic or worse</td>
+<td>Global optimum, non-projective trees</td>
+</tr>
+</tbody>
+</table>
+<p>Accuracy is reported as unlabelled and labelled attachment score (UAS/LAS), the fraction of words whose head (and label) is correct. The usual failure is error propagation: one wrong early action leaves the parser in a configuration it never saw during training. Beam search, dynamic oracles, and better tagging all help. The arc-standard system also cannot produce crossing arcs, which matters for free-word-order languages. The parser still sees a fixed window of context; recurrent models drop that limitation.</p>
+<h3 id="04-language-models-and-rnns">04 · Language models and RNNs</h3>
+<p>A language model assigns probability to a sequence by the chain rule, $P(w_1, \dots, w_T) = \prod_t P(w_t \mid w_{&lt;t})$. N-gram models truncate the history to $n-1$ words and estimate the conditional by counting, which is simple but suffers from sparsity (unseen n-grams get zero unless smoothed) and storage that grows with the corpus. A fixed-window neural model shares statistics across similar words through embeddings, but the window is still fixed and each position has its own weights.</p>
+<p>A recurrent network reads any length with one shared weight matrix:</p>
+<div class="math-display">$$h_t = \sigma\left(W_h h_{t-1} + W_e e_t + b\right), \qquad \hat{y}_t = \text{softmax}(U h_t + b_2)$$</div>
+<p>Training uses teacher forcing — feed the true previous word, predict the next — with cross-entropy at every step, and backpropagation through time sums the gradient contributions from each step. The standard evaluation metric is perplexity, the exponential of the average per-token cross-entropy:</p>
+<div class="math-display">$$\text{PPL} = \exp\left(-\frac{1}{T} \sum_{t=1}^{T} \log P(w_t \mid w_{&lt;t})\right)$$</div>
+<p>Lower is better, and a perplexity of $k$ means the model is roughly as uncertain as a uniform choice among $k$ words. Sampling one token at a time from the output distribution turns the model into a generator.</p>
+<p>Practical issues: full backpropagation through a long document is too expensive, so the sequence is chunked (truncated BPTT); recurrence is inherently sequential, so training does not parallelise across time; and the gradient signal through many steps either vanishes or explodes, which is the subject of the next lecture.</p>
+<h3 id="05-vanishing-gradients-lstms-and-grus">05 · Vanishing gradients, LSTMs, and GRUs</h3>
+<p>The gradient of the loss at step $t$ with respect to the hidden state at an earlier step $k$ contains a product of Jacobians $\prod_{i=k+1}^{t} \partial h_i / \partial h_{i-1}$. If the recurrent weights are small the product shrinks exponentially with distance and the model cannot learn long-range dependencies; if they are large it explodes. Exploding gradients are handled by clipping the gradient norm. Vanishing gradients need an architectural fix.</p>
+<p>The LSTM keeps a separate cell state $c_t$ that is updated additively, with gates deciding what to erase, write, and read:</p>
+<div class="math-display">$$f_t = \sigma(W_f [h_{t-1}, x_t] + b_f), \quad i_t = \sigma(W_i [h_{t-1}, x_t] + b_i), \quad o_t = \sigma(W_o [h_{t-1}, x_t] + b_o)$$</div>
+<div class="math-display">$$\tilde{c}_t = \tanh(W_c [h_{t-1}, x_t] + b_c), \quad c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t, \quad h_t = o_t \odot \tanh(c_t)$$</div>
+<p>With the forget gate near one, information and its gradient travel along $c_t$ through elementwise multiplications rather than through a weight matrix at every step. The GRU merges cell and hidden state and uses a reset gate and an update gate, with fewer parameters.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>State</th>
+<th>Gates</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vanilla RNN</td>
+<td>$h_t$</td>
+<td>none</td>
+<td>Cheapest, shortest memory</td>
+</tr>
+<tr>
+<td>GRU</td>
+<td>$h_t$</td>
+<td>reset, update</td>
+<td>Fewer parameters, often comparable</td>
+</tr>
+<tr>
+<td>LSTM</td>
+<td>$h_t$ and $c_t$</td>
+<td>forget, input, output</td>
+<td>Default choice for a long time</td>
+</tr>
+</tbody>
+</table>
+<p>Two structural additions matter: bidirectional RNNs read left-to-right and right-to-left and concatenate, which is fine for encoding but impossible for generation; and stacking two to four layers helps. Initialising the forget-gate bias to a positive value keeps early training from erasing everything. The same additive-shortcut idea appears as residual connections in deep feed-forward networks. An unconditional language model can only continue text; conditioning it on an input turns it into a translator.</p>
+<h3 id="06-seq2seq-attention-and-machine-translation">06 · Seq2seq, attention, and machine translation</h3>
+<p>Neural machine translation is a conditional language model: an encoder RNN reads the source sentence, and a decoder RNN generates the target one token at a time, $P(y \mid x) = \prod_t P(y_t \mid y_{&lt;t}, x)$, trained end to end. Decoding at test time is a search problem. Greedy decoding takes the argmax at each step and cannot undo a mistake; beam search keeps the $k$ best partial hypotheses, and because longer hypotheses accumulate more negative log-probability, scores are normalised by length before choosing the final output.</p>
+<p>The single encoder vector is a bottleneck. Attention lets every decoder step look back at all encoder states: compute a score between the decoder state $s_t$ and each encoder state $h_i$, normalise with a softmax, and take the weighted sum as a context vector.</p>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Score $e_i$</th>
+<th>Extra parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dot product</td>
+<td>$s_t^\top h_i$</td>
+<td>none</td>
+</tr>
+<tr>
+<td>Multiplicative</td>
+<td>$s_t^\top W h_i$</td>
+<td>one matrix</td>
+</tr>
+<tr>
+<td>Additive</td>
+<td>$v^\top \tanh(W_1 h_i + W_2 s_t)$</td>
+<td>two matrices and a vector</td>
+</tr>
+</tbody>
+</table>
+<p>Attention improves translation quality, gives a soft alignment that can be inspected, and creates a short gradient path from the loss to any source position. Translation is scored with BLEU, a geometric mean of clipped n-gram precisions (usually 1 to 4) multiplied by a brevity penalty. It correlates with human judgment at the corpus level but punishes valid paraphrases.</p>
+<p>What goes wrong: a very large beam favours short, safe outputs; rare words fall outside the vocabulary until subword tokenisation (byte-pair encoding) is used; and the encoder still has to be read sequentially. If attention does the heavy lifting, the recurrence itself becomes the thing to remove.</p>
+<h3 id="07-transformers">07 · Transformers</h3>
+<p>Recurrent encoders have two costs: computation is sequential across time, and the path between two distant tokens is long, so signal degrades. Self-attention fixes both by letting every token attend to every other token in one parallel step. Each input vector is projected into a query, a key, and a value, and the output for a token is a value-weighted average determined by query-key similarity:</p>
+<div class="math-display">$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V$$</div>
+<p>Dividing by $\sqrt{d_k}$ keeps the dot products from growing with dimension and saturating the softmax. Self-attention alone is missing three things. It is order-blind, so positional encodings (sinusoidal or learned) are added to the input embeddings. It is linear in the values, so a position-wise feed-forward network follows each attention layer. And a decoder must not see the future, so scores for later positions are set to $-\infty$ before the softmax. Multi-head attention runs several smaller attention operations in parallel with separate projections and concatenates the results, letting heads specialise. Residual connections and layer normalisation — normalising each token&rsquo;s vector to zero mean and unit variance, then rescaling — make deep stacks trainable. In an encoder-decoder Transformer, cross-attention takes queries from the decoder and keys and values from the encoder.</p>
+<p>The price is quadratic time and memory in sequence length, which is why long-context work keeps revisiting the attention pattern. Training details matter more than with RNNs: learning-rate warmup is needed, the pre-layer-norm variant is easier to optimise than the original post-norm layout, and forgetting the causal mask produces a decoder that scores perfectly on training data and cannot generate. This architecture scales, and scaling is what the next lectures exploit.</p>
+<h3 id="08-pretraining-bert-gpt-and-t5">08 · Pretraining: BERT, GPT, and T5</h3>
+<p>Pretraining trains a large network on raw text with a self-supervised objective, then adapts it to a task. Word vectors already did this for the input layer; the shift is doing it for the whole model, so that syntax, some world knowledge, and coreference cues are learned before any labelled data appears. The three Transformer shapes come with three objectives.</p>
+<table>
+<thead>
+<tr>
+<th>Shape</th>
+<th>Objective</th>
+<th>Example</th>
+<th>Natural use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Encoder</td>
+<td>Masked language modelling: hide some tokens, predict them from both sides</td>
+<td>BERT</td>
+<td>Classification, tagging, span extraction</td>
+</tr>
+<tr>
+<td>Decoder</td>
+<td>Causal language modelling: predict the next token from the left</td>
+<td>GPT family</td>
+<td>Generation, prompting</td>
+</tr>
+<tr>
+<td>Encoder-decoder</td>
+<td>Span corruption: replace spans with sentinels, generate the missing text</td>
+<td>T5</td>
+<td>Translation, summarisation, any text-to-text task</td>
+</tr>
+</tbody>
+</table>
+<p>Masked and causal objectives are both cross-entropy, just over different conditioning sets:</p>
+<div class="math-display">$$\mathcal{L}_{\text{MLM}} = -\sum_{i \in M} \log P(x_i \mid x_{\setminus M}), \qquad \mathcal{L}_{\text{CLM}} = -\sum_{t} \log P(x_t \mid x_{&lt;t})$$</div>
+<p>BERT masks roughly 15 percent of tokens and, to soften the mismatch with fine-tuning where no mask token appears, sometimes replaces the chosen token with a random word or leaves it unchanged. Its original next-sentence-prediction task was later shown to add little. Encoders see both directions, which makes them strong readers but awkward generators; decoders generate naturally but only condition on the left, so for classification you read out the last position. Sentence-piece or byte-pair vocabularies keep every input representable. A pretrained model is only a starting point; getting task behaviour out of it is the next question.</p>
+<h3 id="09-fine-tuning-and-prompting">09 · Fine-tuning and prompting</h3>
+<p>Full fine-tuning adds a small task head and updates every parameter with a small learning rate for a few epochs. Because the pretrained weights already encode most of what is needed, a few thousand labelled examples are often enough, and this recipe drove the jump on benchmarks like GLUE. Prompting is the alternative for decoder models: describe the task in natural language, optionally include a few worked examples, and read the continuation. No gradients are computed, so one model serves many tasks.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Fine-tuning</th>
+<th>Prompting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Labelled data</td>
+<td>Hundreds to thousands of examples</td>
+<td>Zero to a handful</td>
+</tr>
+<tr>
+<td>Parameters changed</td>
+<td>All (or a subset)</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Cost per task</td>
+<td>A training run plus a stored copy</td>
+<td>One forward pass per query</td>
+</tr>
+<tr>
+<td>Failure mode</td>
+<td>Seed instability, forgetting</td>
+<td>Sensitivity to wording and example order</td>
+</tr>
+</tbody>
+</table>
+<p>Chain-of-thought prompting asks the model to write intermediate reasoning before the answer and helps on multi-step problems, but mainly once the model is large. Instruction tuning, covered later, fine-tunes on many tasks phrased as prompts so that the two approaches converge.</p>
+<p>Things go wrong in specific ways. Fine-tuning on small datasets can vary widely across random seeds, so report several. Prompt results can swing by many points from a reformatted template. Benchmark text may appear in the pretraining corpus, inflating scores, so contamination checks matter. Whichever way the model is adapted, the output still has to be decoded from a probability distribution, which is a design decision of its own.</p>
+<h3 id="10-natural-language-generation-and-decoding">10 · Natural language generation and decoding</h3>
+<p>Generation covers translation, summarisation, dialogue, and open-ended writing, and the same trained model can produce very different text depending on how tokens are chosen. Training with teacher forcing means the model never sees its own mistakes, so at test time errors compound — exposure bias. Decoding methods trade off quality against diversity.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Rule</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Greedy</td>
+<td>Take the argmax at each step</td>
+<td>Repetitive, safe</td>
+</tr>
+<tr>
+<td>Beam search</td>
+<td>Keep top-$k$ partial sequences</td>
+<td>Good for translation, bland and loopy for open-ended text</td>
+</tr>
+<tr>
+<td>Temperature sampling</td>
+<td>$P(w) \propto \exp(s_w / \tau)$</td>
+<td>Low $\tau$ sharpens, high $\tau$ flattens</td>
+</tr>
+<tr>
+<td>Top-$k$ sampling</td>
+<td>Sample from the $k$ most likely tokens</td>
+<td>Cuts the long tail, fixed $k$ ignores distribution shape</td>
+</tr>
+<tr>
+<td>Nucleus (top-$p$)</td>
+<td>Sample from the smallest set with cumulative mass $\ge p$</td>
+<td>Adapts to flat versus peaked distributions</td>
+</tr>
+</tbody>
+</table>
+<p>Beam search maximises likelihood, and for open-ended tasks high-likelihood text is not what people write; human text sits below the model&rsquo;s most probable path. Repetition is a known failure of likelihood-trained models and is patched with n-gram blocking or trained away with unlikelihood objectives.</p>
+<p>Evaluation is the weak point. Overlap metrics such as BLEU and ROUGE need a reference and reward lexical matches, which is unfair to a good paraphrase. Model-based metrics like BERTScore compare embeddings. Human evaluation is the standard but is expensive, noisy, and hard to reproduce. Typical mistakes: using beam search for a chatbot, tuning temperature without a held-out check, and reading a BLEU gain on dialogue as a real improvement. Question answering is generation constrained by a passage, which is where the next lecture goes.</p>
+<h3 id="11-question-answering-and-reading-comprehension">11 · Question answering and reading comprehension</h3>
+<p>Reading comprehension gives the model a passage and a question and asks for the answer, usually as a span of the passage. The SQuAD benchmark made this concrete: predict a start index and an end index, and score by exact match and token-level F1 against human answers. Its second version added unanswerable questions, so the model must also learn when to abstain.</p>
+<p>Early neural readers such as BiDAF built separate representations of question and passage, computed attention in both directions between them, and ran a recurrent layer over the fused result. The pretrained-model recipe is simpler: feed the question and passage as one sequence separated by a special token, and train two vectors $w_{\text{start}}$ and $w_{\text{end}}$ against the final hidden states:</p>
+<div class="math-display">$$P_{\text{start}}(i) = \frac{\exp(w_{\text{start}}^\top h_i)}{\sum_j \exp(w_{\text{start}}^\top h_j)}$$</div>
+<p>with the end distribution defined the same way and the answer chosen as the highest-scoring valid span.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Input</th>
+<th>Output</th>
+<th>Typical system</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extractive reading</td>
+<td>Passage plus question</td>
+<td>Span indices</td>
+<td>Fine-tuned encoder</td>
+</tr>
+<tr>
+<td>Open-domain</td>
+<td>Question only</td>
+<td>Answer text</td>
+<td>Retriever plus reader</td>
+</tr>
+<tr>
+<td>Generative</td>
+<td>Passage or nothing plus question</td>
+<td>Free text</td>
+<td>Encoder-decoder or decoder LM</td>
+</tr>
+</tbody>
+</table>
+<p>Open-domain QA drops the passage: a retriever (sparse, like TF-IDF or BM25, or a dense bi-encoder) pulls candidates from a corpus and a reader answers from them. What goes wrong: models exploit lexical overlap and annotation artifacts, so adding one distracting sentence to a passage can flip the answer; and high F1 on one dataset rarely transfers to another. Large decoder models can answer many questions with no passage at all, which raises the question of what scale buys.</p>
+<h3 id="12-large-language-models-scaling-instruction-tuning-and-rlhf">12 · Large language models: scaling, instruction tuning, and RLHF</h3>
+<p>Empirically, language-model loss falls smoothly as a power law in parameters, data, and compute, and later work showed that for a fixed compute budget parameters and training tokens should grow together rather than parameters alone. Scale also changes behaviour: a large decoder can perform a task specified only in its prompt, with no weight updates — in-context learning — and some abilities appear abruptly across scale, although how much of that is a measurement artifact is debated.</p>
+<p>A raw pretrained model completes text; it does not follow instructions. Instruction tuning fine-tunes it on many tasks written as natural-language requests with answers, and the result generalises to unseen instructions. Reinforcement learning from human feedback goes further: collect human preference comparisons between candidate outputs, train a reward model $r_\phi(x, y)$ on them, and optimise the policy to score well while staying close to the supervised starting point:</p>
+<div class="math-display">$$\max_{\theta}\; \mathbb{E}_{y \sim \pi_\theta(\cdot \mid x)}\left[r_\phi(x, y)\right] - \beta\, \mathrm{KL}\left(\pi_\theta(\cdot \mid x)\,\|\,\pi_{\text{ref}}(\cdot \mid x)\right)$$</div>
+<p>The KL term keeps the model from drifting into text the reward model has never scored. Direct preference optimisation reaches a similar objective without an explicit reward model or RL loop.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Data</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pretraining</td>
+<td>Raw text</td>
+<td>Everything the model knows</td>
+</tr>
+<tr>
+<td>Instruction tuning</td>
+<td>Prompt-response pairs</td>
+<td>Format and task following</td>
+</tr>
+<tr>
+<td>RLHF / DPO</td>
+<td>Preference comparisons</td>
+<td>Helpfulness, tone, refusals</td>
+</tr>
+</tbody>
+</table>
+<p>Failure modes are well documented: over-optimising the reward model produces outputs the reward likes and humans do not; models learn to agree with the user; fluent text is confidently wrong. Fine-tuning a model with tens of billions of parameters is also simply expensive, which motivates cheaper adaptation.</p>
+<h3 id="13-efficient-adaptation-adapters-lora-and-prefix-tuning">13 · Efficient adaptation: adapters, LoRA, and prefix tuning</h3>
+<p>Parameter-efficient fine-tuning freezes the pretrained weights and trains a small number of new parameters, so each task costs megabytes rather than a full model copy. Adapters insert a small bottleneck network (down-project, nonlinearity, up-project) after the attention and feed-forward sublayers. Prefix tuning prepends trainable vectors to the keys and values at every layer; prompt tuning does the same at the input only. LoRA (low-rank adaptation) keeps the architecture unchanged and writes the weight update as a product of two thin matrices:</p>
+<div class="math-display">$$W = W_0 + \Delta W = W_0 + \frac{\alpha}{r} B A, \qquad B \in \mathbb{R}^{d \times r},\; A \in \mathbb{R}^{r \times k},\; r \ll \min(d, k)$$</div>
+<p>$A$ starts random and $B$ starts at zero, so training begins from the pretrained function exactly. After training, $BA$ can be merged into $W_0$, so inference costs nothing extra.</p>
+<pre><code class="language-python">import numpy as np
+d, k, r, alpha = 1024, 1024, 8, 16
+W0 = np.random.randn(d, k) * 0.02   # frozen pretrained weight
+A = np.random.randn(r, k) * 0.01    # trainable, random init
+B = np.zeros((d, r))                # trainable, zero init -&gt; dW = 0 at start
+def lora_forward(x):                # x has shape (k,)
+    return W0 @ x + (alpha / r) * (B @ (A @ x))
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Where it lives</th>
+<th>Inference overhead</th>
+<th>Trainable share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adapters</td>
+<td>New sublayers</td>
+<td>Small extra depth</td>
+<td>Around 1 percent</td>
+</tr>
+<tr>
+<td>Prefix tuning</td>
+<td>Key/value prefixes per layer</td>
+<td>Longer sequence</td>
+<td>Under 1 percent</td>
+</tr>
+<tr>
+<td>LoRA</td>
+<td>Low-rank delta on existing matrices</td>
+<td>None after merge</td>
+<td>Under 1 percent</td>
+</tr>
+</tbody>
+</table>
+<p>Typical mistakes: choosing a rank too small for a large domain shift, and applying LoRA to only one projection matrix when several help. With adaptation solved, the course turns back to the linguistic phenomena models are supposed to capture.</p>
+<h3 id="14-coreference-and-linguistic-structure">14 · Coreference and linguistic structure</h3>
+<p>Coreference resolution finds all mentions in a text that refer to the same entity: names, noun phrases, and pronouns. It is needed for summarisation, question answering, and dialogue, and it is hard because pronouns are ambiguous and resolving them often needs world knowledge — Winograd-style sentences flip the referent by changing one verb. Classical approaches used syntactic search heuristics; modern systems learn it.</p>
+<p>The end-to-end neural approach treats every span up to some length as a candidate mention, scores each span for mention-likeness, prunes aggressively, and then scores pairs:</p>
+<div class="math-display">$$s(i, j) = s_m(i) + s_m(j) + s_a(i, j)$$</div>
+<p>where $s_a$ measures how plausible span $j$ is as an antecedent of span $i$, and a dummy antecedent lets the model say &ldquo;no earlier mention&rdquo;. Span representations come from a contextual encoder plus attention over the span&rsquo;s tokens. Because a mention can only link to one earlier antecedent, clusters emerge by following links.</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Decision</th>
+<th>Weakness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mention-pair</td>
+<td>Independent yes/no per pair</td>
+<td>Inconsistent clusters</td>
+</tr>
+<tr>
+<td>Mention-ranking</td>
+<td>Pick best antecedent per mention</td>
+<td>Greedy, no cluster-level view</td>
+</tr>
+<tr>
+<td>Clustering</td>
+<td>Merge clusters directly</td>
+<td>Expensive</td>
+</tr>
+</tbody>
+</table>
+<p>Evaluation averages several cluster metrics (MUC, B-cubed, CEAF) because each rewards different errors. What goes wrong: mention-detection mistakes propagate, pronoun resolution inherits gender stereotypes from data (the WinoBias tests make this measurable), and models lean on surface cues where reasoning is needed. More broadly, pretrained models pick up much of this structure implicitly, which raises the question of what exactly they have learned.</p>
+<h3 id="15-interpretability-and-analysis">15 · Interpretability and analysis</h3>
+<p>Analysis of NLP models works at three levels. Behavioural testing feeds crafted inputs — minimal pairs for subject-verb agreement with intervening nouns, negation, or word-order swaps — and checks predictions, treating the model as a black box. Probing trains a small classifier on frozen representations to predict a linguistic property such as part of speech or dependency depth; success shows the information is easily decodable from that layer. A structural probe goes further and finds a linear transformation under which vector distances match tree distances. Mechanistic analysis looks inside: which heads attend to what, which neurons fire, and how information moves between layers.</p>
+<p>Two caveats matter. A probe with enough capacity can decode almost anything from anything, so control tasks with random labels are needed to separate what the representation encodes from what the probe learned. And attention weights are not explanations by default: studies have found that very different attention distributions can produce the same output, that many heads can be pruned without loss, and that gradient-based attribution often disagrees with attention. Attention shows where the model looked, not why it answered.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Question</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Behavioural</td>
+<td>Does it get the right answer on X?</td>
+<td>Challenge sets, minimal pairs</td>
+</tr>
+<tr>
+<td>Representational</td>
+<td>Is X encoded in layer L?</td>
+<td>Probes, control tasks</td>
+</tr>
+<tr>
+<td>Mechanistic</td>
+<td>How is X computed?</td>
+<td>Attention maps, attribution, ablation</td>
+</tr>
+</tbody>
+</table>
+<p>A recurring finding is that lower layers of a pretrained encoder carry more surface and syntactic information while upper layers carry more task-specific and semantic information, though the split is gradual. The usual mistakes are cherry-picking an attention map and reading &ldquo;decodable&rdquo; as &ldquo;used&rdquo;. Instead of asking what is stored in the parameters, the next lecture puts knowledge outside the model.</p>
+<h3 id="16-retrieval-augmented-generation">16 · Retrieval-augmented generation</h3>
+<p>Knowledge stored in parameters is frozen at training time, cannot cite its source, and is reproduced from fuzzy memory, which is one root of hallucination. Retrieval-augmented generation adds an external store: a retriever finds passages relevant to the query, and the generator conditions on them. The retriever can be sparse (BM25 over terms) or dense — a bi-encoder trained contrastively so that a question and its supporting passage have a high dot product, with other passages in the batch serving as negatives. Passages are pre-encoded into an approximate nearest-neighbour index so lookup is fast.</p>
+<p>The RAG formulation marginalises over the retrieved documents:</p>
+<div class="math-display">$$P(y \mid x) \approx \sum_{z \in \text{top-}k(x)} P_\eta(z \mid x)\, P_\theta(y \mid x, z)$$</div>
+<p>Variants differ in where retrieval enters: REALM retrieves during pretraining, RETRO cross-attends to retrieved chunks inside the decoder, and kNN-LM interpolates the model&rsquo;s next-token distribution with one built from nearest-neighbour contexts.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Parametric only</th>
+<th>Retrieval-augmented</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update knowledge</td>
+<td>Retrain or fine-tune</td>
+<td>Re-index</td>
+</tr>
+<tr>
+<td>Provenance</td>
+<td>None</td>
+<td>Retrieved passage</td>
+</tr>
+<tr>
+<td>Failure</td>
+<td>Confident fabrication</td>
+<td>Off-topic or ignored passages</td>
+</tr>
+</tbody>
+</table>
+<p>In practice most work is in the pipeline: how documents are chunked, which embedding model is used, whether a cross-encoder reranks the candidates, and how many passages fit in the context window. What goes wrong: the retriever returns something plausible but irrelevant and the generator either ignores it or gets distracted by it; the index goes stale; and evaluation checks answer correctness without checking that the answer is faithful to the retrieved text. Systems that retrieve and generate at scale are deployed to real users, which is where the course ends.</p>
+<h3 id="17-bias-safety-and-ethics-in-nlp">17 · Bias, safety, and ethics in NLP</h3>
+<p>Language data is produced by people, and models trained on it inherit their statistical regularities, including the harmful ones. Word vectors encode gender and racial associations that show up in analogy tests and in downstream decisions; coreference systems resolve pronouns along stereotyped occupation lines; toxicity classifiers flag dialects of English at higher rates. Bias is usually separated into allocational harms (a system withholds a resource or opportunity from a group) and representational harms (a system depicts a group in a demeaning or erasing way), and the two need different measurements.</p>
+<p>Large language models add new concerns. They memorise training data and can leak private text. They produce confident falsehoods in a fluent register that readers trust. They can be used to generate misinformation or spam at scale, and their training corpora and compute have environmental and labour costs that are easy to leave out of a paper. Alignment techniques such as instruction tuning and preference optimisation reduce some harms but also encode the values of whoever labelled the preferences.</p>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Where it enters</th>
+<th>Partial mitigations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stereotyped associations</td>
+<td>Training corpus</td>
+<td>Data curation, counterfactual augmentation, targeted evaluation</td>
+</tr>
+<tr>
+<td>Privacy leakage</td>
+<td>Memorisation</td>
+<td>Deduplication, differential privacy, output filtering</td>
+</tr>
+<tr>
+<td>Misuse</td>
+<td>Deployment</td>
+<td>Access controls, usage policies, red-teaming</td>
+</tr>
+</tbody>
+</table>
+<p>The methodological point is that fairness is not a single number: a benchmark score can hide large gaps across dialects, languages, and demographic groups, and debiasing that removes an association from vectors often leaves it recoverable by a classifier. Documentation practices — datasheets for datasets and model cards for models — exist so that these limits travel with the artifact. The question to keep asking about any system in these notes is who it is evaluated on, and who is affected when it is wrong.</p>
+<h2 id="key-equations-at-a-glance">Key equations at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Equation</th>
+<th>When it applies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Skip-gram objective</td>
+<td>$J(\theta) = -\frac{1}{T}\sum_t \sum_{j \ne 0} \log P(w_{t+j} \mid w_t)$</td>
+<td>Learning word vectors by predicting context</td>
+</tr>
+<tr>
+<td>Negative sampling</td>
+<td>$-\log \sigma(u_o^\top v_c) - \sum_{i=1}^{k} \mathbb{E}_{w_i \sim P_n} \log \sigma(-u_{w_i}^\top v_c)$</td>
+<td>Replacing the full softmax over the vocabulary</td>
+</tr>
+<tr>
+<td>GloVe loss</td>
+<td>$\sum_{i,j} f(X_{ij})(w_i^\top \tilde{w}_j + b_i + \tilde{b}_j - \log X_{ij})^2$</td>
+<td>Fitting vectors to global co-occurrence counts</td>
+</tr>
+<tr>
+<td>Cross-entropy gradient</td>
+<td>$\partial J / \partial s = p - \text{onehot}(y)$</td>
+<td>Any softmax classifier</td>
+</tr>
+<tr>
+<td>RNN step</td>
+<td>$h_t = \sigma(W_h h_{t-1} + W_e e_t + b)$</td>
+<td>Sequential encoding and language modelling</td>
+</tr>
+<tr>
+<td>Perplexity</td>
+<td>$\exp\left(-\frac{1}{T}\sum_t \log P(w_t \mid w_{&lt;t})\right)$</td>
+<td>Evaluating any language model</td>
+</tr>
+<tr>
+<td>LSTM cell update</td>
+<td>$c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t$, $h_t = o_t \odot \tanh(c_t)$</td>
+<td>Long-range dependencies in recurrent models</td>
+</tr>
+<tr>
+<td>Scaled dot-product attention</td>
+<td>$\text{softmax}(QK^\top / \sqrt{d_k})\, V$</td>
+<td>Self-attention and cross-attention in Transformers</td>
+</tr>
+<tr>
+<td>Masked LM loss</td>
+<td>$-\sum_{i \in M} \log P(x_i \mid x_{\setminus M})$</td>
+<td>Encoder pretraining</td>
+</tr>
+<tr>
+<td>Causal LM loss</td>
+<td>$-\sum_t \log P(x_t \mid x_{&lt;t})$</td>
+<td>Decoder pretraining and generation</td>
+</tr>
+<tr>
+<td>Nucleus sampling</td>
+<td>Smallest $S$ with $\sum_{w \in S} P(w) \ge p$</td>
+<td>Open-ended text generation</td>
+</tr>
+<tr>
+<td>RLHF objective</td>
+<td>$\mathbb{E}[r_\phi(x,y)] - \beta\,\mathrm{KL}(\pi_\theta \,\Vert\, \pi_{\text{ref}})$</td>
+<td>Aligning a model to human preferences</td>
+</tr>
+<tr>
+<td>LoRA update</td>
+<td>$W = W_0 + \frac{\alpha}{r} BA$ with $r \ll \min(d,k)$</td>
+<td>Cheap fine-tuning of a frozen model</td>
+</tr>
+<tr>
+<td>RAG marginalisation</td>
+<td>$\sum_{z} P(z \mid x)\, P(y \mid x, z)$</td>
+<td>Generation grounded in retrieved passages</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-mistakes">Common mistakes</h2>
+<ul>
+<li>Treating the word2vec softmax as the thing to implement. The full denominator over the vocabulary is the reason negative sampling exists; implement the sampled objective and keep separate center and context vectors.</li>
+<li>Fine-tuning word embeddings on a small labelled set and wondering why unseen words behave worse. Only words in the training data move; freeze embeddings when the dataset is small.</li>
+<li>Reporting perplexity computed with a different tokeniser than the baseline. Perplexity is per token, so two models with different vocabularies are not directly comparable.</li>
+<li>Skipping gradient clipping in recurrent models. Exploding gradients produce a loss that suddenly becomes NaN; clip the global norm and check the forget-gate bias initialisation.</li>
+<li>Using beam search for open-ended generation. Likelihood maximisation produces repetitive, generic text; use nucleus or top-k sampling with a tuned temperature and keep beam search for translation-style tasks.</li>
+<li>Forgetting the causal mask in a decoder. Training looks perfect because every position sees its own answer; generation then collapses. Verify that the attention matrix is lower-triangular.</li>
+<li>Reading an attention map or a probe result as proof of how the model reasons. Add control tasks for probes and use ablation or attribution alongside attention before making a causal claim.</li>
+<li>Building a retrieval pipeline and evaluating only final-answer accuracy. Check retrieval recall separately and check that the answer is supported by the retrieved passages, or the generator&rsquo;s fabrications go unnoticed.</li>
+</ul>
+<h2 id="related-courses">Related courses</h2>
+<ul>
+<li><a href="cs229.html">CS229</a> — the softmax regression, maximum likelihood, and gradient descent that every model here is built on.</li>
+<li><a href="cs230.html">CS230</a> — backpropagation, optimisers, and regularisation tricks shared with these notes, at a more general level.</li>
+<li><a href="cs231n.html">CS231n</a> — the same training machinery applied to images; residual connections and layer norm show up in both.</li>
+<li><a href="cs224w.html">CS224w</a> — graph neural networks use attention over neighbours in the same way Transformers attend over tokens.</li>
+<li><a href="cs234.html">CS234</a> — the policy-gradient and reward-modelling ideas behind RLHF in their original reinforcement-learning setting.</li>
+<li><a href="cs246.html">CS246</a> — nearest-neighbour search and indexing at scale, which retrieval-augmented generation depends on.</li>
+<li><a href="cs336.html">CS336</a> — building a language model from scratch: tokenisers, scaling laws, and systems details this course only sketches.</li>
+</ul>
+      <a class="back" href="../study.html">&larr; All courses</a>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="wrap"><span>&copy; 2026 Kanghoun Lee &middot; Seoul</span><nav aria-label="Footer navigation"><a href="../#about">About</a><a href="../study.html">Study</a><a href="https://github.com/nightandweather">GitHub &#8599;</a></nav></div></footer>
+</body></html>

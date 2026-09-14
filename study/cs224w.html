@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en"><head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HGZPVGV9N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-3HGZPVGV9N");
+  </script>
+  <meta name="google-adsense-account" content="ca-pub-4242632384470714">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4242632384470714" crossorigin="anonymous"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Notes on CS224W: node embeddings, PageRank, GCN, GraphSAGE, GAT, GNN expressiveness, knowledge graphs, recommenders, and scaling.">
+  <title>CS224W Machine Learning with Graphs &mdash; Kanghoun Lee</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://nightandweather.github.io/study/cs224w.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CS224W Machine Learning with Graphs">
+  <meta property="og:description" content="Notes on CS224W: node embeddings, PageRank, GCN, GraphSAGE, GAT, GNN expressiveness, knowledge graphs, recommenders, and scaling.">
+  <meta property="og:image" content="https://nightandweather.github.io/assets/orcaton.jpg">
+  <meta property="og:url" content="https://nightandweather.github.io/study/cs224w.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../study.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+</head>
+<body><a class="skip-link" href="#main-content">Skip to content</a>
+<header class="nav wrap"><a class="wordmark" href="../" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a><nav aria-label="Primary navigation"><a href="../work.html">Work</a><a href="../experiments.html">Experiments</a><a href="../field-notes.html">Field Notes</a><a href="../study.html" aria-current="page">Study</a><a href="../opportunities.html">Calendar</a><a href="../rejections.html">Rejections</a></nav></header>
+<main id="main-content" class="study-page">
+  <section class="study-hero study-hero-tinted" style="--tone:#dcf3ea"><div class="wrap"><p class="kicker">Stanford CS224W &middot; Graphs</p><h1>Machine Learning with Graphs</h1><p class="lead">Notes on CS224W: node embeddings, PageRank, GCN, GraphSAGE, GAT, GNN expressiveness, knowledge graphs, recommenders, and scaling.</p></div></section>
+  <div class="study-layout wrap">
+    <aside class="study-side">
+      <dl class="study-facts"><dt>Taught by</dt><dd>Jure Leskovec</dd><dt>Notes based on</dt><dd>Public lecture sequence (recent fall offerings)</dd><dt>Lectures covered</dt><dd>16</dd><dt>Official page</dt><dd><a href="https://web.stanford.edu/class/cs224w/" rel="noopener">CS224W &#8599;</a></dd></dl>
+      <nav class="study-jump" aria-label="Lectures"><p class="eyebrow">Lectures</p><ol><li><a href="#01-why-graphs-and-the-three-levels-of-tasks">01 · Why graphs, and the three levels of tasks</a></li><li><a href="#02-traditional-feature-based-methods">02 · Traditional feature-based methods</a></li><li><a href="#03-node-embeddings-deepwalk-and-node2vec">03 · Node embeddings: DeepWalk and node2vec</a></li><li><a href="#04-pagerank-and-random-walk-with-restart">04 · PageRank and random walk with restart</a></li><li><a href="#05-message-passing-and-collective-classification">05 · Message passing and collective classification</a></li><li><a href="#06-graph-neural-networks-gcn-graphsage-gat">06 · Graph neural networks: GCN, GraphSAGE, GAT</a></li><li><a href="#07-the-gnn-design-space">07 · The GNN design space</a></li><li><a href="#08-how-expressive-are-gnns-wl-test-and-gin">08 · How expressive are GNNs? WL test and GIN</a></li><li><a href="#09-heterogeneous-graphs-and-knowledge-graph-embeddings">09 · Heterogeneous graphs and knowledge graph embeddings</a></li><li><a href="#10-reasoning-over-knowledge-graphs">10 · Reasoning over knowledge graphs</a></li><li><a href="#11-subgraphs-and-motifs">11 · Subgraphs and motifs</a></li><li><a href="#12-gnns-for-recommender-systems">12 · GNNs for recommender systems</a></li><li><a href="#13-community-detection">13 · Community detection</a></li><li><a href="#14-generative-models-for-graphs">14 · Generative models for graphs</a></li><li><a href="#15-scaling-gnns-to-large-graphs">15 · Scaling GNNs to large graphs</a></li><li><a href="#16-temporal-graphs-and-trustworthy-gnns">16 · Temporal graphs and trustworthy GNNs</a></li></ol></nav>
+    </aside>
+    <article class="study-body note-body">
+      <p class="study-disclaimer">Personal study notes written in my own words from publicly available lectures and course pages. Not affiliated with or endorsed by Stanford University. No assignment solutions are published here.</p>
+<h2 id="what-the-course-is-about">What the course is about</h2>
+<p>Most machine learning assumes inputs that come as fixed-size vectors, grids, or sequences. Graphs break that assumption: a molecule, a social network, a knowledge base, or a road map has no natural ordering of its parts, no fixed size, and its information lives as much in the connections as in the nodes. CS224W is about turning graph structure into something a learning algorithm can use, first with hand-designed features, then with learned embeddings, and finally with neural networks that pass messages along edges.</p>
+<p>You should be comfortable with linear algebra (matrix products, eigenvectors), basic probability, and the mechanics of training a neural network with gradient descent. Knowing what a softmax, a cross-entropy loss, and an embedding table are will make the second half of the course much easier. No prior graph theory is assumed beyond adjacency matrices and degrees.</p>
+<p>The lectures follow one arc. The early part builds intuition with classical tools: structural features, random walks, and PageRank. The middle introduces graph neural networks, how to design them, and how to reason about what they can and cannot distinguish. The last part applies the machinery to specific settings: knowledge graphs, recommender systems, community structure, graph generation, large-scale training, and questions of trust. Each later topic reuses the message-passing view introduced in the middle, so it pays to understand that section thoroughly.</p>
+<h2 id="lecture-notes">Lecture notes</h2>
+<h3 id="01-why-graphs-and-the-three-levels-of-tasks">01 · Why graphs, and the three levels of tasks</h3>
+<p>A graph is a set of nodes $V$ and edges $E$, often stored as an adjacency matrix $A \in \{0,1\}^{|V| \times |V|}$ or, more practically, as an adjacency list. Edges can be directed or undirected, weighted, and typed; nodes and edges can carry feature vectors. The main modeling choice is deciding what the nodes and edges represent, because that choice determines what the model can learn.</p>
+<p>Prediction tasks are organized by their granularity:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Example task</th>
+<th>Typical output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node</td>
+<td>Classify a user as bot or human</td>
+<td>One label per node</td>
+</tr>
+<tr>
+<td>Edge</td>
+<td>Predict a missing friendship or drug interaction</td>
+<td>Score per node pair</td>
+</tr>
+<tr>
+<td>Subgraph</td>
+<td>Estimate travel time along a route</td>
+<td>One value per subgraph</td>
+</tr>
+<tr>
+<td>Graph</td>
+<td>Predict a molecule&rsquo;s solubility</td>
+<td>One label per graph</td>
+</tr>
+</tbody>
+</table>
+<p>Two ideas run through everything that follows. First, a good graph learner must be indifferent to the arbitrary order in which nodes are listed (permutation invariance for graph-level outputs, permutation equivariance for node-level outputs). Second, a node&rsquo;s identity is largely determined by its neighborhood, so almost every method here summarizes neighborhoods, either with formulas or with learned functions.</p>
+<p>What goes wrong in practice is usually at the modeling step: an edge type gets dropped because it was inconvenient, or a directed relation is stored as undirected and the model learns something backwards. The next lecture starts with the classical answer to the question &ldquo;how do you summarize a neighborhood?&rdquo;</p>
+<h3 id="02-traditional-feature-based-methods">02 · Traditional feature-based methods</h3>
+<p>Before neural networks, graph prediction meant computing structural features by hand and feeding them to a logistic regression or a random forest. The features differ by task level.</p>
+<p>For nodes, the basic ones are degree, centrality measures (eigenvector, betweenness, closeness), and the clustering coefficient, which is the fraction of a node&rsquo;s neighbor pairs that are themselves connected. Graphlets generalize this: count how many times a node participates in each small rooted subgraph (paths, triangles, stars, up to a few nodes) and stack the counts into a graphlet degree vector. This captures local structure much more finely than degree alone.</p>
+<p>For edges, the goal is to score how likely two nodes are to be connected. Distance-based features use shortest path length. Neighborhood-overlap features count common neighbors, normalize them (Jaccard), or weight them so that rare shared neighbors count more, as in Adamic-Adar:</p>
+<div class="math-display">$$\text{AA}(u, v) = \sum_{w \in N(u) \cap N(v)} \frac{1}{\log |N(w)|}$$</div>
+<p>Global overlap features such as the Katz index count paths of all lengths with geometric decay, computable in closed form from powers of $A$.</p>
+<p>For whole graphs, kernel methods compare graphs through bag-of-structure representations: the graphlet kernel counts small subgraphs, and the Weisfeiler-Lehman kernel iteratively refines node colors by hashing neighbor colors, then compares color histograms. WL is cheap and surprisingly strong.</p>
+<p>The practical failure is that hand-designed features encode whatever the designer thought to include and nothing more. Computing graphlet counts is also expensive for larger motifs. The next lecture replaces designed features with learned ones.</p>
+<h3 id="03-node-embeddings-deepwalk-and-node2vec">03 · Node embeddings: DeepWalk and node2vec</h3>
+<p>The goal of node embedding is a function $z_v = \text{ENC}(v)$ such that similarity in embedding space, usually the dot product $z_u^\top z_v$, mirrors similarity in the graph. The simplest encoder is a lookup table with one free vector per node. The question is how to define graph similarity.</p>
+<p>Random walks give a flexible answer: two nodes are similar if short random walks starting from one tend to visit the other. For each node $u$, run walks and collect the multiset of visited nodes $N_R(u)$. Then train the embeddings to make those co-visits probable:</p>
+<div class="math-display">$$\max_{z} \sum_{u \in V} \sum_{v \in N_R(u)} \log \frac{\exp(z_u^\top z_v)}{\sum_{n \in V} \exp(z_u^\top z_n)}$$</div>
+<p>The denominator over all nodes is too expensive, so negative sampling replaces it with a sigmoid on the positive pair plus a handful of random negatives, exactly as in word2vec. DeepWalk uses plain unbiased walks.</p>
+<p>node2vec adds two knobs that bias the walk. The return parameter $p$ controls the chance of stepping back to the previous node; the in-out parameter $q$ controls whether the walk stays close (BFS-like, capturing community membership) or wanders outward (DFS-like, capturing structural role). Small $q$ explores; small $p$ stays local.</p>
+<p>Graph-level embeddings can be built by summing or averaging node embeddings, or by adding a virtual node connected to everything and embedding that. Anonymous walks, which record only the pattern of first visits, offer another route.</p>
+<p>The weakness of all of these: embeddings are transductive. A node that appears after training has no vector, and node features are ignored entirely. Neural encoders fix both problems later.</p>
+<h3 id="04-pagerank-and-random-walk-with-restart">04 · PageRank and random walk with restart</h3>
+<p>PageRank treats a directed graph as a flow of importance. Each node splits its current score equally among its out-links, and a node&rsquo;s new score is the sum of what flows in. Writing $M$ for the column-stochastic matrix with $M_{ji} = 1/d_i^{\text{out}}$ when $i \to j$, the fixed point satisfies $r = M r$, so $r$ is the leading eigenvector of $M$ and also the stationary distribution of a random surfer.</p>
+<p>Two problems break the plain version: dead ends (nodes with no out-links) leak score, and spider traps (closed cycles) absorb it. The fix is teleportation: with probability $\beta$ follow a link, otherwise jump to a uniformly random node.</p>
+<div class="math-display">$$r = \beta M r + \frac{1 - \beta}{N} \mathbf{1}, \qquad \beta \approx 0.8 \text{ to } 0.9$$</div>
+<p>Power iteration solves this: initialize $r$ uniformly, apply the update, renormalize, repeat until the change drops below a tolerance. It converges in a few dozen iterations on web-scale graphs.</p>
+<pre><code class="language-python">import numpy as np
+def pagerank(M, beta=0.85, tol=1e-8):
+    n = M.shape[0]
+    r = np.ones(n) / n
+    while True:
+        r_new = beta * M @ r + (1 - beta) / n
+        r_new /= r_new.sum()          # re-absorb leaked mass from dead ends
+        if np.abs(r_new - r).sum() &lt; tol:
+            return r_new
+        r = r_new
+</code></pre>
+<p>Personalized PageRank changes only the teleport set: jump back to a chosen set of nodes rather than anywhere. Random walk with restart is the extreme case where the set is a single query node; the resulting scores rank other nodes by proximity to the query, which is a strong baseline for recommendation. Simulating the walk directly, rather than solving the linear system, is often enough.</p>
+<p>A common mistake is forgetting to renormalize when the graph has dead ends, which makes the scores shrink every iteration. The next lecture uses the same &ldquo;iterate until stable&rdquo; idea for classification.</p>
+<h3 id="05-message-passing-and-collective-classification">05 · Message passing and collective classification</h3>
+<p>Suppose some nodes have labels and you want to label the rest. Node features alone waste information: in many graphs, connected nodes share labels (homophily), or a node&rsquo;s label is predictable from its neighbors&rsquo; labels even when they differ. Collective classification exploits these correlations by letting predictions influence each other.</p>
+<p>Relational classification is the simplest scheme. Each unlabeled node holds a class probability, initialized uniformly, and repeatedly replaces it with the weighted average of its neighbors&rsquo; probabilities:</p>
+<div class="math-display">$$P(Y_v = c) = \frac{1}{\sum_{u \in N(v)} A_{vu}} \sum_{u \in N(v)} A_{vu} \, P(Y_u = c)$$</div>
+<p>Labeled nodes stay fixed. Node features are ignored, and convergence is not guaranteed, though in practice the values settle.</p>
+<p>Iterative classification adds features. Train one classifier on node features alone to produce initial labels, and a second classifier on node features plus a summary of neighbor labels (counts, or the most common label). Then loop: recompute the summaries, reapply the second classifier, until labels stop changing.</p>
+<p>Loopy belief propagation is the principled version. Nodes exchange messages that say, in effect, &ldquo;given what I believe, here is how likely each of your labels is,&rdquo; using a label-compatibility matrix. It is exact on trees and approximate, occasionally non-convergent, on graphs with cycles.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Uses features</th>
+<th>Uses neighbor labels</th>
+<th>Guaranteed to converge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Relational classification</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Iterative classification</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Loopy BP</td>
+<td>Via potentials</td>
+<td>Yes</td>
+<td>Only on trees</td>
+</tr>
+</tbody>
+</table>
+<p>The lasting idea is not any single algorithm but the pattern: a node&rsquo;s state is updated from messages sent by its neighbors, repeated for several rounds. Graph neural networks make the message and update functions learnable.</p>
+<h3 id="06-graph-neural-networks-gcn-graphsage-gat">06 · Graph neural networks: GCN, GraphSAGE, GAT</h3>
+<p>A graph neural network builds a node&rsquo;s representation from its multi-hop neighborhood. Layer $l$ collects the layer-$l$ embeddings of the neighbors, aggregates them with an order-invariant function, and combines the result with the node&rsquo;s own embedding. Stacking $K$ layers gives every node a receptive field of its $K$-hop neighborhood. Because the same weights are shared across all nodes, the model is inductive: it can embed nodes and graphs it never saw during training.</p>
+<p>The graph convolutional network normalizes by degree and applies a single weight matrix:</p>
+<div class="math-display">$$h_v^{(l+1)} = \sigma\left( W^{(l)} \sum_{u \in N(v) \cup \{v\}} \frac{h_u^{(l)}}{\sqrt{|N(u)| \, |N(v)|}} \right)$$</div>
+<p>In matrix form this is $H^{(l+1)} = \sigma(\tilde{D}^{-1/2} \tilde{A} \tilde{D}^{-1/2} H^{(l)} W^{(l)})$ with $\tilde{A} = A + I$.</p>
+<p>GraphSAGE separates the self and neighbor terms and makes the aggregator pluggable:</p>
+<div class="math-display">$$h_v^{(l+1)} = \sigma\left( W^{(l)} \cdot \text{CONCAT}\left( h_v^{(l)}, \text{AGG}\{ h_u^{(l)} : u \in N(v) \} \right) \right)$$</div>
+<p>where AGG can be a mean, a max after an MLP (pooling), or an LSTM over a shuffled neighbor list. Embeddings are often $\ell_2$-normalized after each layer.</p>
+<p>The graph attention network learns how much each neighbor matters instead of using fixed degree weights:</p>
+<div class="math-display">$$e_{vu} = \text{LeakyReLU}\left( a^\top [W h_v \, \| \, W h_u] \right), \qquad \alpha_{vu} = \frac{\exp(e_{vu})}{\sum_{k \in N(v)} \exp(e_{vk})}$$</div>
+<p>and then aggregates $\sum_u \alpha_{vu} W h_u$. Multiple attention heads are run in parallel and concatenated or averaged.</p>
+<p>Training follows the task: cross-entropy on labeled nodes, a pair score for edges, pooled embeddings for graphs. The most common practical error is stacking many layers expecting more power; deep GNNs blur node embeddings together, a problem the next lecture addresses directly.</p>
+<h3 id="07-the-gnn-design-space">07 · The GNN design space</h3>
+<p>A GNN is a pipeline, and each stage is a design decision. Within a layer, the choice is the message function (usually a linear map), the aggregation (sum, mean, max, attention), and the nonlinearity. Batch normalization on node embeddings stabilizes training; dropout on the linear map regularizes it.</p>
+<p>Between layers, the key problem is over-smoothing. Each layer averages a node with its neighbors, so after many layers the receptive fields of different nodes overlap almost completely and their embeddings collapse toward one another. The practical rules are to keep the number of message-passing layers close to the graph&rsquo;s diameter of interest, to put expressive MLPs before and after message passing (pre- and post-processing layers) rather than adding more GNN layers, and to add skip connections so that shallow, more distinctive embeddings survive to the output. A skip connection can be a residual sum or a concatenation of all layer outputs.</p>
+<p>The graph itself can also be changed. If nodes have no features, give them a constant or a one-hot identity (one-hot works only transductively) or hand-computed counts such as triangles or cycle lengths that message passing struggles to detect. If the graph is too sparse, add virtual edges (for example, connect two-hop neighbors) or a virtual node linked to everything to shorten paths. If it is too dense, sample a subset of neighbors per layer, which also regularizes.</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Adjustment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Featureless nodes</td>
+<td>Constant, one-hot, or structural features</td>
+</tr>
+<tr>
+<td>Too sparse</td>
+<td>Virtual edges or a virtual node</td>
+</tr>
+<tr>
+<td>Too dense</td>
+<td>Neighbor sampling per layer</td>
+</tr>
+<tr>
+<td>Too large</td>
+<td>Subgraph sampling (later lecture)</td>
+</tr>
+</tbody>
+</table>
+<p>Treat these as hyperparameters worth searching, not fixed conventions. The natural question that follows is how much any of these architectures can actually distinguish.</p>
+<h3 id="08-how-expressive-are-gnns-wl-test-and-gin">08 · How expressive are GNNs? WL test and GIN</h3>
+<p>Two nodes with identical features and identical multi-hop neighborhood structure will always receive the same GNN embedding, since the computation graphs are the same. The question is the converse: when the neighborhoods differ, does the GNN notice?</p>
+<p>The reference point is the Weisfeiler-Lehman color refinement test. Every node starts with the same color; at each round, a node&rsquo;s new color is an injective hash of its current color together with the multiset of its neighbors&rsquo; colors. After $K$ rounds, two graphs with different color histograms are non-isomorphic. A GNN layer has exactly this shape, with the aggregator playing the role of the hash. So a GNN is at most as powerful as 1-WL, and it reaches that ceiling only when its aggregation is injective on multisets.</p>
+<p>Mean and max aggregation are not injective. Mean cannot tell a neighbor multiset $\{a, b\}$ from $\{a, a, b, b\}$; max cannot tell $\{a\}$ from $\{a, a\}$. Sum can. The graph isomorphism network builds on this observation, using a sum followed by an MLP, which by the universal approximation theorem can represent an injective function of the summed multiset:</p>
+<div class="math-display">$$h_v^{(l+1)} = \text{MLP}^{(l)}\left( (1 + \epsilon^{(l)}) \, h_v^{(l)} + \sum_{u \in N(v)} h_u^{(l)} \right)$$</div>
+<p>Here $\epsilon$ can be learned or fixed at zero. GIN is provably as expressive as 1-WL, and it can be read as a neural version of the WL kernel from lecture 02.</p>
+<p>The ceiling still matters: 1-WL cannot distinguish some regular graphs, cannot count cycles, and gives identical embeddings to two nodes with the same local view even when their global positions differ. Adding structural features or node identifiers pushes past the limit at some cost to generality.</p>
+<h3 id="09-heterogeneous-graphs-and-knowledge-graph-embeddings">09 · Heterogeneous graphs and knowledge graph embeddings</h3>
+<p>Real graphs have several node types and several relation types: papers and authors, drugs and proteins, users and items. A heterogeneous graph stores each edge as a triple $(h, r, t)$ with a relation type. The direct GNN extension is the relational GCN, which uses a separate weight matrix per relation and normalizes per relation and node:</p>
+<div class="math-display">$$h_v^{(l+1)} = \sigma\left( \sum_{r} \sum_{u \in N_r(v)} \frac{1}{|N_r(v)|} W_r^{(l)} h_u^{(l)} + W_0^{(l)} h_v^{(l)} \right)$$</div>
+<p>With many relations the parameter count explodes, so weights are made block-diagonal or built from a few shared basis matrices.</p>
+<p>Knowledge graphs push this to its extreme: millions of entities, hundreds of relations, and the main task is completion, predicting the missing tail of $(h, r, ?)$. Shallow embedding models score triples directly.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Score</th>
+<th>Handles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TransE</td>
+<td>$-\|h + r - t\|$</td>
+<td>Antisymmetric, inverse, composition</td>
+</tr>
+<tr>
+<td>TransR</td>
+<td>Project to a relation space, then translate</td>
+<td>Adds 1-to-N, symmetric</td>
+</tr>
+<tr>
+<td>DistMult</td>
+<td>$\langle h, r, t \rangle$ (bilinear, diagonal)</td>
+<td>Symmetric, 1-to-N</td>
+</tr>
+<tr>
+<td>ComplEx</td>
+<td>Real part of $\langle h, r, \bar{t} \rangle$ in $\mathbb{C}$</td>
+<td>Adds antisymmetric, inverse</td>
+</tr>
+<tr>
+<td>RotatE</td>
+<td>$-\|h \circ r - t\|$ with $|r_i| = 1$</td>
+<td>Symmetric, antisymmetric, inverse, composition, 1-to-N</td>
+</tr>
+</tbody>
+</table>
+<p>The TransE idea is that a relation is a translation vector: $h + r \approx t$. It is trained with a margin loss against corrupted triples. Its weakness is that a symmetric relation forces $r = 0$, and a 1-to-N relation forces all tails to coincide. RotatE replaces translation with rotation in the complex plane, which keeps composition (rotations compose) while allowing symmetry (a rotation by $\pi$ is its own inverse).</p>
+<p>No single model wins everywhere; check which relation patterns your data contains before choosing. The next lecture asks harder questions of the same embeddings.</p>
+<h3 id="10-reasoning-over-knowledge-graphs">10 · Reasoning over knowledge graphs</h3>
+<p>Link prediction answers one-hop questions. Real queries are multi-hop: &ldquo;which proteins are associated with diseases treated by drug X?&rdquo; translates to a path of two relations from an anchor entity. Because knowledge graphs are incomplete, you cannot just traverse; a missing edge would kill the whole path. The alternative is to reason in embedding space, where traversal becomes vector arithmetic.</p>
+<p>With TransE-style embeddings, a path query is answered by starting at the anchor and adding the relation vectors in order; entities near the resulting point are the answers. This works for chains but breaks on conjunctions (&ldquo;drugs that treat both A and B&rdquo;), since a single point cannot represent a set that then gets intersected.</p>
+<p>Query2box addresses this by embedding queries as axis-aligned boxes, each with a center and an offset (half-widths). Entities are points. A relation moves and grows the box: the center is translated and the offset is increased. Intersection of several boxes is computed with a learned attention over centers and a shrinking of offsets so the result lies inside all inputs. Distance from an entity to a box is the outside distance plus a down-weighted inside distance; training pulls answer entities inside the box and pushes sampled negatives out.</p>
+<p>Unions are the hard case: the union of two arbitrary boxes is not a box, and it can be shown that handling unions in general needs embedding dimension that grows with the number of entities. The practical fix rewrites any query into disjunctive normal form, pushes the union to the very end, and takes the minimum distance across the disjuncts.</p>
+<p>The general lesson: pick a geometric object whose closure properties match the logical operations you need.</p>
+<h3 id="11-subgraphs-and-motifs">11 · Subgraphs and motifs</h3>
+<p>A subgraph is either node-induced (pick nodes, keep all edges among them) or edge-induced (pick edges, keep their endpoints). Motifs are small, recurring, significant subgraphs: feed-forward loops in gene regulation, triangles in social networks, reciprocal edges in trade. Significance is measured against a null model. Generate random graphs with the same degree sequence (the configuration model, or edge-switching), count the motif in each, and compute a z-score; the vector of z-scores over motif types is a significance profile that fingerprints a network.</p>
+<p>Deciding whether a query graph appears inside a target is subgraph isomorphism, which is NP-complete in general. Neural subgraph matching sidesteps exact search by embedding neighborhoods and encoding the &ldquo;is contained in&rdquo; relation as an order. In an order embedding, $z_A \preceq z_B$ coordinate-wise means A is a subgraph of B. Transitivity, antisymmetry, and closure under intersection all hold for the coordinate-wise order, matching the subgraph relation. Training uses a max-margin loss that pushes positive pairs to satisfy the order and negative pairs to violate it by a margin. The same embeddings support frequent motif mining: grow candidate subgraphs step by step, staying in the region of embedding space that many target neighborhoods dominate.</p>
+<p>What typically goes wrong: counting node-induced when the biological question was about edge-induced patterns, or using an Erdos-Renyi null model that ignores degree heterogeneity and therefore flags every dense structure as significant. Subgraph-level reasoning returns in the recommender lecture, where a two-hop neighborhood of a user is the object of interest.</p>
+<h3 id="12-gnns-for-recommender-systems">12 · GNNs for recommender systems</h3>
+<p>A recommender is a bipartite graph of users and items, with an edge for each interaction. The task is link prediction restricted to unseen user-item pairs, evaluated by ranking: for each user, does the model put held-out positive items in the top $K$? Recall at $K$ is the usual metric.</p>
+<p>Embedding-based collaborative filtering gives each user and item a vector and scores a pair by dot product. Training uses the Bayesian personalized ranking loss, which for each user samples a positive item and a negative item and pushes the positive score above the negative through a log-sigmoid on the difference.</p>
+<p>GNNs improve the embeddings by propagating them along the bipartite edges. Neural graph collaborative filtering did this with full GCN layers. LightGCN observed that, since the input embeddings are already learnable, the per-layer weight matrices and nonlinearities add little. Its update is pure normalized averaging, $E^{(l+1)} = \tilde{D}^{-1/2} \tilde{A} \tilde{D}^{-1/2} E^{(l)}$, and the final embedding is the mean over all layers. It trains faster and generalizes better than the heavier version.</p>
+<p>PinSage scales the idea to billions of pins. Its main tricks are defining neighborhoods by short random walks and keeping the top-visited nodes (importance pooling), which bounds neighborhood size and weights neighbors by relevance; curriculum learning that gradually introduces hard negatives that are close to but not equal to the positive; and pre-computing neighborhoods so that inference is a map-reduce job.</p>
+<p>The common failure is evaluating with random negatives, which makes any model look good; hard negatives and time-based splits give honest numbers.</p>
+<h3 id="13-community-detection">13 · Community detection</h3>
+<p>Communities are groups of nodes with dense internal connections and sparse external ones. Detecting them means turning that intuition into an objective.</p>
+<p>Modularity compares the number of edges inside groups to the number expected under a null model that preserves degrees. With $m$ edges, degrees $k_i$, and community labels $c_i$:</p>
+<div class="math-display">$$Q = \frac{1}{2m} \sum_{i, j} \left( A_{ij} - \frac{k_i k_j}{2m} \right) \delta(c_i, c_j)$$</div>
+<p>The term $k_i k_j / 2m$ is the expected number of edges between $i$ and $j$ if edges were rewired at random with the same degrees. Positive $Q$ means more internal edges than chance; values above roughly $0.3$ usually indicate meaningful structure.</p>
+<p>Maximizing $Q$ exactly is NP-hard, so the Louvain method uses a greedy two-phase loop. Phase one visits nodes one at a time and moves each into the neighboring community that gives the largest modularity gain, repeating until no move helps. Phase two collapses each community into a super-node with weighted edges, then returns to phase one on the smaller graph. The result is a hierarchy of communities, and it scales to very large graphs.</p>
+<p>Modularity has a resolution limit: it can merge small, genuinely distinct communities when the graph is large, because the null model term shrinks as $m$ grows. It also assigns each node to exactly one community. Overlapping models such as the affiliation graph model and its likelihood-based fitting (BigCLAM) let a node belong to several communities with different strengths, and the fit can be done by gradient ascent. Louvain plus a look at the resolution parameter is the reasonable default.</p>
+<h3 id="14-generative-models-for-graphs">14 · Generative models for graphs</h3>
+<p>Graph generation serves anomaly detection, simulation, and drug design. Traditional models are simple and interpretable. Erdos-Renyi picks each edge independently, giving binomial degrees and no clustering. Small-world models rewire a ring lattice to get high clustering with short paths. Kronecker graphs grow a small initiator matrix through repeated Kronecker products and reproduce heavy-tailed degrees and shrinking diameters. None of them learn from data.</p>
+<p>Deep generative models learn a distribution $p_{\text{model}}(G)$ from examples and sample from it. The difficulty is that a graph of $n$ nodes has $O(n^2)$ possible edges and $n!$ equivalent orderings. GraphRNN makes generation sequential: fix a node ordering, then emit one node at a time, and for each node emit the edges to all previous nodes. A graph-level RNN carries state across nodes; an edge-level RNN produces the binary edge decisions for the current node. Training is teacher-forced; sampling draws each edge from the emitted Bernoulli. Using a breadth-first node ordering matters: it caps how far back an edge can reach, which shrinks the edge-level sequence and reduces the number of orderings the model must cover.</p>
+<p>Evaluating generated graphs is done by comparing statistics (degree, clustering, orbit counts) with a distributional distance, since there is no per-sample ground truth. For goal-directed generation, such as molecules with a target property, a reinforcement learning policy (GCPN) adds edges step by step and is rewarded for validity and the property.</p>
+<p>Recent offerings also point to diffusion models, which reverse a gradual noising of adjacency and features and sidestep the ordering problem. All of these train on small graphs; the next lecture handles the opposite regime.</p>
+<h3 id="15-scaling-gnns-to-large-graphs">15 · Scaling GNNs to large graphs</h3>
+<p>Full-batch GNN training keeps every node embedding of every layer in memory and multiplies by the full adjacency matrix. That works for tens of thousands of nodes, not billions. Naively minibatching nodes does not help, because a $K$-layer GNN needs each sampled node&rsquo;s entire $K$-hop neighborhood, which for a hub is the whole graph. Three responses are standard.</p>
+<p>Neighbor sampling, introduced with GraphSAGE, caps the fan-out at each hop: sample at most $s_1$ neighbors at hop one, $s_2$ at hop two, and so on, so each node&rsquo;s computation graph has at most $s_1 s_2 \cdots s_K$ leaves. Fresh samples each epoch regularize. The cost is noisy gradients, and with hubs even the pruned trees overlap heavily.</p>
+<p>Cluster sampling (Cluster-GCN) partitions the graph into communities with a fast algorithm such as METIS, then treats each partition, or a random union of a few partitions, as a minibatch and runs full message passing inside it. Edges across partitions are dropped, which biases the gradient, and taking unions of clusters with their between-cluster edges reduces that bias. Embeddings are shared within the batch rather than recomputed per tree, so it is much faster.</p>
+<p>Simplified GCN removes the nonlinearities from a GCN. Without them, $K$ layers collapse to $\tilde{A}^K X W$, and $\tilde{A}^K X$ can be precomputed once with sparse matrix products. Training is then a logistic regression on fixed features, which minibatches trivially. It loses expressiveness but works well when homophily is strong.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Per-epoch cost</th>
+<th>Gradient bias</th>
+<th>Expressiveness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Neighbor sampling</td>
+<td>High for deep models</td>
+<td>Low</td>
+<td>Full</td>
+</tr>
+<tr>
+<td>Cluster-GCN</td>
+<td>Low</td>
+<td>Some, from dropped edges</td>
+<td>Full</td>
+</tr>
+<tr>
+<td>Simplified GCN</td>
+<td>Very low after precompute</td>
+<td>None</td>
+<td>Linear only</td>
+</tr>
+</tbody>
+</table>
+<p>The final lecture covers what happens when the graph changes over time and when the predictions need to be trusted.</p>
+<h3 id="16-temporal-graphs-and-trustworthy-gnns">16 · Temporal graphs and trustworthy GNNs</h3>
+<p>Many graphs are event streams: a message at time $t$, a transaction, a citation. A temporal graph is a set of time-stamped edges, and the honest evaluation splits by time, training on the past and predicting the future. Static GNNs ignore this and leak future information when trained on the whole graph.</p>
+<p>Temporal GNNs make time explicit. Temporal graph attention networks attend over a node&rsquo;s past interactions with a learned time-encoding of the interval since each one, so recent events count differently from old ones. Temporal graph networks add a per-node memory vector updated by a recurrent cell each time the node participates in an event, then run message passing over the recent neighborhood with the memories as features. Both are inductive over new nodes and new time stamps.</p>
+<p>Trustworthiness spans three concerns. Explainability asks which edges and features drove a prediction. GNNExplainer learns a soft mask over the edges of a node&rsquo;s computation graph and over feature dimensions, chosen to maximize mutual information between the masked subgraph and the original prediction while keeping the mask small; the surviving edges are the explanation. Robustness asks how easily an adversary can flip a prediction by adding a few edges or perturbing features; on citation and social graphs, small structural edits to a target&rsquo;s neighborhood are often enough, and adversarial training or certified smoothing are the standard defenses. Fairness asks whether outcomes differ across groups defined by sensitive attributes, which graphs can amplify through homophily even when the attribute is never used as a feature.</p>
+<p>The cross-cutting lesson: because a GNN&rsquo;s prediction depends on other nodes, every property you care about, correctness, explanation, robustness, fairness, must be reasoned about at the level of neighborhoods rather than individual examples.</p>
+<h2 id="key-equations-at-a-glance">Key equations at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Equation</th>
+<th>When it applies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adamic-Adar</td>
+<td>$\sum_{w \in N(u) \cap N(v)} 1 / \log \lvert N(w) \rvert$</td>
+<td>Link prediction from shared neighbors</td>
+</tr>
+<tr>
+<td>node2vec objective</td>
+<td>$\sum_u \sum_{v \in N_R(u)} \log \dfrac{\exp(z_u^\top z_v)}{\sum_n \exp(z_u^\top z_n)}$</td>
+<td>Shallow node embedding with biased walks</td>
+</tr>
+<tr>
+<td>PageRank</td>
+<td>$r = \beta M r + \frac{1-\beta}{N} \mathbf{1}$</td>
+<td>Node importance on directed graphs</td>
+</tr>
+<tr>
+<td>Relational classification</td>
+<td>$P(Y_v) \propto \sum_{u \in N(v)} A_{vu} P(Y_u)$</td>
+<td>Semi-supervised labels under homophily</td>
+</tr>
+<tr>
+<td>GCN layer</td>
+<td>$h_v' = \sigma\left(W \sum_{u \in N(v) \cup v} \frac{h_u}{\sqrt{d_u d_v}}\right)$</td>
+<td>Homophilous graphs with features</td>
+</tr>
+<tr>
+<td>GraphSAGE layer</td>
+<td>$h_v' = \sigma(W [h_v \,\|\, \text{AGG}\{h_u\}])$</td>
+<td>Inductive learning, custom aggregators</td>
+</tr>
+<tr>
+<td>GAT attention</td>
+<td>$\alpha_{vu} = \text{softmax}_u\left(\text{LeakyReLU}(a^\top [W h_v \| W h_u])\right)$</td>
+<td>Neighbors of unequal importance</td>
+</tr>
+<tr>
+<td>GIN layer</td>
+<td>$h_v' = \text{MLP}\left((1+\epsilon) h_v + \sum_{u \in N(v)} h_u\right)$</td>
+<td>Maximum 1-WL expressiveness</td>
+</tr>
+<tr>
+<td>TransE score</td>
+<td>$f(h, r, t) = -\lVert h + r - t \rVert$</td>
+<td>KG completion without symmetric relations</td>
+</tr>
+<tr>
+<td>DistMult score</td>
+<td>$\langle h, r, t \rangle = \sum_i h_i r_i t_i$</td>
+<td>Symmetric and 1-to-N relations</td>
+</tr>
+<tr>
+<td>Modularity</td>
+<td>$Q = \frac{1}{2m} \sum_{ij} \left(A_{ij} - \frac{k_i k_j}{2m}\right) \delta(c_i, c_j)$</td>
+<td>Scoring a non-overlapping partition</td>
+</tr>
+<tr>
+<td>Simplified GCN</td>
+<td>$\hat{Y} = \text{softmax}(\tilde{A}^K X W)$</td>
+<td>Scalable linear propagation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-mistakes">Common mistakes</h2>
+<ul>
+<li>Using mean or max aggregation and then wondering why the model cannot distinguish nodes with different neighborhood sizes. Use sum aggregation (GIN-style) when structural counting matters.</li>
+<li>Stacking ten message-passing layers on a graph with diameter five. The embeddings over-smooth. Keep GNN depth small, add pre- and post-processing MLPs, and use skip connections.</li>
+<li>Running PageRank without handling dead ends, so total score shrinks each iteration and the ranking drifts. Renormalize after each step or redistribute leaked mass uniformly.</li>
+<li>Training node2vec or DeepWalk and then expecting embeddings for nodes added later. Shallow embeddings are transductive; switch to a GNN if new nodes will appear.</li>
+<li>Modeling a symmetric relation with TransE. The translation vector is forced toward zero. Pick a model such as DistMult, ComplEx, or RotatE whose geometry allows symmetry.</li>
+<li>Evaluating a recommender or a temporal link predictor with random splits. Future edges leak into training. Split by time and rank against hard negatives.</li>
+<li>Reading a high modularity score as proof of community structure without a null-model comparison. Random graphs with heavy-tailed degrees can have non-trivial modularity, and the resolution limit hides small communities.</li>
+<li>Ignoring edge direction or edge type because the library defaults to undirected homogeneous graphs. Directed and heterogeneous structure often carries most of the signal; use a relational model when types exist.</li>
+</ul>
+<h2 id="related-courses">Related courses</h2>
+<ul>
+<li><a href="cs229.html">CS229</a> supplies the supervised-learning foundations, logistic regression and gradient descent, that every classifier in these notes sits on top of.</li>
+<li><a href="cs230.html">CS230</a> covers the deep learning training practices (batch norm, dropout, initialization) reused in the GNN design space lecture.</li>
+<li><a href="cs224n.html">CS224N</a> introduces word2vec and attention; node2vec and GAT are direct adaptations to graphs.</li>
+<li><a href="cs231n.html">CS231n</a> explains convolution on grids, which is the special case that graph convolution generalizes.</li>
+<li><a href="cs246.html">CS246</a> treats PageRank, community detection, and link analysis at web scale from the data-mining side.</li>
+<li><a href="cs234.html">CS234</a> provides the policy-gradient background behind goal-directed graph generation.</li>
+</ul>
+      <a class="back" href="../study.html">&larr; All courses</a>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="wrap"><span>&copy; 2026 Kanghoun Lee &middot; Seoul</span><nav aria-label="Footer navigation"><a href="../#about">About</a><a href="../study.html">Study</a><a href="https://github.com/nightandweather">GitHub &#8599;</a></nav></div></footer>
+</body></html>

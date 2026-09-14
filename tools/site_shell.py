@@ -67,7 +67,7 @@ def normalized_header(prefix: str):
     home = prefix or "./"
     return f'''<header class="nav wrap">
     <a class="wordmark" href="{home}" aria-label="Kanghoun Lee, home">KANGHOUN LEE</a>
-    <nav aria-label="Primary navigation"><a href="{prefix}work.html">Work</a><a href="{prefix}experiments.html">Experiments</a><a href="{prefix}field-notes.html">Field Notes</a><a href="{prefix}opportunities.html">Calendar</a><a href="{prefix}rejections.html">Rejections</a></nav>
+    <nav aria-label="Primary navigation"><a href="{prefix}work.html">Work</a><a href="{prefix}experiments.html">Experiments</a><a href="{prefix}field-notes.html">Field Notes</a><a href="{prefix}study.html">Study</a><a href="{prefix}opportunities.html">Calendar</a><a href="{prefix}rejections.html">Rejections</a></nav>
   </header>'''
 
 
